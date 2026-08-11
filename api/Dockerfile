@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     ca-certificates \
     fonts-liberation \
-    libayatana-appindicator3-1 \
+    libappindicator3-1 \
     libasound2 \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libexpat1 \
     libfontconfig1 \
     libgbm1 \
-    libgcc-s1 \
+    libgcc1 \
     libglib2.0-0 \
     libgtk-3-0 \
     libnspr4 \
@@ -33,6 +33,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxext6 \
     libxfixes3 \
     libxi6 \
+    libxrandr2 \
     libxrender1 \
     libxss1 \
     libxtst6 \

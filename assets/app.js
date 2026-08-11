@@ -1,9 +1,22 @@
-/* AccessiCheck — interactions légères et mesures d'audience anonymes sur la landing page.
-   Aucun cookie, aucune IP, aucun identifiant personnel n'est transmis. */
+/* AccessiCheck — interactions légères, commande AccessiCheck et mesures d'audience anonymes.
+   Aucun cookie, aucune IP, aucun identifiant personnel n'est transmis hors du formulaire de commande. */
 (function () {
   'use strict';
 
   var API_BASE = 'https://api.brozapi.com';
+
+  // Liens de paiement Stripe AccessiCheck (créés par Franck, compte Stripe Brozapi).
+  var PAYMENT_LINKS = {
+    oneshot: 'https://buy.stripe.com/00w5kx2cxccR7tN1ZbcZa06',
+    pro: 'https://buy.stripe.com/9B6cMZ2cx7WB9BV1ZbcZa07',
+    monitoring: 'https://buy.stripe.com/cNi5kxcRbekZ01l8nzcZa08'
+  };
+
+  var OFFER_LABELS = {
+    oneshot: '29 €',
+    pro: '49 €',
+    monitoring: '9 €/mois'
+  };
 
   /**
    * Envoie un événement de mesure d'audience anonyme à api.brozapi.com/track.
@@ -52,10 +65,36 @@
     });
   });
 
-  // Formulaire de commande de diagnostic.
+  // Formulaire de commande.
   var form = document.getElementById('order-form');
   var statusEl = document.getElementById('order-status');
   var submitBtn = document.getElementById('order-submit');
+  var offerSelect = document.getElementById('scan-offer');
+
+  function setStatus(text, isError) {
+    if (!statusEl) return;
+    statusEl.textContent = text;
+    statusEl.className = 'status-msg' + (isError ? ' status-msg--err' : ' status-msg--ok');
+  }
+
+  // Les cartes d'offres pré-sélectionnent l'offre et ramènent au formulaire
+  // (au lieu d'ouvrir directement Stripe : on a besoin de l'URL ET de l'email avant paiement).
+  document.querySelectorAll('[data-offer]').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      var offer = el.getAttribute('data-offer');
+      if (offerSelect && PAYMENT_LINKS[offer]) {
+        offerSelect.value = offer;
+      }
+      var scanner = document.getElementById('scanner');
+      if (scanner) {
+        scanner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      var urlInput = document.getElementById('scan-url');
+      if (urlInput) urlInput.focus();
+      trackEvent('offer_selected_' + offer, location.pathname || '/');
+    });
+  });
 
   if (form) {
     form.addEventListener('submit', function (e) {
@@ -63,34 +102,53 @@
       if (statusEl) statusEl.textContent = '';
 
       var urlInput = document.getElementById('scan-url');
+      var emailInput = document.getElementById('scan-email');
       var url = urlInput ? urlInput.value.trim() : '';
+      var email = emailInput ? emailInput.value.trim() : '';
+      var offer = offerSelect ? offerSelect.value : 'oneshot';
+
       if (!url || !/^https?:\/\/.+/i.test(url)) {
-        if (statusEl) {
-          statusEl.textContent = 'Merci d\'indiquer une adresse commençant par https://';
-          statusEl.className = 'status-msg status-msg--err';
-        }
+        setStatus('Merci d\'indiquer une adresse commençant par https://', true);
+        if (urlInput) urlInput.focus();
+        return;
+      }
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        setStatus('Merci d\'indiquer un email valide pour recevoir le rapport.', true);
+        if (emailInput) emailInput.focus();
+        return;
+      }
+      if (!PAYMENT_LINKS[offer]) {
+        setStatus('Offre inconnue.', true);
         return;
       }
 
-      // L'utilisateur déclenche une commande de scan.
-      trackEvent('scan_triggered', '/');
+      trackEvent('scan_triggered_' + offer, '/');
 
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Redirection vers Stripe…';
+        submitBtn.textContent = 'Préparation du paiement…';
       }
 
-      // Placeholder : les liens Stripe seront activés par Franck.
-      setTimeout(function () {
-        if (statusEl) {
-          statusEl.innerHTML = 'Les paiements Stripe sont en cours d\'activation. <br>Merci de revenir d\'ici quelques heures, ou contactez-nous via la page Mentions légales.';
-          statusEl.className = 'status-msg status-msg--err';
-        }
-        if (submitBtn) {
+      // 1. Enregistrer la commande (URL + email + offre) côté API.
+      fetch(API_BASE + '/accessicheck/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: url, email: email, offer: offer })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (!data || !data.ok) {
+            throw new Error((data && data.error) || 'Erreur de commande.');
+          }
+          // 2. Rediriger vers Stripe avec l'email pré-rempli.
+          var paymentUrl = PAYMENT_LINKS[offer] + '?prefilled_email=' + encodeURIComponent(email);
+          window.location.href = paymentUrl;
+        })
+        .catch(function (err) {
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Commander le diagnostic — 29 €';
-        }
-      }, 600);
+          submitBtn.textContent = 'Commander';
+          setStatus('Impossible de préparer le paiement : ' + err.message + ' Contactez-nous via la page Mentions légales.', true);
+        });
     });
   }
 })();
