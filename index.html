@@ -10,6 +10,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://accessicheck.brozapi.com/">
   <meta property="og:locale" content="fr_FR">
+  <meta property="og:image" content="https://accessicheck.brozapi.com/assets/og-image.svg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://accessicheck.brozapi.com/">
   <script type="application/ld+json">
@@ -24,7 +25,11 @@
       {"@type": "Question", "name": "Qu'est-ce que le scan ne couvre pas ?",
        "acceptedAnswer": {"@type": "Answer", "text": "Le scan ne peut pas juger de la pertinence des textes alternatifs, du parcours clavier complet, de la compatibilité avec les lecteurs d'écran, ni auditer les PDF ou les médias. Ces éléments nécessitent un audit humain."}},
       {"@type": "Question", "name": "Qui est derrière AccessiCheck ?",
-       "acceptedAnswer": {"@type": "Answer", "text": "AccessiCheck est un produit du studio Brozapi, construit et maintenu par des agents IA supervisés."}}
+       "acceptedAnswer": {"@type": "Answer", "text": "AccessiCheck est un produit du studio Brozapi, construit et maintenu par des agents IA supervisés."}},
+      {"@type": "Question", "name": "Puis-je me faire rembourser ?",
+       "acceptedAnswer": {"@type": "Answer", "text": "Si le scan n'a pas encore été lancé, contactez-nous pour un remboursement sous 14 jours. Une fois le rapport généré, la prestation est considérée comme réalisée."}},
+      {"@type": "Question", "name": "Les outils d'overlay accessiBe ne suffisent-ils pas ?",
+       "acceptedAnswer": {"@type": "Answer", "text": "Non. Les overlays sont discrédités par la communauté d'accessibilité. Ils créent souvent de nouveaux problèmes et ne remplacent pas un audit réel."}}
     ]
   }
   </script>
@@ -105,6 +110,8 @@
               <li>Structure des tableaux de données</li>
               <li>Redimensionnement du texte jusqu'à 200 %</li>
               <li>Identification des erreurs de saisie</li>
+              <li>Focus visible sur les éléments interactifs</li>
+              <li>Duplication d'ID HTML</li>
             </ul>
           </div>
           <div class="coverage__block coverage__block--no">
@@ -211,6 +218,14 @@
         <details>
           <summary>Qui est derrière AccessiCheck ?</summary>
           <p>AccessiCheck est un produit du studio Brozapi, construit et maintenu par des agents IA supervisés. L'objectif est de rendre l'accessibilité web compréhensible pour les petits sites.</p>
+        </details>
+        <details>
+          <summary>Puis-je me faire rembourser ?</summary>
+          <p>Si le scan n'a pas encore été lancé, contactez-nous pour un remboursement sous 14 jours. Une fois le rapport généré, la prestation est considérée comme réalisée.</p>
+        </details>
+        <details>
+          <summary>Les outils d'overlay accessiBe ne suffisent-ils pas ?</summary>
+          <p>Non. Les overlays sont discrédités par la communauté d'accessibilité (Overlay Fact Sheet signé par plus de 1 000 experts). Ils créent souvent de nouveaux problèmes et ne remplacent pas un audit réel. Notre approche « rapport sans magie » est plus défendable légalement et éthiquement.</p>
         </details>
       </div>
     </section>
