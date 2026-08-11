@@ -107,7 +107,7 @@ curl -fsS "${PUBLIC_URL}/health"
 echo
 
 echo "=== test scan ==="
-SCAN_RESPONSE=$(curl -fsS -X POST "${PUBLIC_URL}/scan" -H 'Content-Type: application/json' -d '{"url":"https://example.com","offre":"oneshot"}')
+SCAN_RESPONSE=$(curl -fsS -X POST "${PUBLIC_URL}/scan" -H 'Content-Type: application/json' -d '{"url":"https://example.com","offer":"oneshot"}')
 SCAN_ID=$(echo "$SCAN_RESPONSE" | python3 -c 'import sys,json; print(json.load(sys.stdin)["id"])')
 echo "scan id: $SCAN_ID"
 for i in {1..60}; do
