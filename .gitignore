@@ -1,0 +1,13 @@
+# AccessiCheck — exclusions
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.swo
+.env
+.env.local
+node_modules/
+__pycache__/
+*.pyc
+.vscode/
+.idea/

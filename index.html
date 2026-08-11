@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AccessiCheck — Diagnostic d'accessibilité RGAA/WCAG en 2 minutes</title>
+  <meta name="description" content="Scan automatique d'accessibilité RGAA/WCAG pour petits sites et agences. Diagnostic express à 29 €, rapport Pro à 49 €, surveillance à 9 €/mois. Aucune garantie de conformité : audit humain nécessaire.">
+  <meta property="og:title" content="AccessiCheck — Diagnostic d'accessibilité RGAA/WCAG">
+  <meta property="og:description" content="Scan automatique d'accessibilité pour petits sites. Diagnostic express à 29 €. Sans garantie magique.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://accessicheck.brozapi.com/">
+  <meta property="og:locale" content="fr_FR">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://accessicheck.brozapi.com/">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "AccessiCheck garantit-il la conformité RGAA ?",
+       "acceptedAnswer": {"@type": "Answer", "text": "Non. AccessiCheck est un outil technique d'aide au diagnostic. Il couvre uniquement les critères RGAA/WCAG automatiquement testables. Un audit humain reste nécessaire pour garantir la conformité pleine et entière."}},
+      {"@type": "Question", "name": "Qu'est-ce que le scan couvre ?",
+       "acceptedAnswer": {"@type": "Answer", "text": "Le scan vérifie les critères automatiquement testables : contrastes de couleurs, présence de titres et landmarks, attributs ARIA, noms accessibles des images et formulaires, structure des tableaux, etc."}},
+      {"@type": "Question", "name": "Qu'est-ce que le scan ne couvre pas ?",
+       "acceptedAnswer": {"@type": "Answer", "text": "Le scan ne peut pas juger de la pertinence des textes alternatifs, du parcours clavier complet, de la compatibilité avec les lecteurs d'écran, ni auditer les PDF ou les médias. Ces éléments nécessitent un audit humain."}},
+      {"@type": "Question", "name": "Qui est derrière AccessiCheck ?",
+       "acceptedAnswer": {"@type": "Answer", "text": "AccessiCheck est un produit du studio Brozapi, construit et maintenu par des agents IA supervisés."}}
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <header class="header">
+    <div class="container">
+      <a class="logo" href="/" aria-label="AccessiCheck — Accueil">
+        <span class="logo__name">AccessiCheck</span>
+        <span class="logo__by">par Brozapi</span>
+      </a>
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="#scanner">Scanner</a>
+        <a href="#couverture">Ce que l'on teste</a>
+        <a href="#offres">Offres</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenu">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <h1 id="hero-title">Votre site est-il accessible ? Vérifiez-le en 2 minutes.</h1>
+        <p class="hero__subtitle">
+          AccessiCheck scanne automatiquement les critères RGAA/WCAG testables sur votre page d'accueil.
+          Un diagnostic clair, des actions prioritaires, et surtout : aucune fausse promesse de conformité.
+        </p>
+        <a class="hero__cta" href="#scanner">Scanner mon site — 29 €</a>
+      </div>
+    </section>
+
+    <div class="urgency">
+      <div class="container">
+        <strong>RGAA secteur public + EAA e-commerce</strong> · Amende jusqu'à 45 000 € en cas de non-conformité avérée
+      </div>
+    </div>
+
+    <section id="scanner" class="section scanner" aria-labelledby="scanner-title">
+      <div class="container">
+        <h2 id="scanner-title" class="section__title">Commander un diagnostic</h2>
+        <p class="section__lead">Saisissez l'adresse de la page d'accueil à scanner. Vous recevez le rapport par email sous 24 heures ouvrées.</p>
+        <div class="scanner__box">
+          <form id="order-form" class="form" novalidate>
+            <div class="form__row">
+              <label for="scan-url" class="visually-hidden" hidden>Adresse du site</label>
+              <input id="scan-url" type="url" name="url" placeholder="https://mon-site.fr" required inputmode="url" autocomplete="url" spellcheck="false">
+              <button class="btn btn--primary" type="submit" id="order-submit">Commander le diagnostic — 29 €</button>
+            </div>
+            <p class="status-msg" id="order-status" role="status" aria-live="polite"></p>
+          </form>
+          <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--gray-500);">
+            Paiement sécurisé par Stripe. Le lien de paiement sera activé dès validation par Franck.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="couverture" class="section coverage" aria-labelledby="couverture-title">
+      <div class="container">
+        <h2 id="couverture-title" class="section__title">Ce que l'on teste — et ce que l'on ne teste pas</h2>
+        <p class="section__lead">Un outil ne peut pas tout voir. Nous affichons nos limites dès la page d'accueil, comme l'exige une démarche honnête.</p>
+        <div class="coverage__grid">
+          <div class="coverage__block coverage__block--ok">
+            <h3>Critères automatiquement testés</h3>
+            <ul class="check-list">
+              <li>Contrastes de couleurs (textes / fonds)</li>
+              <li>Présence et hiérarchie des titres (h1 → h6)</li>
+              <li>Landmarks ARIA et rôles de structure</li>
+              <li>Attributs <code>alt</code> sur les images (présence, pas pertinence)</li>
+              <li>Étiquettes et noms accessibles des formulaires</li>
+              <li>Liens vides ou non explicites</li>
+              <li>Langue de la page et encodage</li>
+              <li>Structure des tableaux de données</li>
+              <li>Redimensionnement du texte jusqu'à 200 %</li>
+              <li>Identification des erreurs de saisie</li>
+            </ul>
+          </div>
+          <div class="coverage__block coverage__block--no">
+            <h3>Ce qui nécessite un audit humain</h3>
+            <ul class="check-list check-list--minus">
+              <li>Pertinence des textes alternatifs</li>
+              <li>Parcours clavier complet et logique</li>
+              <li>Compatibilité avec les lecteurs d'écran</li>
+              <li>Vidéos, médias et transcriptions</li>
+              <li>Documents PDF accessibles</li>
+              <li>Qualité des étiquettes et messages d'erreur</li>
+              <li>Navigation et compréhension globale</li>
+              <li>Audit multi-pages (hors offre Pro/Monitoring)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section honesty" aria-labelledby="honn-title">
+      <div class="container">
+        <h2 id="honn-title" class="section__title">Pas de garantie RGAA. Pas de magie.</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>AccessiCheck est un diagnostic express</h3>
+            <p>Il détecte les problèmes techniques visibles automatiquement et vous donne une liste d'actions prioritaires. C'est un premier pas, pas une certification.</p>
+          </article>
+          <article class="card">
+            <h3>Pourquoi c'est utile quand même</h3>
+            <p>La plupart des sites ont des dizaines d'erreurs techniques simples à corriger. Les identifier rapidement vous fait gagner du temps et de l'argent avant un éventuel audit complet.</p>
+          </article>
+          <article class="card">
+            <h3>Faux positifs possibles</h3>
+            <p>Comme tout scanner, AccessiCheck peut signaler des éléments qui ne sont pas de vraies violations. Le rapport indique chaque fois le niveau de confiance.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="offres" class="section pricing" aria-labelledby="offres-title">
+      <div class="container">
+        <h2 id="offres-title" class="section__title">Nos offres</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>Diagnostic One-Shot</h3>
+            <p class="price">29 € <span>une fois</span></p>
+            <ul class="features">
+              <li>Scan de la page d'accueil</li>
+              <li>Score d'accessibilité simplifié</li>
+              <li>Top 10 des problèmes détectés</li>
+              <li>Actions prioritaires classées par gravité</li>
+              <li>Rapport PDF + email récapitulatif</li>
+            </ul>
+            <a class="btn btn--primary" href="#scanner">Commander — 29 €</a>
+          </article>
+          <article class="card card--featured">
+            <span class="badge">Le plus complet</span>
+            <h3>Rapport Pro</h3>
+            <p class="price">49 € <span>une fois</span></p>
+            <ul class="features">
+              <li>Tout le Diagnostic One-Shot</li>
+              <li>Audit de 5 pages clés (accueil, contact, etc.)</li>
+              <li>Grille de critères RGAA/WCAG détaillée</li>
+              <li>Extrait dirigeant d'une page</li>
+              <li>Code de correction pour chaque erreur</li>
+            </ul>
+            <a class="btn btn--primary" href="#scanner">Commander le Pro — 49 €</a>
+          </article>
+          <article class="card">
+            <h3>Surveillance mensuelle</h3>
+            <p class="price">9 € <span>/ mois</span></p>
+            <ul class="features">
+              <li>1 scan mensuel de la page d'accueil</li>
+              <li>Alerte email en cas de régression</li>
+              <li>Tableau de bord de suivi des scores</li>
+              <li>Rapport comparatif mois par mois</li>
+              <li>Sans engagement, résilliable à tout moment</li>
+            </ul>
+            <a class="btn btn--primary" href="#scanner">Souscrire — 9 €/mois</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section faq" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title" class="section__title">Foire aux questions</h2>
+        <details>
+          <summary>AccessiCheck garantit-il la conformité RGAA ?</summary>
+          <p>Non. AccessiCheck est un outil technique d'aide au diagnostic. Il couvre uniquement les critères automatiquement testables. Un audit humain reste nécessaire pour garantir la conformité pleine et entière.</p>
+        </details>
+        <details>
+          <summary>Le scan couvre-t-il tout mon site ?</summary>
+          <p>L'offre One-Shot analyse la page d'accueil. Le Rapport Pro couvre 5 pages clés. La surveillance mensuelle revient chaque mois sur la page d'accueil. Pour un audit complet de l'ensemble du site, il faut faire appel à un auditeur RGAA humain.</p>
+        </details>
+        <details>
+          <summary>Comment reçoit-on le rapport ?</summary>
+          <p>Par email, sous 24 heures ouvrées après le paiement. Le rapport comprend un PDF lisible et une liste d'actions prioritaires.</p>
+        </details>
+        <details>
+          <summary>Quels sont les moyens de paiement ?</summary>
+          <p>Les paiements sont sécurisés par Stripe (carte bancaire). Les liens de paiement seront activés dès validation par Franck.</p>
+        </details>
+        <details>
+          <summary>Qui est derrière AccessiCheck ?</summary>
+          <p>AccessiCheck est un produit du studio Brozapi, construit et maintenu par des agents IA supervisés. L'objectif est de rendre l'accessibilité web compréhensible pour les petits sites.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <p><strong>AccessiCheck</strong><br>par Brozapi</p>
+        </div>
+        <div>
+          <p><a href="mentions-legales.html">Mentions légales &amp; CGV</a></p>
+          <p><a href="mentions-legales.html#confidentialite">Politique de confidentialité</a></p>
+        </div>
+        <div>
+          <p>Hébergé en UE · Zéro cookie · Statistiques de visite anonymes</p>
+        </div>
+      </div>
+      <p class="footer__disclaimer">
+        AccessiCheck est un outil technique d'aide au diagnostic. Il ne constitue ni un conseil juridique ni une garantie de conformité RGAA/WCAG.
+      </p>
+    </div>
+  </footer>
+
+  <script src="assets/app.js" defer></script>
+</body>
+</html>
