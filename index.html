@@ -49,6 +49,7 @@
         <a href="#scanner">Scanner</a>
         <a href="#couverture">Ce que l'on teste</a>
         <a href="#offres">Offres</a>
+        <a href="#exemple">Exemple de rapport</a>
         <a href="audit-rgaa-pas-cher.html">Guides</a>
         <a href="#faq">FAQ</a>
       </nav>
@@ -161,6 +162,47 @@
             <p>Comme tout scanner, AccessiCheck peut signaler des éléments qui ne sont pas de vraies violations. Le rapport indique chaque fois le niveau de confiance.</p>
           </article>
         </div>
+      </div>
+    </section>
+
+    <section id="exemple" class="section exemple" aria-labelledby="exemple-title">
+      <div class="container">
+        <h2 id="exemple-title" class="section__title">Voir un exemple de rapport</h2>
+        <p class="section__lead">
+          Dogfooding : nous scannons nos propres sites avec AccessiCheck. Voici des rapports réels,
+          générés par notre moteur pa11y/axe-core — sans retouche.
+        </p>
+        <div class="cards">
+          <article class="card">
+            <h3>badgeia.brozapi.com — 100/100</h3>
+            <ul class="features">
+              <li>0 problème détecté (diagnostic One-Shot)</li>
+              <li>Contrastes, titres, labels, landmarks, langue : conformes</li>
+              <li>Site du produit BadgeIA, scanné le 11 août 2026</li>
+            </ul>
+            <p>
+              <a class="btn btn--secondary" href="exemple-rapport.html">Voir le rapport en ligne</a>
+              <a class="btn btn--primary" href="assets/rapports/badgeia-brozapi-oneshot.pdf" download data-track="click_exemple_pdf_oneshot">PDF One-Shot</a>
+              <a class="btn btn--primary" href="assets/rapports/badgeia-brozapi-pro.pdf" download data-track="click_exemple_pdf_pro">PDF Pro</a>
+            </p>
+          </article>
+          <article class="card">
+            <h3>brozapi.com — 100/100</h3>
+            <ul class="features">
+              <li>0 problème détecté (diagnostic One-Shot)</li>
+              <li>Le scan a détecté un incident réel : le site était injoignable en HTTPS (config serveur écrasée lors d'un déploiement). Corrigé, puis re-scanné : 100/100.</li>
+              <li>Site du studio, scanné le 11 août 2026</li>
+            </ul>
+            <p>
+              <a class="btn btn--primary" href="assets/rapports/brozapi-com-oneshot.pdf" download data-track="click_exemple_pdf_oneshot_brozapi">PDF One-Shot</a>
+              <a class="btn btn--primary" href="assets/rapports/brozapi-com-pro.pdf" download data-track="click_exemple_pdf_pro_brozapi">PDF Pro</a>
+            </p>
+          </article>
+        </div>
+        <p class="section__lead" style="margin-top: 1.2rem; font-size: 0.95rem;">
+          Transparence : 100/100 signifie qu'aucun critère <em>automatiquement testable</em> n'a échoué.
+          Cela ne garantit pas la conformité RGAA complète, qui exige un audit humain (voir la FAQ).
+        </p>
       </div>
     </section>
 
