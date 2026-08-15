@@ -24,4 +24,12 @@
     <loc>https://accessicheck.brozapi.com/erreurs-accessibilite-frequentes.html</loc>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://accessicheck.brozapi.com/blog/</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://accessicheck.brozapi.com/blog/audit-accessibilite-prix-methodes-loi.html</loc>
+    <priority>0.8</priority>
+  </url>
 </urlset>
