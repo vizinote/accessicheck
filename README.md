@@ -41,3 +41,4 @@ Landing page statique en phase de lancement. Le produit vend un **diagnostic exp
 ## Avertissement
 
 AccessiCheck est un outil technique d'aide au diagnostic. Il ne constitue ni un conseil juridique ni une garantie de conformité RGAA/WCAG.
+trigger rebuild
