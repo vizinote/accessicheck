@@ -75,16 +75,13 @@ def ensure_dependencies() -> None:
 def render_pdf(meta: dict[str, str], body_html: str, output: Path) -> None:
     import weasyprint
 
-    title = meta.get("title", "Accessibilité web : votre site est-il concerné ?")
-    author = meta.get("author", "Brozapi")
+    title = meta.get("title") or meta.get("titre", "Accessibilité web : votre site est-il concerné ?")
+    author = meta.get("author") or meta.get("auteur", "Brozapi")
     version = meta.get("version", "1.0")
     guide_date = meta.get("date") or datetime.now(timezone.utc).strftime("%Y-%m-%d")
     generated = datetime.now(timezone.utc).strftime("%d/%m/%Y")
 
-    warning_html = """<div class="warning-box">
-      <strong>Version temporaire en cours de validation</strong>
-      <p>Ce guide est une ébauche structurée. Le contenu définitif sera publié prochainement après relecture et validation.</p>
-    </div>"""
+    warning_html = ""
 
     html = f"""<!DOCTYPE html>
 <html lang="fr">
