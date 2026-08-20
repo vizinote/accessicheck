@@ -1,5 +1,6 @@
 const express = require('express');
-const { initDb, createScan, getScan, updateScanStatus, listPendingScans, createOrder, getOrder, getPendingOrderByEmail, updateOrderStatus } = require('./db');
+const nodemailer = require('nodemailer');
+const { initDb, createScan, getScan, updateScanStatus, listPendingScans, createOrder, getOrder, getPendingOrderByEmail, updateOrderStatus, saveLead } = require('./db');
 const { generateId, normalizeUrl, validateUrl, scanWithRetry, closeBrowser } = require('./scanner');
 const { generateReportHtml, generateReportPdf } = require('./reports/reportGenerator');
 
@@ -12,6 +13,7 @@ const WORKER_SCAN_TIMEOUT_MS = parseInt(process.env.WORKER_SCAN_TIMEOUT_MS || '1
 const VALID_OFFERS = new Set(['oneshot', 'pro', 'monitoring']);
 const ALLOWED_ORIGINS = new Set([
   'https://accessicheck.brozapi.com',
+  'https://www.accessicheck.brozapi.com',
   'https://badgeia.brozapi.com',
   'https://brozapi.com',
   'https://www.brozapi.com',
@@ -19,6 +21,120 @@ const ALLOWED_ORIGINS = new Set([
   'http://localhost:3000',
   'http://localhost:5173',
 ]);
+
+// Configuration email (lues depuis l'environnement au runtime, jamais en dur).
+// Peut provenir d'un fichier .env monté dans /data (badgeia-mail.env),
+// avec des clés MAIL_* mappées sur les SMTP_* attendues par le code.
+function loadDotenv(path) {
+  try {
+    const text = require('fs').readFileSync(path, 'utf-8');
+    for (const line of text.split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#') || !trimmed.includes('=')) continue;
+      const [key, ...rest] = trimmed.split('=');
+      const val = rest.join('=').trim().replace(/^['"]|['"]$/g, '');
+      if (key && val && !(key in process.env)) {
+        process.env[key] = val;
+      }
+    }
+  } catch (e) {
+    // fichier absent : on continue avec les variables existantes
+  }
+}
+
+for (const envPath of ['/data/badgeia-mail.env', '/opt/data/badgeia-mail.env', '/app/badgeia-mail.env']) {
+  loadDotenv(envPath);
+}
+
+function emailCfg(name) {
+  const smtp = process.env['SMTP_' + name];
+  if (smtp) return smtp;
+  const mapping = { HOST: 'HOST', PORT: 'PORT', USER: 'USER', PASSWORD: 'PASS' };
+  const mailKey = mapping[name] || name;
+  return process.env['MAIL_' + mailKey] || '';
+}
+
+let smtpPortRaw = (emailCfg('PORT') || process.env.SMTP_PORT || process.env.MAIL_PORT || '587').toString().trim();
+if (smtpPortRaw === '993' || smtpPortRaw === '995') smtpPortRaw = '587';
+const SMTP_HOST = emailCfg('HOST') || process.env.SMTP_HOST || '';
+const SMTP_PORT = parseInt(smtpPortRaw, 10);
+const SMTP_USER = emailCfg('USER') || process.env.SMTP_USER || '';
+const SMTP_PASSWORD = emailCfg('PASSWORD') || process.env.SMTP_PASSWORD || '';
+const SMTP_FROM = process.env.SMTP_FROM || process.env.MAIL_DEFAULT_SENDER || SMTP_USER || '';
+const SMTP_REPLY_TO = process.env.SMTP_REPLY_TO || '';
+const GUIDE_PDF_URL = 'https://accessicheck.brozapi.com/guide-accessibilite-eaa.pdf';
+
+function createEmailTransporter() {
+  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASSWORD || !SMTP_FROM) return null;
+  return nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: SMTP_PORT === 465,
+    auth: { user: SMTP_USER, pass: SMTP_PASSWORD },
+    tls: { rejectUnauthorized: true },
+  });
+}
+
+function sendGuideEmail(email) {
+  // Ne fait jamais échouer la requête API.
+  const transporter = createEmailTransporter();
+  if (!transporter) {
+    console.warn('SMTP non configuré : email de livraison non envoyé à %s', email);
+    return Promise.resolve();
+  }
+
+  const subject = 'Votre guide Accessibilité web EAA/RGAA';
+  const textBody =
+    `Bonjour,\n\n` +
+    `Merci pour votre intérêt. Votre guide « Accessibilité web : votre site est-il concerné ? (EAA, RGAA, WCAG) » ` +
+    `est disponible ici : ${GUIDE_PDF_URL}\n\n` +
+    `Vous pouvez le télécharger gratuitement et le partager au sein de votre équipe.\n\n` +
+    `Important : un scan automatique ne couvre qu'environ 30 % à 40 % des critères RGAA. ` +
+    `Pour une conformité complète, un audit humain reste nécessaire.\n\n` +
+    `Ce guide est fourni à titre indicatif. Il ne constitue pas un conseil juridique ` +
+    `ni une garantie de conformité.\n\n` +
+    `Bonne lecture,\n` +
+    `L'équipe Brozapi — AccessiCheck\n` +
+    `https://accessicheck.brozapi.com\n`;
+
+  const htmlBody =
+    `<html><body style="font-family: system-ui, sans-serif; color:#1a1a1a; background:#ffffff;">` +
+    `<div style="max-width:560px; margin:0 auto;">` +
+    `<p style="color:#0b6e47; font-weight:800; font-size:1.1rem;">AccessiCheck · par Brozapi</p>` +
+    `<p>Bonjour,</p>` +
+    `<p>Merci pour votre intérêt. Votre guide <strong>« Accessibilité web : votre site est-il concerné ? (EAA, RGAA, WCAG) »</strong> ` +
+    `est disponible ici :</p>` +
+    `<p><a href="${GUIDE_PDF_URL}" style="display:inline-block; padding:0.75rem 1.25rem; background:#0b6e47; color:#ffffff; text-decoration:none; border-radius:0.5rem; font-weight:600;">Télécharger le guide PDF</a></p>` +
+    `<p>Vous pouvez le télécharger gratuitement et le partager au sein de votre équipe.</p>` +
+    `<p style="background:#e7f6ef; padding:0.75rem; border-left:3px solid #0b6e47; color:#454545;">` +
+    `<strong>Important :</strong> un scan automatique ne couvre qu'environ 30 % à 40 % des critères RGAA. ` +
+    `Pour une conformité complète, un audit humain reste nécessaire.` +
+    `</p>` +
+    `<p><small>Ce guide est fourni à titre indicatif. Il ne constitue pas un conseil juridique ` +
+    `ni une garantie de conformité.</small></p>` +
+    `<p>Bonne lecture,<br>` +
+    `L'équipe Brozapi — AccessiCheck<br>` +
+    `<a href="https://accessicheck.brozapi.com" style="color:#0b6e47;">accessicheck.brozapi.com</a></p>` +
+    `<hr style="border:none; border-top:1px solid #d4d4d4; margin:1.5rem 0;">` +
+    `<p style="font-size:0.8rem; color:#737373;">` +
+    `Brozapi — Studio de produits numériques.<br>` +
+    `Ce message vous a été envoyé suite à votre demande sur accessicheck.brozapi.com.` +
+    `</p>` +
+    `</div></body></html>`;
+
+  const msg = {
+    from: SMTP_FROM,
+    to: email,
+    subject,
+    text: textBody,
+    html: htmlBody,
+  };
+  if (SMTP_REPLY_TO) msg.replyTo = SMTP_REPLY_TO;
+
+  return transporter.sendMail(msg)
+    .then(() => console.log('Email guide envoyé à %s', email))
+    .catch((err) => console.warn('Échec envoi email guide à %s : %s', email, err.message || err));
+}
 
 const rateLimits = new Map();
 
@@ -152,6 +268,35 @@ app.post(route('/orders/:id/delivered'), async (req, res) => {
     console.error('markOrderDelivered error:', err);
     return makeResponse(res, { ok: false, error: 'Erreur de mise à jour.' }, 500);
   }
+});
+
+app.post(route('/lead'), async (req, res) => {
+  const clientIp = getClientIp(req);
+  const data = req.body || {};
+  const email = String(data.email || '').trim().toLowerCase();
+  const consent = data.consent;
+
+  if (consent !== true) {
+    return makeResponse(res, { ok: false, error: 'Vous devez accepter la politique de confidentialité.' }, 400);
+  }
+  if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    return makeResponse(res, { ok: false, error: 'Adresse email invalide.' }, 400);
+  }
+  if (!isAllowed(clientIp, 'lead_guide', 3, 86400)) {
+    return makeResponse(res, { ok: false, error: 'Quota de demandes atteint. Réessayez demain.' }, 429);
+  }
+
+  try {
+    await saveLead(email, '/guide-accessibilite-eaa.pdf', '', 'guide-pdf-accessicheck');
+  } catch (err) {
+    console.error('saveLead error:', err);
+    return makeResponse(res, { ok: false, error: 'Erreur de stockage. Réessayez plus tard.' }, 500);
+  }
+
+  // Envoi asynchrone : ne doit pas faire échouer la requête API.
+  sendGuideEmail(email).catch((err) => console.warn('Échec envoi email guide après stockage :', err));
+
+  return makeResponse(res, { ok: true });
 });
 
 app.post(route('/scan'), async (req, res) => {

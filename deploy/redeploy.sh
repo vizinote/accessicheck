@@ -51,6 +51,7 @@ fi
 docker run -d --name "${SERVICE_NAME}-next" \
   --network badgeia-net \
   -v accessicheck-data:/data \
+  -v /opt/data/badgeia-mail.env:/app/badgeia-mail.env:ro \
   -e DATABASE_PATH=/data/scans.db \
   -e SCAN_TIMEOUT=30000 \
   -e MAX_RETRIES=2 \

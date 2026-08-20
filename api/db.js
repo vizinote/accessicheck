@@ -40,6 +40,24 @@ function initDb() {
       `);
       db.run(`CREATE INDEX IF NOT EXISTS idx_orders_email ON orders(email)`);
       db.run(`CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status)`);
+      db.run(`
+        CREATE TABLE IF NOT EXISTS leads (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          email TEXT NOT NULL,
+          url TEXT,
+          score TEXT,
+          created_at TEXT NOT NULL,
+          source TEXT DEFAULT ''
+        )
+      `);
+      db.run(`CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(email)`);
+      db.run(`CREATE INDEX IF NOT EXISTS idx_leads_created ON leads(created_at)`);
+      // Migration : ajout de la colonne source si la table existait sans elle.
+      db.get("SELECT 1 FROM pragma_table_info('leads') WHERE name = 'source'", (err, row) => {
+        if (!err && !row) {
+          db.run("ALTER TABLE leads ADD COLUMN source TEXT DEFAULT ''");
+        }
+      });
     });
     db.close((err) => (err ? reject(err) : resolve()));
   });
@@ -164,6 +182,24 @@ function updateOrderStatus(id, status, extra = {}) {
   });
 }
 
+// Leads (lead magnet guide PDF) ------------------------------------------------
+
+function saveLead(email, url, score, source) {
+  return new Promise((resolve, reject) => {
+    const db = getDb();
+    const now = new Date().toISOString();
+    db.run(
+      'INSERT INTO leads (email, url, score, source, created_at) VALUES (?, ?, ?, ?, ?)',
+      [email.toLowerCase().trim(), url, score, source, now],
+      function (err) {
+        db.close();
+        if (err) return reject(err);
+        resolve({ id: this.lastID, email, url, score, source, created_at: now });
+      }
+    );
+  });
+}
+
 module.exports = {
   initDb,
   createScan,
@@ -174,4 +210,5 @@ module.exports = {
   getOrder,
   getPendingOrderByEmail,
   updateOrderStatus,
+  saveLead,
 };
