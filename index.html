@@ -75,6 +75,29 @@
       </div>
     </div>
 
+    <section id="guide" class="section lead-magnet" aria-labelledby="guide-title">
+      <div class="container">
+        <div class="lead-magnet__box">
+          <h2 id="guide-title" class="lead-magnet__title">Téléchargez le guide gratuit : Accessibilité web EAA/RGAA</h2>
+          <p class="lead-magnet__lead">Un guide pratique pour savoir si votre site est concerné, comprendre les risques et prioriser vos actions.</p>
+          <form id="guide-form" class="form">
+            <div class="form__row">
+              <label for="guide-email" class="visually-hidden">Adresse email</label>
+              <input id="guide-email" type="email" name="email" placeholder="vous@exemple.fr" required autocomplete="email">
+              <button class="btn btn--primary" type="submit">Recevoir le guide</button>
+            </div>
+            <div class="form__checkbox">
+              <input id="guide-consent" type="checkbox" name="consent" value="1" required>
+              <label for="guide-consent">
+                J'accepte la <a href="mentions-legales.html#confidentialite">politique de confidentialité</a> et je souhaite recevoir le guide.
+              </label>
+            </div>
+          </form>
+          <p id="guide-status" class="status-msg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
     <section id="scanner" class="section scanner" aria-labelledby="scanner-title">
       <div class="container">
         <h2 id="scanner-title" class="section__title">Commander un diagnostic</h2>
@@ -276,20 +299,18 @@
       </div>
     </section>
 
-    <section class="section" aria-labelledby="hub-title">
+    <section class="section audits-villes-secteurs" aria-labelledby="hub-title">
       <div class="container">
         <h2 id="hub-title" class="section__title">Audits par ville et secteur</h2>
-        <p class="section__lead">Découvrez nos pages dédiées pour les grandes villes françaises et les principaux secteurs d'activité.</p>
+        <p class="section__lead">Des pages dédiées pour les grandes villes françaises et les principaux secteurs d'activité, avec les règles d'accessibilité spécifiques à votre contexte.</p>
         <div class="cards">
           <article class="card">
-            <h3>Audits par ville</h3>
-            <p>Paris, Lyon, Marseille, Bordeaux, Lille, Strasbourg, Nantes, Toulouse, Montpellier, Rennes, Nice, Toulon, Grenoble, Dijon, Angers, Clermont-Ferrand et plus encore.</p>
-            <a class="btn btn--primary" href="/audit-accessibilite-france.html#villes-title">Voir les villes</a>
+            <h3><a href="audit-accessibilite-france.html#villes-title">Audit accessibilité par ville</a></h3>
+            <p>Paris, Lyon, Marseille, Bordeaux, Lille, Strasbourg, Montpellier, Rennes, Nice et plus de 20 grandes agglomérations.</p>
           </article>
           <article class="card">
-            <h3>Audits par secteur</h3>
-            <p>Restaurant, e-commerce, hôtel, agence web, médecin-clinique, association, mairie-collectivité, immobilier, coach-consultant, artisan, freelance et avocat.</p>
-            <a class="btn btn--primary" href="/audit-accessibilite-france.html#secteurs-title">Voir les secteurs</a>
+            <h3><a href="audit-accessibilite-france.html#secteurs-title">Obligations par secteur d'activité</a></h3>
+            <p>e-commerce, restauration, hôtellerie, santé, immobilier, artisanat, professions libérales et collectivités.</p>
           </article>
         </div>
       </div>
