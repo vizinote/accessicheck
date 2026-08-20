@@ -11,6 +11,7 @@
     "@axe-core/puppeteer": "^4.10.0",
     "axe-core": "^4.10.0",
     "express": "^4.19.2",
+    "nodemailer": "^6.9.15",
     "pa11y": "^8.0.0",
     "puppeteer": "^23.0.0",
     "sqlite3": "^5.1.7"

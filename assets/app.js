@@ -151,4 +151,67 @@
         });
     });
   }
+
+  // Formulaire lead magnet : guide gratuit EAA/RGAA.
+  var guideForm = document.getElementById('guide-form');
+  if (guideForm) {
+    guideForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var emailInput = document.getElementById('guide-email');
+      var consentInput = document.getElementById('guide-consent');
+      var guideStatus = document.getElementById('guide-status');
+      var guideSubmit = guideForm.querySelector('button[type="submit"]');
+      var originalText = guideSubmit ? guideSubmit.textContent : 'Recevoir le guide';
+
+      var email = emailInput ? emailInput.value.trim() : '';
+      var consent = consentInput ? consentInput.checked : false;
+
+      function setGuideStatus(text, isError) {
+        if (!guideStatus) return;
+        guideStatus.textContent = text;
+        guideStatus.className = 'status-msg' + (isError ? ' status-msg--error' : ' status-msg--success');
+      }
+
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        setGuideStatus('Veuillez saisir une adresse email valide.', true);
+        if (emailInput) emailInput.focus();
+        return;
+      }
+      if (!consent) {
+        setGuideStatus('Vous devez accepter la politique de confidentialité.', true);
+        if (consentInput) consentInput.focus();
+        return;
+      }
+
+      if (guideSubmit) {
+        guideSubmit.disabled = true;
+        guideSubmit.textContent = 'Envoi en cours…';
+      }
+
+      fetch(API_BASE + '/accessicheck/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ email: email, consent: true })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (!data || !data.ok) {
+            throw new Error((data && data.error) || 'Réessayez dans quelques instants.');
+          }
+          setGuideStatus('Merci ! Le guide vous a été envoyé par email.', false);
+          trackEvent('download_guide', location.pathname || '/');
+          if (emailInput) emailInput.value = '';
+          if (consentInput) consentInput.checked = false;
+        })
+        .catch(function (err) {
+          setGuideStatus(err.message || 'Réessayez dans quelques instants.', true);
+        })
+        .finally(function () {
+          if (guideSubmit) {
+            guideSubmit.disabled = false;
+            guideSubmit.textContent = originalText;
+          }
+        });
+    });
+  }
 })();

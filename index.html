@@ -75,6 +75,29 @@
       </div>
     </div>
 
+    <section id="guide" class="section lead-magnet" aria-labelledby="guide-title">
+      <div class="container">
+        <div class="lead-magnet__box">
+          <h2 id="guide-title" class="lead-magnet__title">Téléchargez le guide gratuit : Accessibilité web EAA/RGAA</h2>
+          <p class="lead-magnet__lead">Un guide pratique pour savoir si votre site est concerné, comprendre les risques et prioriser vos actions.</p>
+          <form id="guide-form" class="form">
+            <div class="form__row">
+              <label for="guide-email" class="visually-hidden">Adresse email</label>
+              <input id="guide-email" type="email" name="email" placeholder="vous@exemple.fr" required autocomplete="email">
+              <button class="btn btn--primary" type="submit">Recevoir le guide</button>
+            </div>
+            <div class="form__checkbox">
+              <input id="guide-consent" type="checkbox" name="consent" value="1" required>
+              <label for="guide-consent">
+                J'accepte la <a href="mentions-legales.html#confidentialite">politique de confidentialité</a> et je souhaite recevoir le guide.
+              </label>
+            </div>
+          </form>
+          <p id="guide-status" class="status-msg" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
     <section id="scanner" class="section scanner" aria-labelledby="scanner-title">
       <div class="container">
         <h2 id="scanner-title" class="section__title">Commander un diagnostic</h2>
