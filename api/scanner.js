@@ -126,6 +126,18 @@ async function runAxe(page) {
   }));
 }
 
+// Textes de lien non explicites (WCAG 2.4.4) : "cliquez ici", "en savoir plus", etc.
+const VAGUE_LINK_TEXTS = new Set([
+  'cliquez ici', 'click here', 'cliquez', 'ici', 'en savoir plus', 'learn more',
+  'lire la suite', 'read more', 'suite', 'plus d\'infos', 'plus', 'more',
+  'télécharger ici', 'download here', 'suivre ce lien', 'suivre', 'go', 'continue',
+]);
+
+function isVagueLinkText(text) {
+  const t = (text || '').trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.…!?]+$/, '').trim();
+  return VAGUE_LINK_TEXTS.has(t);
+}
+
 async function runCustomChecks(page) {
   const checks = [];
 
@@ -204,6 +216,112 @@ async function runCustomChecks(page) {
       wcag: '1.3.1',
       rgaa: '11.1.1',
       count: formLabels.length,
+    });
+  }
+
+  const structure = await page.evaluate(() => {
+    const hasMain = !!document.querySelector('main, [role="main"]');
+    const hasNav = !!document.querySelector('nav, [role="navigation"]');
+    const title = document.title || '';
+    const positiveTabindex = Array.from(document.querySelectorAll('[tabindex]'))
+      .filter((el) => {
+        const v = parseInt(el.getAttribute('tabindex'), 10);
+        return Number.isInteger(v) && v > 0;
+      })
+      .length;
+    return { hasMain, hasNav, title, positiveTabindex };
+  });
+
+  if (!structure.hasMain) {
+    checks.push({
+      engine: 'custom',
+      id: 'landmark-main-missing',
+      impact: 'serious',
+      message: 'Aucun repère principal (landmark) détecté pour la zone de contenu (élément <main> ou role="main").',
+      wcag: '1.3.1',
+      rgaa: '8.5.1',
+    });
+  }
+
+  if (!structure.hasNav) {
+    checks.push({
+      engine: 'custom',
+      id: 'landmark-nav-missing',
+      impact: 'moderate',
+      message: 'Aucun repère de navigation (landmark) détecté (élément <nav> ou role="navigation").',
+      wcag: '1.3.1',
+      rgaa: '8.5.1',
+    });
+  }
+
+  if (!structure.title.trim()) {
+    checks.push({
+      engine: 'custom',
+      id: 'title-missing',
+      impact: 'serious',
+      message: 'La balise <title> (titre de la page) est absente.',
+      wcag: '2.4.2',
+      rgaa: '8.4.1',
+    });
+  }
+
+  if (structure.positiveTabindex > 0) {
+    checks.push({
+      engine: 'custom',
+      id: 'positive-tabindex',
+      impact: 'moderate',
+      message: `${structure.positiveTabindex} élément(s) avec un tabindex positif (> 0) détecté(s), perturbant l'ordre de tabulation naturel.`,
+      wcag: '2.4.3',
+      rgaa: '12.1.1',
+      count: structure.positiveTabindex,
+    });
+  }
+
+  const links = await page.evaluate((vagueList) => {
+    const out = { vague: [], newTabNoRel: 0, newTabSamples: [] };
+    for (const a of document.querySelectorAll('a[href]')) {
+      const visibleText = (a.innerText || a.textContent || '').trim();
+      const hasAccName = a.getAttribute('aria-label') || a.getAttribute('aria-labelledby') || a.getAttribute('title');
+      if (!hasAccName && visibleText) {
+        const normalized = visibleText.toLowerCase().replace(/\s+/g, ' ').replace(/[.…!?]+$/, '').trim();
+        if (vagueList.includes(normalized) && out.vague.length < 5) {
+          out.vague.push({ text: visibleText.slice(0, 60), href: a.getAttribute('href') || '' });
+        }
+      }
+      if ((a.getAttribute('target') || '').toLowerCase() === '_blank') {
+        const rel = (a.getAttribute('rel') || '').toLowerCase();
+        if (!rel.includes('noopener') && !rel.includes('noreferrer')) {
+          out.newTabNoRel += 1;
+          if (out.newTabSamples.length < 5) out.newTabSamples.push(a.getAttribute('href') || '');
+        }
+      }
+    }
+    return out;
+  }, Array.from(VAGUE_LINK_TEXTS));
+
+  if (links.vague.length > 0) {
+    const examples = links.vague.map((l) => `"${l.text}"`).join(', ');
+    checks.push({
+      engine: 'custom',
+      id: 'vague-link-text',
+      impact: 'moderate',
+      message: `${links.vague.length} lien(s) avec un texte non explicite (ex : ${examples}). Rendre le libellé du lien explicite hors contexte.`,
+      wcag: '2.4.4',
+      rgaa: '7.5.1',
+      count: links.vague.length,
+    });
+  }
+
+  if (links.newTabNoRel > 0) {
+    checks.push({
+      engine: 'custom',
+      id: 'link-new-tab-no-warning',
+      impact: 'minor',
+      message: `${links.newTabNoRel} lien(s) s'ouvrant dans un nouvel onglet (target="_blank") sans rel="noopener" ni avertissement explicite.`,
+      wcag: '2.4.4',
+      rgaa: '7.5.1',
+      count: links.newTabNoRel,
+      samples: links.newTabSamples,
     });
   }
 
@@ -303,7 +421,7 @@ async function scanUrl(url, log = console.log) {
       issues,
       scanned_at: new Date().toISOString(),
       coverage_note:
-        'Ce scan couvre uniquement les critères RGAA/WCAG automatiquement testables (environ 30-40 % du référentiel RGAA). Un audit humain reste nécessaire pour une conformité complète.',
+        'Ce scan couvre les critères RGAA/WCAG automatiquement testables : contraste des couleurs, structure (titres, lang, landmarks), ARIA, formulaires, images, liens et navigation clavier (plus de 40 % du référentiel RGAA). Un audit humain reste nécessaire pour une conformité complète.',
     };
   } finally {
     try {
@@ -345,4 +463,7 @@ module.exports = {
   scanWithRetry,
   closeBrowser,
   getBrowser,
+  isVagueLinkText,
+  computeScore,
+  runCustomChecks,
 };
