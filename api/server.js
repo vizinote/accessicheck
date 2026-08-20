@@ -5,6 +5,7 @@ const { generateId, normalizeUrl, validateUrl, scanWithRetry, closeBrowser } = r
 const { generateReportHtml, generateReportPdf } = require('./reports/reportGenerator');
 
 const app = express();
+app.disable('x-powered-by'); // ne pas exposer la version/marque du serveur
 app.use(express.json({ limit: '1mb' }));
 
 const PORT = process.env.PORT || 8080;
