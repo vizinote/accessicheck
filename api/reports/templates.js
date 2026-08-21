@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const STYLE_CSS = fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8');
+const { correctionsSectionHtml } = require('./corrections');
 
 const IMPACT_ORDER = { critical: 0, serious: 1, error: 2, moderate: 3, warning: 4, minor: 5, notice: 6 };
 const IMPACT_LABELS = {
@@ -314,6 +315,7 @@ function renderOneShot(scan) {
         <h2>Actions prioritaires</h2>
         ${remediationPlan(result.issues)}
       </section>
+      ${correctionsSectionHtml(result.issues, 10)}
       <section>
         <h2>Ce qui a été testé</h2>
         ${criteriaTable(result)}
@@ -341,6 +343,7 @@ function renderPro(scan) {
         <h2>Plan de remédiation priorisé</h2>
         ${remediationPlan(result.issues)}
       </section>
+      ${correctionsSectionHtml(result.issues, 10)}
       <section class="page-break">
         <h2>Liste complète des problèmes détectés</h2>
         ${allIssuesTable(result.issues)}

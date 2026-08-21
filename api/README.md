@@ -39,6 +39,29 @@ Le scan combine 3 couches de détection, étiquetées dans le rapport :
 
 Le rapport sépare explicitement **Analyse IA** (verdicts à confirmer) et **Détection technique**.
 
+### Rapport « Corrections détaillées » (v3.1)
+
+Le rapport enrichi affiche, pour les 10 problèmes les plus impactants :
+- la liste des **éléments fautifs** : sélecteur CSS + extrait HTML échappé (cap 5
+  éléments / issue, « + N autres » au-delà) ;
+- un encadré **« Comment corriger »** avec un **avant/après** de code corrigé,
+  généré DÉTERMINISTEMENT par gabarit par règle axe (`image-alt`, `color-contrast`
+  avec couleurs mesurées + suggestion de ratio, `label`, `button-name`,
+  `html-has-lang`…) — `api/reports/corrections.js`.
+
+Règles métier :
+- **Aucun texte LLM brut** : les gabarits sont pré-écrits et validés, seules les
+  données mesurées (sélecteurs, valeurs, URLs) sont injectées.
+- **Sécurité** : tout snippet/HTML du site scanné est échappé via `escapeHtml`
+  (anti-injection). Aucun script issu du site audité n'est interprété.
+- **IA sémantique** : conserver le disclaimer « à confirmer par un expert humain »
+  pour les détections sémantiques `ai: true`.
+
+Le scanner remonte désormais aussi les mesures brutes des noeuds axe (`data` :
+`fgColor`, `bgColor`, `contrastRatio`, `fontSize`, `expectedContrastRatio`…) et les
+sélecteurs/HTML des checks custom (cibles tactiles, champs sans label, tabindex
+positif) pour alimenter ces gabarits.
+
 ## Développement
 
 ```bash

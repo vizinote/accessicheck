@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 const pa11y = require('pa11y');
-const { injectAxe, getViolations } = require('@axe-core/puppeteer');
+const { AxePuppeteer } = require('@axe-core/puppeteer');
 const crypto = require('crypto');
 const { URL } = require('url');
 const { runSemanticAnalysis } = require('./semantic');
@@ -101,17 +101,11 @@ async function runPa11y(browser, url) {
 }
 
 async function runAxe(page) {
-  await injectAxe(page);
-  const axeResults = await page.evaluate(async () => {
-    // eslint-disable-next-line no-undef
-    return await axe.run({
-      runOnly: {
-        type: 'tag',
-        values: ['wcag2a', 'wcag2aa', 'wcag21aa'],
-      },
-    });
-  });
-  return axeResults.violations.map((v) => ({
+  const axeResults = await new AxePuppeteer(page)
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+    .analyze();
+  const violations = axeResults.violations || [];
+  return violations.map((v) => ({
     engine: 'axe',
     id: v.id,
     impact: v.impact,
@@ -119,11 +113,21 @@ async function runAxe(page) {
     description: v.description,
     help: v.help,
     helpUrl: v.helpUrl,
-    nodes: v.nodes.map((n) => ({
-      target: n.target,
-      html: n.html,
-      failureSummary: n.failureSummary,
-    })),
+    nodes: v.nodes.map((n) => {
+      // Mesures brutes fournies par axe (couleurs, ratio, tailles…)
+      // => alimente les gabarits de correction déterministes du rapport.
+      const anyData = (n.any || []).filter((c) => c && c.data && Object.keys(c.data).length > 0)
+        .map((c) => c.data);
+      const allData = (n.all || []).filter((c) => c && c.data && Object.keys(c.data).length > 0)
+        .map((c) => c.data);
+      const data = anyData[0] || allData[0] || null;
+      return {
+        target: n.target,
+        html: n.html,
+        failureSummary: n.failureSummary,
+        data,
+      };
+    }),
   }));
 }
 
@@ -343,6 +347,28 @@ async function runInteractionChecks(page, log = console.log) {
 
     // 7. Cibles tactiles < 44 px (hors liens d'évitement cachés/offscreen)
     const smallTargets = await page.evaluate(() => {
+      const info = (el) => {
+        if (!el) return { target: '', html: '' };
+        const parts = [];
+        let node = el;
+        while (node && node !== document.documentElement) {
+          let sel = '';
+          if (node.id) { sel = '#' + String(node.id).replace(/[^a-zA-Z0-9_-]/g, '_'); }
+          else if (node.classList && node.classList.length) { sel = '.' + Array.from(node.classList).slice(0, 3).join('.'); }
+          else {
+            sel = node.tagName ? node.tagName.toLowerCase() : '';
+            const parent = node.parentElement;
+            if (parent) {
+              const same = Array.from(parent.children).filter((c) => c.tagName === node.tagName);
+              if (same.length > 1) sel += ':nth-child(' + (Array.from(parent.children).indexOf(node) + 1) + ')';
+            }
+          }
+          if (!sel) { node = node.parentElement; continue; }
+          parts.unshift(sel);
+          node = node.parentElement;
+        }
+        return { target: parts.join(' > '), html: (el.outerHTML || '').replace(/\s+/g, ' ').slice(0, 200) };
+      };
       const out = [];
       const vh = window.innerHeight;
       const vw = window.innerWidth;
@@ -352,7 +378,8 @@ async function runInteractionChecks(page, log = console.log) {
         // hors champ visible (skip-link caché, éléments offscreen pour le focus) : pas une cible tactile
         if (r.bottom < 0 || r.top > vh || r.right < 0 || r.left > vw) continue;
         if (r.width < 44 || r.height < 44) {
-          out.push({ tag: el.tagName.toLowerCase(), w: Math.round(r.width), h: Math.round(r.height), text: (el.innerText || el.value || '').trim().slice(0, 20) || el.tagName });
+          const i = info(el);
+          out.push({ tag: el.tagName.toLowerCase(), w: Math.round(r.width), h: Math.round(r.height), text: (el.innerText || el.value || '').trim().slice(0, 20) || el.tagName, target: i.target, html: i.html });
           if (out.length >= 8) break;
         }
       }
@@ -364,6 +391,7 @@ async function runInteractionChecks(page, log = console.log) {
         engine: 'custom', id: 'small-touch-target', impact: 'moderate',
         message: `${smallTargets.length} cible(s) tactile(s) de taille < 44×44 px (min. recommandé) (ex : ${ex}).`,
         wcag: '2.5.8', rgaa: '10.1.1', count: smallTargets.length, layer: 'interaction',
+        nodes: smallTargets.slice(0, 5).map((t) => ({ target: [t.target], html: t.html })),
       });
     }
 
@@ -437,17 +465,41 @@ async function runCustomChecks(page) {
   }
 
   const formLabels = await page.evaluate(() => {
+    const info = (el) => {
+      if (!el) return { target: '', html: '' };
+      const parts = [];
+      let node = el;
+      while (node && node !== document.documentElement) {
+        let sel = '';
+        if (node.id) { sel = '#' + String(node.id).replace(/[^a-zA-Z0-9_-]/g, '_'); }
+        else if (node.classList && node.classList.length) { sel = '.' + Array.from(node.classList).slice(0, 3).join('.'); }
+        else {
+          sel = node.tagName ? node.tagName.toLowerCase() : '';
+          const parent = node.parentElement;
+          if (parent) {
+            const same = Array.from(parent.children).filter((c) => c.tagName === node.tagName);
+            if (same.length > 1) sel += ':nth-child(' + (Array.from(parent.children).indexOf(node) + 1) + ')';
+          }
+        }
+        if (!sel) { node = node.parentElement; continue; }
+        parts.unshift(sel);
+        node = node.parentElement;
+      }
+      return { target: parts.join(' > '), html: (el.outerHTML || '').replace(/\s+/g, ' ').slice(0, 200) };
+    };
     const inputs = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="image"]), select, textarea'));
-    return inputs
-      .filter((input) => {
-        const id = input.id;
-        const aria = input.getAttribute('aria-label') || input.getAttribute('aria-labelledby');
-        const hasLabel = id && document.querySelector(`label[for="${id}"]`);
-        const placeholder = input.placeholder;
-        const title = input.title;
-        return !(hasLabel || aria || placeholder || title);
-      })
-      .map((input) => ({ tag: input.tagName, type: input.type || '', name: input.name || '' }));
+    const bad = inputs.filter((input) => {
+      const id = input.id;
+      const aria = input.getAttribute('aria-label') || input.getAttribute('aria-labelledby');
+      const hasLabel = id && document.querySelector(`label[for="${id}"]`);
+      const placeholder = input.placeholder;
+      const title = input.title;
+      return !(hasLabel || aria || placeholder || title);
+    });
+    return bad.map((input) => {
+      const i = info(input);
+      return { tag: input.tagName, type: input.type || '', name: input.name || '', target: i.target, html: i.html };
+    });
   });
 
   if (formLabels.length > 0) {
@@ -455,10 +507,33 @@ async function runCustomChecks(page) {
       engine: 'custom', id: 'form-missing-label', impact: 'serious',
       message: `${formLabels.length} champ(s) de formulaire sans label détecté(s).`,
       wcag: '1.3.1', rgaa: '11.1.1', count: formLabels.length, layer: 'technique',
+      nodes: formLabels.slice(0, 5).map((f) => ({ target: [f.target], html: f.html })),
     });
   }
 
   const structure = await page.evaluate(() => {
+    const info = (el) => {
+      if (!el) return { target: '', html: '' };
+      const parts = [];
+      let node = el;
+      while (node && node !== document.documentElement) {
+        let sel = '';
+        if (node.id) { sel = '#' + String(node.id).replace(/[^a-zA-Z0-9_-]/g, '_'); }
+        else if (node.classList && node.classList.length) { sel = '.' + Array.from(node.classList).slice(0, 3).join('.'); }
+        else {
+          sel = node.tagName ? node.tagName.toLowerCase() : '';
+          const parent = node.parentElement;
+          if (parent) {
+            const same = Array.from(parent.children).filter((c) => c.tagName === node.tagName);
+            if (same.length > 1) sel += ':nth-child(' + (Array.from(parent.children).indexOf(node) + 1) + ')';
+          }
+        }
+        if (!sel) { node = node.parentElement; continue; }
+        parts.unshift(sel);
+        node = node.parentElement;
+      }
+      return { target: parts.join(' > '), html: (el.outerHTML || '').replace(/\s+/g, ' ').slice(0, 200) };
+    };
     const hasMain = !!document.querySelector('main, [role="main"]');
     const hasNav = !!document.querySelector('nav, [role="navigation"]');
     const title = document.title || '';
@@ -467,7 +542,7 @@ async function runCustomChecks(page) {
         const v = parseInt(el.getAttribute('tabindex'), 10);
         return Number.isInteger(v) && v > 0;
       })
-      .length;
+      .map((el) => info(el));
     return { hasMain, hasNav, title, positiveTabindex };
   });
 
@@ -492,11 +567,12 @@ async function runCustomChecks(page) {
       wcag: '2.4.2', rgaa: '8.4.1', layer: 'technique',
     });
   }
-  if (structure.positiveTabindex > 0) {
+  if (structure.positiveTabindex.length > 0) {
     checks.push({
       engine: 'custom', id: 'positive-tabindex', impact: 'moderate',
-      message: `${structure.positiveTabindex} élément(s) avec un tabindex positif (> 0) détecté(s), perturbant l'ordre de tabulation naturel.`,
-      wcag: '2.4.3', rgaa: '12.1.1', count: structure.positiveTabindex, layer: 'technique',
+      message: `${structure.positiveTabindex.length} élément(s) avec un tabindex positif (> 0) détecté(s), perturbant l'ordre de tabulation naturel.`,
+      wcag: '2.4.3', rgaa: '12.1.1', count: structure.positiveTabindex.length, layer: 'technique',
+      nodes: structure.positiveTabindex.slice(0, 5).map((t) => ({ target: [t.target], html: t.html })),
     });
   }
 

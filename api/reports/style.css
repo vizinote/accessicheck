@@ -286,3 +286,120 @@ h2 {
   margin: 2pt 0 8pt;
 }
 .issues-table.compact { margin-bottom: 16pt; }
+
+/* Corrections détaillées */
+.corrections-intro {
+  font-size: 9.5pt;
+  color: #4b5563;
+  margin: 2pt 0 12pt;
+}
+.correction-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin: 0 0 14pt;
+  padding: 0;
+  overflow: hidden;
+}
+.correction-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9pt 12pt;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+.correction-msg { flex: 1; font-weight: 600; }
+.elements-block {
+  padding: 10pt 12pt;
+  border-bottom: 1px dashed #e5e7eb;
+}
+.elements-block h5 {
+  margin: 0 0 6pt;
+  font-size: 9.5pt;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.el-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.el-item {
+  padding: 5pt 0;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 8.5pt;
+}
+.el-item:last-child { border-bottom: none; }
+.el-selector {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: #0f766e;
+  font-weight: 600;
+}
+.el-no-sel { color: #9ca3af; font-weight: 400; font-style: italic; }
+.el-snippet-wrap { margin-top: 3pt; }
+.el-snippet {
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 4pt 6pt;
+  font-size: 8pt;
+  color: #374151;
+}
+.el-more {
+  padding: 5pt 0;
+  color: #6b7280;
+  font-style: italic;
+  font-size: 8.5pt;
+}
+.fix-box {
+  padding: 12pt;
+}
+.fix-title {
+  margin: 0 0 4pt;
+  font-size: 10.5pt;
+  color: #0f766e;
+}
+.fix-explain {
+  margin: 0 0 8pt;
+  font-size: 9pt;
+  color: #4b5563;
+}
+.fix-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10pt;
+}
+.fix-label {
+  font-size: 8pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 4pt;
+}
+.fix-label { color: #b91c1c; }
+.fix-col:last-child .fix-label { color: #15803d; }
+.fix-code {
+  margin: 0;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 8pt;
+  font-size: 8.3pt;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: #1f2937;
+  min-height: 46pt;
+}
+.fix-code.before { border-left: 3px solid #dc2626; }
+.fix-code.after { border-left: 3px solid #16a34a; }
+@media print {
+  .fix-cols { grid-template-columns: 1fr 1fr; }
+  .fix-code { white-space: pre-wrap; word-break: break-word; }
+}
