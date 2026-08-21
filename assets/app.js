@@ -94,23 +94,135 @@
       scanStatus.className = 'status-msg' + (isError ? ' status-msg--err' : ' status-msg--ok');
     }
 
+    var scanResults = document.getElementById('scan-results');
+    var lastScanId = '';
+
+    function scoreColor(score) {
+      if (score >= 90) return '#15803d';
+      if (score >= 70) return '#ca8a04';
+      return '#b91c1c';
+    }
+
+    function scoreLabel(score) {
+      if (score >= 90) return 'Bon';
+      if (score >= 70) return 'À améliorer';
+      return 'À corriger en priorité';
+    }
+
+    function renderScanResult(data) {
+      if (!scanResults) return;
+      var result = data && data.result ? data.result : {};
+      var score = typeof result.score === 'number' ? result.score : 0;
+      var issues = (result.issues || []).slice(0, 5);
+      var color = scoreColor(score);
+      var label = scoreLabel(score);
+      var html = '<div class="scan-result">';
+      html += '<div class="scan-result__score" style="--score-color:' + color + ';">';
+      html += '<span class="scan-result__value" style="color:' + color + ';">' + score + '<small>/100</small></span>';
+      html += '<span class="scan-result__label">' + label + '</span>';
+      html += '</div>';
+      html += '<p class="scan-result__url">' + (result.url || '').replace(/</g, '&lt;') + '</p>';
+      if (issues.length > 0) {
+        html += '<h3>Problèmes prioritaires détectés</h3><ul class="scan-result__issues">';
+        issues.forEach(function (issue) {
+          var impact = (issue.impact || issue.type || 'notice').toLowerCase();
+          var impactClass = 'impact-' + impact;
+          var impactLabel = impact === 'serious' || impact === 'critical' || impact === 'error' ? 'Important' :
+                            impact === 'moderate' || impact === 'warning' ? 'Moyen' : 'À vérifier';
+          html += '<li><span class="impact-pill ' + impactClass + '">' + impactLabel + '</span> ' +
+                  (issue.message || '').replace(/</g, '&lt;') + '</li>';
+        });
+        html += '</ul>';
+      } else {
+        html += '<p class="scan-result__good">Aucun problème automatiquement détecté. Pensez tout de même à un audit humain pour valider la conformité RGAA complète.</p>';
+      }
+      html += '<a class="btn btn--primary" href="#offres" data-track="click_scan_cta_offres">Recevoir le rapport complet avec corrections détaillées — 29 €</a>';
+      html += '<p class="scan-result__note">Ce scan gratuit couvre les critères automatiquement testables. Le rapport payant ajoute le code de correction et un résumé pour le dirigeant.</p>';
+      html += '</div>';
+      scanResults.innerHTML = html;
+      scanResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function pollScan(id) {
+      var attempts = 0;
+      var maxAttempts = 60;
+      var timer = setInterval(function () {
+        attempts += 1;
+        fetch(API_BASE + '/accessicheck/scan/' + encodeURIComponent(id), {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' }
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (!data || !data.ok) {
+              clearInterval(timer);
+              setScanStatus(data && data.error ? data.error : 'Le scan a échoué.', true);
+              if (scanSubmit) scanSubmit.disabled = false;
+              return;
+            }
+            if (data.status === 'done') {
+              clearInterval(timer);
+              setScanStatus('Scan terminé.', false);
+              if (scanSubmit) scanSubmit.disabled = false;
+              renderScanResult(data);
+              trackEvent('scan_done_free', '/');
+              return;
+            }
+            if (data.status === 'failed') {
+              clearInterval(timer);
+              setScanStatus(data.error || 'Le scan a échoué.', true);
+              if (scanSubmit) scanSubmit.disabled = false;
+              return;
+            }
+            if (attempts >= maxAttempts) {
+              clearInterval(timer);
+              setScanStatus('Le scan prend plus de temps que prévu. Rechargez la page ou choisissez une offre ci-dessous.', true);
+              if (scanSubmit) scanSubmit.disabled = false;
+            }
+          })
+          .catch(function () {
+            clearInterval(timer);
+            setScanStatus('Erreur de connexion au serveur de scan.', true);
+            if (scanSubmit) scanSubmit.disabled = false;
+          });
+      }, 2000);
+    }
+
     if (scanForm) {
       scanForm.addEventListener('submit', function (e) {
         e.preventDefault();
         var input = readScanInputs();
         if (!validUrl(input.url)) {
-          setScanStatus('Merci d\'indiquer une adresse commençant par https://', true);
+          setScanStatus('Merci d\’indiquer une adresse commençant par https://', true);
           return;
         }
         if (!validEmail(input.email)) {
-          setScanStatus('Merci d\'indiquer un email valide pour recevoir le rapport.', true);
+          setScanStatus('Merci d\’indiquer un email valide pour recevoir le rapport.', true);
           return;
         }
-        // Sépare explicitement la vérification gratuite de la commande payante.
+        if (scanSubmit) scanSubmit.disabled = true;
+        setScanStatus('Lancement du scan gratuit…', false);
+        if (scanResults) scanResults.innerHTML = '';
         trackEvent('scan_entered', '/');
-        var offers = document.getElementById('offres');
-        if (offers) offers.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        setScanStatus('Vérification enregistrée. Choisissez votre offre ci-dessous.', false);
+
+        fetch(API_BASE + '/accessicheck/free-scan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: input.url })
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (!data || !data.ok || !data.id) {
+              throw new Error((data && data.error) || 'Erreur de lancement du scan.');
+            }
+            lastScanId = data.id;
+            setScanStatus('Scan en cours, cela peut prendre jusqu\’à 60 secondes…', false);
+            pollScan(data.id);
+          })
+          .catch(function (err) {
+            setScanStatus(err.message || 'Impossible de lancer le scan.', true);
+            if (scanSubmit) scanSubmit.disabled = false;
+          });
       });
     }
 

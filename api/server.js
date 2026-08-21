@@ -11,7 +11,7 @@ app.use(express.json({ limit: '1mb' }));
 const PORT = process.env.PORT || 8080;
 const BASE_PATH = process.env.BASE_PATH || '';
 const WORKER_SCAN_TIMEOUT_MS = parseInt(process.env.WORKER_SCAN_TIMEOUT_MS || '120000', 10);
-const VALID_OFFERS = new Set(['oneshot', 'pro', 'monitoring']);
+const VALID_OFFERS = new Set(['oneshot', 'pro', 'monitoring', 'free']);
 const ALLOWED_ORIGINS = new Set([
   'https://accessicheck.brozapi.com',
   'https://www.accessicheck.brozapi.com',
@@ -326,6 +326,29 @@ app.post(route('/scan'), async (req, res) => {
     return makeResponse(res, { ok: true, id, url, offer, status: 'pending', message: 'Scan mis en file d\'attente.' }, 202);
   } catch (err) {
     console.error('createScan error:', err);
+    return makeResponse(res, { ok: false, error: 'Erreur de stockage.' }, 500);
+  }
+});
+
+// Scan gratuit depuis la page d'accueil (sans offre payante associée).
+app.post(route('/free-scan'), async (req, res) => {
+  const clientIp = getClientIp(req);
+  if (!isAllowed(clientIp, 'free_scan', 5, 3600)) {
+    return makeResponse(res, { ok: false, error: 'Quota de scans gratuits atteint. Réessayez dans une heure.' }, 429);
+  }
+
+  const url = normalizeUrl(req.body.url);
+  const error = validateUrl(url);
+  if (error) {
+    return makeResponse(res, { ok: false, error }, 400);
+  }
+
+  try {
+    const id = generateId();
+    await createScan(id, url, 'free');
+    return makeResponse(res, { ok: true, id, url, offer: 'free', status: 'pending', message: 'Scan gratuit mis en file d\'attente.' }, 202);
+  } catch (err) {
+    console.error('createFreeScan error:', err);
     return makeResponse(res, { ok: false, error: 'Erreur de stockage.' }, 500);
   }
 });
