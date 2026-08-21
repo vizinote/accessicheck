@@ -99,7 +99,7 @@
           AccessiCheck scanne automatiquement les critères RGAA/WCAG testables sur votre page d'accueil.
           Un diagnostic clair, des actions prioritaires, et surtout : aucune fausse promesse de conformité.
         </p>
-        <a class="hero__cta" href="#scanner">Scanner mon site — 29 €</a>
+        <a class="hero__cta" href="#offres">Auditer mon site — 29 €</a>
       </div>
     </section>
 
@@ -134,10 +134,10 @@
 
     <section id="scanner" class="section scanner" aria-labelledby="scanner-title">
       <div class="container">
-        <h2 id="scanner-title" class="section__title">Commander un diagnostic</h2>
-        <p class="section__lead">Indiquez l'adresse de votre site et votre email. Vous choisissez l'offre, payez en ligne, et vous recevez le rapport par email sous 24 heures ouvrées.</p>
+        <h2 id="scanner-title" class="section__title">Scanner mon site gratuitement</h2>
+        <p class="section__lead">Entrez l'adresse de votre site et votre email. Nous vérifions gratuitement les critères RGAA/WCAG testables, puis vous choisissez une offre pour recevoir le rapport complet (PDF + actions prioritaires) sous 24 heures ouvrées.</p>
         <div class="scanner__box">
-          <form id="order-form" class="form" novalidate>
+          <form id="scan-form" class="form" novalidate>
             <div class="form__row">
               <label for="scan-url" class="visually-hidden">Adresse du site</label>
               <input id="scan-url" type="url" name="url" placeholder="https://mon-site.fr" required inputmode="url" autocomplete="url" spellcheck="false">
@@ -146,19 +146,11 @@
               <label for="scan-email" class="visually-hidden">Votre email</label>
               <input id="scan-email" type="email" name="email" placeholder="vous@exemple.fr" required inputmode="email" autocomplete="email" spellcheck="false">
             </div>
-            <div class="form__row">
-              <label for="scan-offer" class="visually-hidden">Offre</label>
-              <select id="scan-offer" name="offer" class="form__select">
-                <option value="oneshot">Diagnostic One-Shot — 29 € une fois</option>
-                <option value="pro">Rapport Pro — 49 € une fois</option>
-                <option value="monitoring">Surveillance mensuelle — 9 € / mois</option>
-              </select>
-              <button class="btn btn--primary" type="submit" id="order-submit">Commander</button>
-            </div>
-            <p class="status-msg" id="order-status" role="status" aria-live="polite"></p>
+            <button class="btn btn--primary" type="submit" id="scan-submit">Voir les offres</button>
+            <p class="status-msg" id="scan-status" role="status" aria-live="polite"></p>
           </form>
           <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--gray-500);">
-            Paiement sécurisé par Stripe (carte bancaire). Aucune donnée bancaire ne transite par nos serveurs.
+            Le diagnostic est gratuit. Le rapport complet et le plan de correction sont payants : choisissez votre offre ci-dessous.
           </p>
         </div>
       </div>
@@ -283,7 +275,7 @@
               <li>Actions prioritaires classées par gravité</li>
               <li>Rapport PDF + email récapitulatif</li>
             </ul>
-            <a class="btn btn--primary" href="https://buy.stripe.com/00w5kx2cxccR7tN1ZbcZa06" target="_blank" rel="noopener nofollow" data-offer="oneshot" data-track="click_buy_oneshot">Commander — 29 €</a>
+            <a class="btn btn--primary" href="https://buy.stripe.com/00w5kx2cxccR7tN1ZbcZa06" target="_blank" rel="noopener nofollow" data-offer="oneshot" data-track="click_buy_oneshot">Commander et payer — 29 €</a>
           </article>
           <article class="card card--featured">
             <span class="badge">Le plus complet</span>
@@ -296,7 +288,7 @@
               <li>Extrait dirigeant d'une page</li>
               <li>Code de correction pour chaque erreur</li>
             </ul>
-            <a class="btn btn--primary" href="https://buy.stripe.com/9B6cMZ2cx7WB9BV1ZbcZa07" target="_blank" rel="noopener nofollow" data-offer="pro" data-track="click_buy_pro">Commander le Pro — 49 €</a>
+            <a class="btn btn--primary" href="https://buy.stripe.com/9B6cMZ2cx7WB9BV1ZbcZa07" target="_blank" rel="noopener nofollow" data-offer="pro" data-track="click_buy_pro">Commander et payer le Pro — 49 €</a>
           </article>
           <article class="card">
             <h3>Surveillance mensuelle</h3>
@@ -308,7 +300,7 @@
               <li>Rapport comparatif mois par mois</li>
               <li>Sans engagement, résilliable à tout moment</li>
             </ul>
-            <a class="btn btn--primary" href="https://buy.stripe.com/cNi5kxcRbekZ01l8nzcZa08" target="_blank" rel="noopener nofollow" data-offer="monitoring" data-track="click_buy_monitoring">Souscrire — 9 €/mois</a>
+            <a class="btn btn--primary" href="https://buy.stripe.com/cNi5kxcRbekZ01l8nzcZa08" target="_blank" rel="noopener nofollow" data-offer="monitoring" data-track="click_buy_monitoring">Souscrire et payer — 9 €/mois</a>
           </article>
         </div>
       </div>

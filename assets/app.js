@@ -65,92 +65,100 @@
     });
   });
 
-  // Formulaire de commande.
-  var form = document.getElementById('order-form');
-  var statusEl = document.getElementById('order-status');
-  var submitBtn = document.getElementById('order-submit');
-  var offerSelect = document.getElementById('scan-offer');
+  // Formulaire scanner : scan gratuit (URL + email). Pas d'ordre ici :
+    // la commande se fait uniquement via les cartes #offres.
+    var scanForm = document.getElementById('scan-form');
+    var scanStatus = document.getElementById('scan-status');
+    var scanSubmit = document.getElementById('scan-submit');
 
-  function setStatus(text, isError) {
-    if (!statusEl) return;
-    statusEl.textContent = text;
-    statusEl.className = 'status-msg' + (isError ? ' status-msg--err' : ' status-msg--ok');
-  }
-
-  // Les cartes d'offres pré-sélectionnent l'offre et ramènent au formulaire
-  // (au lieu d'ouvrir directement Stripe : on a besoin de l'URL ET de l'email avant paiement).
-  document.querySelectorAll('[data-offer]').forEach(function (el) {
-    el.addEventListener('click', function (e) {
-      e.preventDefault();
-      var offer = el.getAttribute('data-offer');
-      if (offerSelect && PAYMENT_LINKS[offer]) {
-        offerSelect.value = offer;
-      }
-      var scanner = document.getElementById('scanner');
-      if (scanner) {
-        scanner.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      var urlInput = document.getElementById('scan-url');
-      if (urlInput) urlInput.focus();
-      trackEvent('offer_selected_' + offer, location.pathname || '/');
-    });
-  });
-
-  if (form) {
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      if (statusEl) statusEl.textContent = '';
-
+    function readScanInputs() {
       var urlInput = document.getElementById('scan-url');
       var emailInput = document.getElementById('scan-email');
-      var url = urlInput ? urlInput.value.trim() : '';
-      var email = emailInput ? emailInput.value.trim() : '';
-      var offer = offerSelect ? offerSelect.value : 'oneshot';
+      return {
+        url: urlInput ? urlInput.value.trim() : '',
+        email: emailInput ? emailInput.value.trim() : ''
+      };
+    }
 
-      if (!url || !/^https?:\/\/.+/i.test(url)) {
-        setStatus('Merci d\'indiquer une adresse commençant par https://', true);
-        if (urlInput) urlInput.focus();
-        return;
-      }
-      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        setStatus('Merci d\'indiquer un email valide pour recevoir le rapport.', true);
-        if (emailInput) emailInput.focus();
-        return;
-      }
-      if (!PAYMENT_LINKS[offer]) {
-        setStatus('Offre inconnue.', true);
-        return;
-      }
+    function validUrl(url) {
+      return /^https?:\/\/.+/i.test(url);
+    }
 
-      trackEvent('scan_triggered_' + offer, '/');
+    function validEmail(email) {
+      return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+    }
 
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Préparation du paiement…';
-      }
+    function setScanStatus(text, isError) {
+      if (!scanStatus) return;
+      scanStatus.textContent = text;
+      scanStatus.className = 'status-msg' + (isError ? ' status-msg--err' : ' status-msg--ok');
+    }
 
-      // 1. Enregistrer la commande (URL + email + offre) côté API.
-      fetch(API_BASE + '/accessicheck/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: url, email: email, offer: offer })
-      })
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-          if (!data || !data.ok) {
-            throw new Error((data && data.error) || 'Erreur de commande.');
-          }
-          // 2. Rediriger vers Stripe avec l'email pré-rempli.
-          var paymentUrl = PAYMENT_LINKS[offer] + '?prefilled_email=' + encodeURIComponent(email);
-          window.location.href = paymentUrl;
+    if (scanForm) {
+      scanForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var input = readScanInputs();
+        if (!validUrl(input.url)) {
+          setScanStatus('Merci d\'indiquer une adresse commençant par https://', true);
+          return;
+        }
+        if (!validEmail(input.email)) {
+          setScanStatus('Merci d\'indiquer un email valide pour recevoir le rapport.', true);
+          return;
+        }
+        // Sépare explicitement la vérification gratuite de la commande payante.
+        trackEvent('scan_entered', '/');
+        var offers = document.getElementById('offres');
+        if (offers) offers.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setScanStatus('Vérification enregistrée. Choisissez votre offre ci-dessous.', false);
+      });
+    }
+
+    // Cartes #offres = SEULS points de paiement. Un clic enregistre la commande
+    // (URL + email + offre) puis ouvre Stripe.
+    document.querySelectorAll('[data-offer]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        var offer = el.getAttribute('data-offer');
+        var input = readScanInputs();
+        if (!validUrl(input.url)) {
+          setScanStatus('Commencez par saisir votre adresse de site (https://…).', true);
+          var scanner = document.getElementById('scanner');
+          if (scanner) scanner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+        if (!validEmail(input.email)) {
+          setScanStatus('Commencez par saisir votre email pour recevoir le rapport.', true);
+          var scanner2 = document.getElementById('scanner');
+          if (scanner2) scanner2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+        if (!PAYMENT_LINKS[offer]) {
+          setScanStatus('Offre inconnue.', true);
+          return;
+        }
+        setScanStatus('Préparation du paiement…', false);
+        el.setAttribute('aria-disabled', 'true');
+        trackEvent('scan_triggered_' + offer, '/');
+        fetch(API_BASE + '/accessicheck/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: input.url, email: input.email, offer: offer })
         })
-        .catch(function (err) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Commander';
-          setStatus('Impossible de préparer le paiement : ' + err.message + ' Contactez-nous via la page Mentions légales.', true);
-        });
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (!data || !data.ok) {
+              throw new Error((data && data.error) || 'Erreur de commande.');
+            }
+            var paymentUrl = PAYMENT_LINKS[offer] + '?prefilled_email=' + encodeURIComponent(input.email);
+            window.location.href = paymentUrl;
+          })
+          .catch(function (err) {
+            el.removeAttribute('aria-disabled');
+            setScanStatus('Impossible de préparer le paiement : ' + err.message + ' Contactez-nous via la page Mentions légales.', true);
+          });
+      });
     });
-  }
 
   // Formulaire lead magnet : guide gratuit EAA/RGAA.
   var guideForm = document.getElementById('guide-form');
