@@ -1,14 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AccessiCheck — Exemple de rapport d'accessibilité (100/100)</title>
-  <meta name="description" content="Exemple réel d'un rapport AccessiCheck : scan RGAA/WCAG de badgeia.brozapi.com, 100/100, 0 problème détecté. Découvrez ce que vous recevez avant de commander.">
+  <title>AccessiCheck — Exemple de rapport d'accessibilité (90/100)</title>
+  <meta name="description" content="Exemple réel d'un rapport AccessiCheck : scan RGAA/WCAG + analyse IA de badgeia.brozapi.com, 90/100. Détection technique et analyse IA clairement séparées. Découvrez ce que vous recevez avant de commander.">
   <link rel="canonical" href="https://accessicheck.brozapi.com/exemple-rapport.html">
-  <meta property="og:title" content="AccessiCheck — Exemple de rapport d'accessibilité (100/100)">
-  <meta property="og:description" content="Exemple réel d'un rapport AccessiCheck : 100/100 et 0 problème détecté sur badgeia.brozapi.com. Voyez le rendu avant de commander.">
+  <meta property="og:title" content="AccessiCheck — Exemple de rapport d'accessibilité (90/100)">
+  <meta property="og:description" content="Exemple réel d'un rapport AccessiCheck : 90/100 sur badgeia.brozapi.com, détection technique + analyse IA. Voyez le rendu avant de commander.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://accessicheck.brozapi.com/exemple-rapport.html">
   <meta property="og:locale" content="fr_FR">
@@ -17,8 +16,8 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AccessiCheck — Exemple de rapport d'accessibilité (100/100)">
-  <meta name="twitter:description" content="Exemple réel d'un rapport AccessiCheck : 0 problème détecté sur badgeia.brozapi.com. Voyez le rendu avant de commander.">
+  <meta name="twitter:title" content="AccessiCheck — Exemple de rapport d'accessibilité (90/100)">
+  <meta name="twitter:description" content="Exemple réel d'un rapport AccessiCheck : 90/100, détection technique + analyse IA.">
   <meta name="twitter:image" content="https://accessicheck.brozapi.com/assets/og-image.png">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>/* Reset & base */
@@ -196,20 +195,20 @@ h2 {
 .impact-minor, .impact-notice { background: #e5e7eb; color: #374151; }
 
 /* Tables */
-.criteria-grid, .issues-table {
+.criteria-table, .issues-table {
   width: 100%;
   border-collapse: collapse;
   margin: 8pt 0 12pt 0;
   font-size: 9pt;
 }
-.criteria-grid th, .criteria-grid td,
+.criteria-table th, .criteria-table td,
 .issues-table th, .issues-table td {
   border: 1px solid #e5e7eb;
   padding: 6pt 8pt;
   text-align: left;
   vertical-align: top;
 }
-.criteria-grid th, .issues-table th {
+.criteria-table th, .issues-table th {
   background: #f3f4f6;
   font-weight: 700;
   color: #374151;
@@ -286,9 +285,33 @@ h2 {
   .page-break { page-break-before: always; }
   body { font-size: 10pt; }
 }
+
+/* v3 — Analyse IA vs détection technique */
+.tag-ai {
+  display: inline-block;
+  background: #ede9fe;
+  color: #6d28d9;
+  border-radius: 4px;
+  padding: 1pt 6pt;
+  font-size: 8pt;
+  font-weight: 700;
+}
+.ai-subtitle {
+  margin: 14pt 0 4pt;
+  font-size: 12pt;
+  color: #111827;
+}
+.ai-note {
+  font-size: 8.5pt;
+  color: #6b7280;
+  font-style: italic;
+  margin: 2pt 0 8pt;
+}
+.issues-table.compact { margin-bottom: 16pt; }
 </style>
 </head>
 <body>
+
   <header class="report-header">
     
     <div class="logo">
@@ -300,7 +323,7 @@ h2 {
   
     <div class="meta">
       <span class="offer-badge">One-Shot · 29 €</span>
-      <span class="date">11 août 2026</span>
+      <span class="date">21 août 2026</span>
     </div>
   </header>
   
@@ -309,32 +332,61 @@ h2 {
       <p class="url">https://badgeia.brozapi.com/</p>
       
     <section class="score-section">
-      <div class="score-ring" style="--score-color: #16a34a; --score-percent: 100">
-        <div class="score-value">100<small>/100</small></div>
+      <div class="score-ring" style="--score-color: #16a34a; --score-percent: 90">
+        <div class="score-value">90<small>/100</small></div>
       </div>
       <div class="score-label" style="color:#16a34a">Bon</div>
     </section>
   
       
     <div class="cards">
-      <div class="card"><div class="card-number">0</div><div class="card-label">Problèmes détectés</div></div>
+      <div class="card"><div class="card-number">2</div><div class="card-label">Problèmes détectés</div></div>
       <div class="card"><div class="card-number">0</div><div class="card-label">Critiques</div></div>
       <div class="card"><div class="card-number">0</div><div class="card-label">Sérieux</div></div>
-      <div class="card"><div class="card-number">0</div><div class="card-label">Niveaux d'impact</div></div>
+      <div class="card"><div class="card-number">1</div><div class="card-label">Niveaux d'impact</div></div>
     </div>
   
       <section>
         <h2>Top 5 des problèmes à corriger</h2>
-        <p class="good-news">Aucun problème détecté. Excellent travail !</p>
+        
+    <ol class="issue-list">
+      
+        <li>
+          <span class="impact-pill impact-moderate">Moyen</span>
+          <span class="issue-message">Aucune page ou lien « Déclaration d&#39;accessibilité » détecté. Obligation RGAA pour les services concernés (art. 47 de la loi pour une République numérique).</span>
+        </li>
+      
+        <li>
+          <span class="impact-pill impact-moderate">Moyen</span>
+          <span class="issue-message">6 cible(s) tactile(s) de taille &lt; 44×44 px (min. recommandé) (ex : a 185×38 «BadgeIA
+par Brozapi», a 64×24 «Scanner», a 55×24 «Offres»).</span>
+        </li>
+      
+    </ol>
+  
       </section>
       <section>
         <h2>Actions prioritaires</h2>
-        <p class="good-news">Aucune action requise.</p>
+        
+    <ol class="plan-list">
+      
+        <li>
+          <span class="plan-count">1</span>
+          <span class="plan-action">Rendre les liens explicites et accessibles</span>
+        </li>
+      
+        <li>
+          <span class="plan-count">1</span>
+          <span class="plan-action">Vérifier ce point avec un expert accessibilité</span>
+        </li>
+      
+    </ol>
+  
       </section>
       <section>
         <h2>Ce qui a été testé</h2>
         
-    <table class="criteria-grid">
+    <table class="criteria-table">
       <thead>
         <tr><th>Critère testé automatiquement</th><th>État</th></tr>
       </thead>
@@ -346,7 +398,7 @@ h2 {
           </tr>
         
           <tr>
-            <td>Textes alternatifs aux images</td>
+            <td>Textes alternatifs aux images (technique + sémantique)</td>
             <td><span class="status-ok">✓ Conforme</span></td>
           </tr>
         
@@ -371,22 +423,32 @@ h2 {
           </tr>
         
           <tr>
-            <td>Noms accessibles</td>
+            <td>Navigation clavier, skip-link, focus</td>
             <td><span class="status-ok">✓ Conforme</span></td>
+          </tr>
+        
+          <tr>
+            <td>Médias sous-titrés + documents PDF</td>
+            <td><span class="status-ok">✓ Conforme</span></td>
+          </tr>
+        
+          <tr>
+            <td>Déclaration d&#39;accessibilité + iframes titrées</td>
+            <td><span class="status-ko">✗ Problème détecté</span></td>
           </tr>
         
       </tbody>
     </table>
-    <p class="not-tested">Critères non testés automatiquement : navigation clavier, lecteur d'écran, contenus multimédias, documents téléchargeables, formulaires complexes, tableaux de données, changements de langue, etc.</p>
+    <p class="not-tested">La détection automatisée technique + analyse IA couvre une part importante mais non exhaustive des critères RGAA/WCAG : lecteur d'écran réel, contenus très complexes, tableaux de données, changements de langue, etc. restent du ressort d'un audit humain.</p>
   
       </section>
     </main>
   
   <footer class="report-footer">
-    <p><strong>Mention légale :</strong> Ce scan couvre uniquement les critères RGAA/WCAG automatiquement testables (environ 30-40 % du référentiel RGAA). Un audit humain reste nécessaire pour une conformité complète.</p>
+    <p><strong>Mention légale :</strong> Ce scan combine une détection technique automatisée (contraste, structure, ARIA, formulaires, images, liens, navigation clavier — critères RGAA/WCAG) élargie par une analyse IA des textes alternatifs, intitulés de liens et labels de formulaires. La détection automatisée reste partielle : un audit humain reste nécessaire pour une conformité complète.</p>
     <p>AccessiCheck — Brozapi — SIRET actif</p>
     
   </footer>
+
 </body>
 </html>
-  
