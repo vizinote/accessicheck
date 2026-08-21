@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Erreurs RGAA les plus fréquentes : les 10 à corriger d'abord (en 2026) | AccessiCheck</title>
+  <title>Erreurs RGAA les plus fréquentes : les 10 à corriger d’abord (en 2026) | AccessiCheck</title>
   <meta name="description" content="Découvrez les 10 erreurs d'accessibilité les plus fréquentes sur les sites web français et comment les corriger. Guide pratique pour développeurs et chefs de projet.">
   <meta property="og:title" content="Erreurs RGAA les plus fréquentes : les 10 à corriger d'abord (en 2026)">
   <meta property="og:description" content="Découvrez les 10 erreurs d'accessibilité les plus fréquentes sur les sites web français et comment les corriger. Guide pratique pour développeurs et chefs de projet.">
@@ -28,6 +28,7 @@
   </script>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.brozapi.com; font-src 'self' data:; base-uri 'self'; form-action 'self' https://api.brozapi.com">
 </head>
 <body>
   <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -56,17 +57,17 @@
             <li style="display:inline;" aria-hidden="true"> &rsaquo; </li>
             <li style="display:inline;"><a href="/blog/">Blog</a></li>
             <li style="display:inline;" aria-hidden="true"> &rsaquo; </li>
-            <li style="display:inline;">Erreurs d'accessibilité fréquentes</li>
+            <li style="display:inline;">Erreurs d’accessibilité fréquentes</li>
           </ol>
         </nav>
 
-        <h1>Erreurs RGAA les plus fréquentes : les 10 à corriger d'abord (en 2026)</h1>
+        <h1>Erreurs RGAA les plus fréquentes : les 10 à corriger d’abord (en 2026)</h1>
         <hr>
 <p>
-L'accessibilité numérique reste un point aveugle pour de nombreuses équipes web. Pourtant, avec l'entrée en vigueur de l'Acte européen sur l'accessibilité (EAA) et les obligations RGAA, le sujet n'est plus optionnel.
+L’accessibilité numérique reste un point aveugle pour de nombreuses équipes web. Pourtant, avec l’entrée en vigueur de l’Acte européen sur l’accessibilité (EAA) et les obligations RGAA, le sujet n’est plus optionnel.
 </p>
 <p>
-La bonne nouvelle ? La majorité des problèmes viennent d'une poignée d'erreurs récurrentes. Des études menées sur des milliers de sites français montrent que <strong>plus de 70 % des sites présentent au moins 3 de ces 10 défauts</strong>. Mieux encore : la plupart se corrigent en quelques minutes une fois identifiés.
+La bonne nouvelle ? La majorité des problèmes viennent d’une poignée d’erreurs récurrentes. Des études menées sur des milliers de sites français montrent que <strong>plus de 70 % des sites présentent au moins 3 de ces 10 défauts</strong>. Mieux encore : la plupart se corrigent en quelques minutes une fois identifiés.
 </p>
 <p>
 Voici un guide concret, sans jargon inutile, pour repérer et éliminer les erreurs RGAA les plus fréquentes.
@@ -77,14 +78,14 @@ Voici un guide concret, sans jargon inutile, pour repérer et éliminer les erre
 Trois facteurs expliquent leur persistance :
 </p>
 <p>
-1. <strong>Elles sont invisibles à l'œil nu.</strong> Un contraste trop faible ou un label mal associé ne se remarquent pas lors d'une navigation classique.
+1. <strong>Elles sont invisibles à l'œil nu.</strong> Un contraste trop faible ou un label mal associé ne se remarquent pas lors d’une navigation classique.
  
-2. <strong>Elles passent à travers les tests manuels informels.</strong> Tant que personne n'utilise de lecteur d'écran, elles restent sous le radar.
+2. <strong>Elles passent à travers les tests manuels informels.</strong> Tant que personne n’utilise de lecteur d’écran, elles restent sous le radar.
  
-3. <strong>Les frameworks modernes les génèrent par défaut.</strong> Certains composants UI prêts à l'emploi négligent l'accessibilité si le développeur ne les configure pas.
+3. <strong>Les frameworks modernes les génèrent par défaut.</strong> Certains composants UI prêts à l’emploi négligent l’accessibilité si le développeur ne les configure pas.
 </p>
 <hr>
-<h2>Les 10 erreurs d'accessibilité les plus fréquentes</h2>
+<h2>Les 10 erreurs d’accessibilité les plus fréquentes</h2>
 <h3>1. Contrastes de couleur insuffisants</h3>
 <p>
 <strong>Le problème</strong>
@@ -94,43 +95,43 @@ Du texte gris clair sur fond blanc, un bouton orange sur fond jaune… Ces assoc
 <p>
 <strong>Le critère RGAA</strong>
  
-Le rapport de contraste doit être d'au moins 4,5:1 pour les textes courants, et 3:1 pour les textes de grande taille.
+Le rapport de contraste doit être d’au moins 4,5:1 pour les textes courants, et 3:1 pour les textes de grande taille.
 </p>
 <p>
 <strong>Comment corriger</strong>
 </p>
 <ul class="legal-list">
-<li>Utilisez l'outil de contraste intégré aux DevTools de Chrome ou Firefox.</li>
+<li>Utilisez l’outil de contraste intégré aux DevTools de Chrome ou Firefox.</li>
 <li>Ne transmettez jamais une information par la couleur seule ; ajoutez une icône ou un texte.</li>
 </ul>
 <h3>2. Images sans texte alternatif (attribut alt)</h3>
 <p>
 <strong>Le problème</strong>
  
-Une image informative a un alt vide, ou une image décorative porte un alt fourre-tout. Le lecteur d'écran lit "image" ou une description inutile.
+Une image informative a un alt vide, ou une image décorative porte un alt fourre-tout. Le lecteur d’écran lit "image" ou une description inutile.
 </p>
 <p>
 <strong>Le critère RGAA</strong>
  
-Toute image porteuse d'information doit avoir un texte alternatif pertinent. Les images décoratives doivent avoir un `alt=""`.
+Toute image porteuse d’information doit avoir un texte alternatif pertinent. Les images décoratives doivent avoir un `alt=""`.
 </p>
 <p>
 <strong>Comment corriger</strong>
 </p>
 <ul class="legal-list">
-<li>Décrivez l'information, pas l'apparence. Mauvais : "image d'un graphique". Bon : "Chiffre d'affaires 2024 : 1,2 M€, en hausse de 15 %".</li>
+<li>Décrivez l’information, pas l’apparence. Mauvais : "image d’un graphique". Bon : "Chiffre d’affaires 2024 : 1,2 M€, en hausse de 15 %".</li>
 <li>Pour les logos-liens, indiquez la destination : `alt="Accueil - AccessiCheck"`.</li>
 </ul>
 <h3>3. Formulaires sans labels associés</h3>
 <p>
 <strong>Le problème</strong>
  
-Un texte précède visuellement un champ, mais n'est pas lié techniquement. Le lecteur d'écran ne sait pas quel label correspond à quelle zone.
+Un texte précède visuellement un champ, mais n’est pas lié techniquement. Le lecteur d’écran ne sait pas quel label correspond à quelle zone.
 </p>
 <p>
 <strong>Le critère RGAA</strong>
  
-Chaque champ doit être associé à une étiquette via l'attribut `for` ou en imbriquant le champ dans le label.
+Chaque champ doit être associé à une étiquette via l’attribut `for` ou en imbriquant le champ dans le label.
 </p>
 <p>
 <strong>Comment corriger</strong>
@@ -143,7 +144,7 @@ Chaque champ doit être associé à une étiquette via l'attribut `for` ou en im
 <p>
 <strong>Le problème</strong>
  
-On saute d'un `<h1>` à un `<h3>`, ou on utilise un `<h2>` juste pour agrandir du texte. La structure logique s'effondre.
+On saute d’un `<h1>` à un `<h3>`, ou on utilise un `<h2>` juste pour agrandir du texte. La structure logique s’effondre.
 </p>
 <p>
 <strong>Le critère RGAA</strong>
@@ -155,43 +156,43 @@ Hiérarchie cohérente : un `<h1>` unique par page, puis `<h2>`, `<h3>`, etc., s
 </p>
 <ul class="legal-list">
 <li>Ne choisissez pas un niveau de titre pour sa taille CSS. Séparez sémantique et apparence.</li>
-<li>Parcourez la page avec la touche H d'un lecteur d'écran. Si l'ordre est confus, reprenez le balisage.</li>
+<li>Parcourez la page avec la touche H d’un lecteur d’écran. Si l’ordre est confus, reprenez le balisage.</li>
 </ul>
 <h3>5. Liens peu explicites ("cliquez ici", "en savoir plus")</h3>
 <p>
 <strong>Le problème</strong>
  
-Un utilisateur de lecteur d'écran liste les liens de la page : "cliquez ici, en savoir plus, lire la suite". Aucune indication sur la destination.
+Un utilisateur de lecteur d’écran liste les liens de la page : "cliquez ici, en savoir plus, lire la suite". Aucune indication sur la destination.
 </p>
 <p>
 <strong>Le critère RGAA</strong>
  
-L'intitulé d'un lien doit être explicite hors contexte.
+L’intitulé d’un lien doit être explicite hors contexte.
 </p>
 <p>
 <strong>Comment corriger</strong>
 </p>
 <ul class="legal-list">
-<li>Remplacez "cliquez ici" par l'action réelle : "Télécharger le guide RGAA (PDF, 2 Mo)", "Consulter nos tarifs d'audit accessibilité".</li>
-<li>Si plusieurs liens répétés mènent à des pages différentes, ajoutez un texte masqué à l'écran pour différencier les destinations.</li>
+<li>Remplacez "cliquez ici" par l’action réelle : "Télécharger le guide RGAA (PDF, 2 Mo)", "Consulter nos tarifs d’audit accessibilité".</li>
+<li>Si plusieurs liens répétés mènent à des pages différentes, ajoutez un texte masqué à l’écran pour différencier les destinations.</li>
 </ul>
 <h3>6. Navigation impossible au clavier</h3>
 <p>
 <strong>Le problème</strong>
  
-Un menu déroulant ou un modal ne se pilote pas avec Tab. L'utilisateur sans souris reste bloqué.
+Un menu déroulant ou un modal ne se pilote pas avec Tab. L’utilisateur sans souris reste bloqué.
 </p>
 <p>
 <strong>Le critère RGAA</strong>
  
-Toute fonctionnalité utilisable à la souris doit l'être au clavier. Le parcours Tab doit être logique, visible, et ne pas piéger l'utilisateur.
+Toute fonctionnalité utilisable à la souris doit l’être au clavier. Le parcours Tab doit être logique, visible, et ne pas piéger l’utilisateur.
 </p>
 <p>
 <strong>Comment corriger</strong>
 </p>
 <ul class="legal-list">
 <li>Testez chaque page avec Tab uniquement. Vous devez atteindre tous les éléments interactifs et en ressortir.</li>
-<li>Ne supprimez pas l'outline de focus (`:focus-visible`) sans le remplacer par un style visible.</li>
+<li>Ne supprimez pas l’outline de focus (`:focus-visible`) sans le remplacer par un style visible.</li>
 </ul>
 <h3>7. ARIA mal utilisé ou en excès</h3>
 <p>
@@ -208,14 +209,14 @@ Les attributs ARIA doivent être utilisés à bon escient, avec des valeurs vali
 <strong>Comment corriger</strong>
 </p>
 <ul class="legal-list">
-<li>Privilégiez toujours le HTML natif : un vrai `<button>` vaut mieux qu'une `<div role="button">`.</li>
+<li>Privilégiez toujours le HTML natif : un vrai `<button>` vaut mieux qu’une `<div role="button">`.</li>
 <li>Si vous utilisez ARIA, vérifiez que le rôle et les états correspondent au comportement réel du composant.</li>
 </ul>
 <h3>8. Tableaux de données sans en-têtes de colonne</h3>
 <p>
 <strong>Le problème</strong>
  
-Un tableau de prix ou de comparaison utilise des `<td>` sur toute la première ligne. Les lecteurs d'écran ne peuvent pas associer une cellule à sa colonne.
+Un tableau de prix ou de comparaison utilise des `<td>` sur toute la première ligne. Les lecteurs d’écran ne peuvent pas associer une cellule à sa colonne.
 </p>
 <p>
 <strong>Le critère RGAA</strong>
@@ -227,18 +228,18 @@ Les tableaux doivent utiliser `<th>` pour les en-têtes, avec `scope="col"` ou `
 </p>
 <ul class="legal-list">
 <li>Remplacez les `<td>` de la première ligne par des `<th scope="col">`.</li>
-<li>N'utilisez jamais de tableau pour faire de la mise en page.</li>
+<li>N’utilisez jamais de tableau pour faire de la mise en page.</li>
 </ul>
 <h3>9. Vidéos sans sous-titres ni transcription</h3>
 <p>
 <strong>Le problème</strong>
  
-Une vidéo de présentation ou un tutoriel est publié sans sous-titres. Les personnes sourdes ou malentendantes n'accèdent à aucune information auditive.
+Une vidéo de présentation ou un tutoriel est publié sans sous-titres. Les personnes sourdes ou malentendantes n’accèdent à aucune information auditive.
 </p>
 <p>
 <strong>Le critère RGAA</strong>
  
-Les médias temporels doivent disposer d'une alternative textuelle et, pour les vidéos, de sous-titres synchronisés.
+Les médias temporels doivent disposer d’une alternative textuelle et, pour les vidéos, de sous-titres synchronisés.
 </p>
 <p>
 <strong>Comment corriger</strong>
@@ -247,22 +248,22 @@ Les médias temporels doivent disposer d'une alternative textuelle et, pour les 
 <li>Ajoutez des sous-titres à toutes vos vidéos avant publication. Relisez et corrigez la génération automatique.</li>
 <li>Fournissez une transcription textuelle sous la vidéo : elle bénéficie aussi au référencement.</li>
 </ul>
-<h3>10. Messages d'erreur de formulaire peu visibles et mal associés</h3>
+<h3>10. Messages d’erreur de formulaire peu visibles et mal associés</h3>
 <p>
 <strong>Le problème</strong>
  
-Une erreur apparaît en rouge sans explication claire, et le focus ne se déplace pas vers le message. L'utilisateur ne sait pas quel champ est concerné ni comment corriger.
+Une erreur apparaît en rouge sans explication claire, et le focus ne se déplace pas vers le message. L’utilisateur ne sait pas quel champ est concerné ni comment corriger.
 </p>
 <p>
 <strong>Le critère RGAA</strong>
  
-Les messages d'erreur doivent être explicites, associés au champ concerné (`aria-describedby`), et le focus replacé sur la première erreur.
+Les messages d’erreur doivent être explicites, associés au champ concerné (`aria-describedby`), et le focus replacé sur la première erreur.
 </p>
 <p>
 <strong>Comment corriger</strong>
 </p>
 <ul class="legal-list">
-<li>Remplacez "Champ invalide" par "L'adresse e-mail doit contenir un @ et un nom de domaine".</li>
+<li>Remplacez "Champ invalide" par "L’adresse e-mail doit contenir un @ et un nom de domaine".</li>
 <li>Utilisez `aria-describedby` pour lier le message au champ.</li>
 <li>Déplacez le focus vers la première erreur lors de la soumission.</li>
 </ul>
@@ -275,20 +276,20 @@ Une partie de ces problèmes peut être identifiée sans audit manuel. Les outil
 <strong>AccessiCheck</strong> scanne votre site et détecte ces défauts en quelques secondes. Il couvre <strong>environ 30 à 40 % des critères RGAA via des tests automatiques</strong> : contrastes, structure des titres, attributs `alt`, labels de formulaires, liens vides, et autres points vérifiables par analyse de code.
 </p>
 <p>
-C'est un excellent point de départ pour prioriser vos corrections. Cependant, un outil automatique ne peut pas juger de la pertinence d'un texte alternatif, ni vérifier que la navigation au clavier est logique, ni tester l'expérience réelle avec un lecteur d'écran. Pour les 60 à 70 % des critères restants, un audit humain reste indispensable.
+C’est un excellent point de départ pour prioriser vos corrections. Cependant, un outil automatique ne peut pas juger de la pertinence d’un texte alternatif, ni vérifier que la navigation au clavier est logique, ni tester l’expérience réelle avec un lecteur d’écran. Pour les 60 à 70 % des critères restants, un audit humain reste indispensable.
 </p>
 <hr>
 <h2>Quand faire appel à un audit humain ?</h2>
 <p>
-Un audit automatique vous donne une photographie rapide et économique, mais il ne remplace pas l'expertise d'un consultant dans les cas suivants :
+Un audit automatique vous donne une photographie rapide et économique, mais il ne remplace pas l’expertise d’un consultant dans les cas suivants :
 </p>
 <ul class="legal-list">
-<li>Vous devez justifier d'une conformité RGAA auprès d'une autorité.</li>
+<li>Vous devez justifier d’une conformité RGAA auprès d’une autorité.</li>
 <li>Votre site comporte des parcours complexes (e-commerce, espace client).</li>
 <li>Vous souhaitez un rapport formalisé avec un taux de conformité global.</li>
 </ul>
 <p>
-En attendant, corriger les 10 erreurs ci-dessus améliore déjà significativement l'expérience de vos visiteurs.
+En attendant, corriger les 10 erreurs ci-dessus améliore déjà significativement l’expérience de vos visiteurs.
 </p>
 <hr>
 <h2>Votre prochaine étape</h2>
@@ -299,7 +300,7 @@ Commencez par un scan rapide pour identifier lesquels de ces 10 problèmes se tr
 👉 <strong><a href="https://accessicheck.brozapi.com/">Scanner mon site gratuitement</a></strong>
 </p>
 <p>
-L'accessibilité n'est pas une certification à obtenir en une fois. C'est une habitude à prendre page après page. Ces 10 corrections sont le meilleur investissement que vous puissiez faire aujourd'hui.
+L’accessibilité n’est pas une certification à obtenir en une fois. C’est une habitude à prendre page après page. Ces 10 corrections sont le meilleur investissement que vous puissiez faire aujourd’hui.
 </p>
       </div>
     </article>
@@ -322,11 +323,11 @@ L'accessibilité n'est pas une certification à obtenir en une fois. C'est une h
           <p><a href="audit-rgaa-pas-cher.html">Audit RGAA pas cher</a></p>
           <p><a href="audit-accessibilite-site-web.html">Audit accessibilité site web</a></p>
           <p><a href="conformite-eaa-ecommerce-2025.html">Conformité EAA e-commerce 2025</a></p>
-          <p><a href="erreurs-accessibilite-frequentes.html">Erreurs d'accessibilité fréquentes</a></p>
+          <p><a href="erreurs-accessibilite-frequentes.html">Erreurs d’accessibilité fréquentes</a></p>
         </div>
       </div>
       <p class="footer__disclaimer">
-        AccessiCheck est un outil technique d'aide au diagnostic. Il ne constitue ni un conseil juridique ni une garantie de conformité RGAA/WCAG.
+        AccessiCheck est un outil technique d’aide au diagnostic. Il ne constitue ni un conseil juridique ni une garantie de conformité RGAA/WCAG.
       </p>
     </div>
   </footer>
