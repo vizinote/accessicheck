@@ -26,6 +26,7 @@ Si vous dirigez une PME avec un site web ou une boutique en ligne, vous avez pro
 Ce guide a été conçu pour une personne comme vous : un dirigeant qui n'a pas le temps de devenir expert en accessibilité numérique, mais qui veut prendre les bonnes décisions pour protéger son entreprise et ne pas laisser passer un marché important.
 
 Nous allons voir ensemble :
+
 - si **votre entreprise est concernée** par cette nouvelle réglementation ;
 - ce que vous **risquez concrètement** en cas de non-respect ;
 - les **erreurs les plus fréquentes** sur les sites PME ;
@@ -57,6 +58,7 @@ Votre entreprise est concernée si elle cumule **les trois conditions suivantes*
 ### Le cas particulier du e-commerce
 
 Les services de **commerce électronique** sont explicitement visés par l'EAA. Cela inclut :
+
 - les boutiques en ligne (B2C et B2B) ;
 - les places de marché ;
 - les systèmes de réservation en ligne ;
@@ -208,6 +210,7 @@ Vous n'avez pas besoin de tout refaire en une semaine. Voici un plan réaliste p
 ### Semaines 1 à 2 : Mesurer la situation actuelle
 
 **Actions à réaliser** :
+
 - [ ] Faites un scan automatique de votre site avec un outil en ligne (voir chapitre 5). Cela prend 5 minutes et donne une première photographie.
 - [ ] Testez la navigation au clavier sur les trois parcours les plus importants : accueil → fiche produit → panier → paiement ; accueil → formulaire de contact ; accueil → recherche.
 - [ ] Demandez à un collaborateur de vérifier le contraste des textes principaux (titres, descriptions, boutons) avec un outil gratuit.
@@ -221,6 +224,7 @@ Vous n'avez pas besoin de tout refaire en une semaine. Voici un plan réaliste p
 Certaines corrections sont rapides et ont un fort impact.
 
 **Actions prioritaires** :
+
 - [ ] Ajouter ou corriger les textes alternatifs sur les images principales (logo, bannières, photos de produits).
 - [ ] Corriger les étiquettes des formulaires de contact et de commande.
 - [ ] Améliorer le contraste des boutons d'appel à l'action (« Acheter », « Ajouter au panier », « Nous contacter »).
@@ -233,6 +237,7 @@ Certaines corrections sont rapides et ont un fort impact.
 ### Semaines 5 à 8 : Structurer le parcours critique
 
 **Actions** :
+
 - [ ] Assurez-vous que le parcours de commande complet est utilisable au clavier, du panier à la confirmation de paiement.
 - [ ] Ajoutez des sous-titres à vos vidéos de présentation (vous pouvez utiliser les outils de génération automatique de votre hébergeur vidéo, puis relire pour corriger).
 - [ ] Créez une page « Accessibilité » sur votre site qui indique votre engagement, le niveau de conformité visé, et un moyen de contacter votre équipe en cas de difficulté.
@@ -241,6 +246,7 @@ Certaines corrections sont rapides et ont un fort impact.
 ### Semaines 9 à 12 : Consolider et planifier la suite
 
 **Actions** :
+
 - [ ] Faites relire votre site par une personne utilisant un lecteur d'écran, ou par une association locale de personnes handicapées (certaines proposent des tests utilisateurs à des tarifs raisonnables).
 - [ ] Rédigez une déclaration d'accessibilité conforme au RGAA (modèle disponible sur le site de la Dinum).
 - [ ] Intégrez l'accessibilité dans votre processus de création de contenu : chaque nouvelle image doit avoir un texte alternatif, chaque nouvelle vidéo une transcription, etc.

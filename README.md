@@ -41,4 +41,13 @@ Landing page statique en phase de lancement. Le produit vend un **diagnostic exp
 ## Avertissement
 
 AccessiCheck est un outil technique d'aide au diagnostic. Il ne constitue ni un conseil juridique ni une garantie de conformité RGAA/WCAG.
+## Règles de rédaction du guide PDF
+
+Source du guide : `guide-accessibilite-eaa.md`, généré en PDF via `build-guide.py`.
+
+- **Typographie FR** : apostrophes typographiques `’`, guillemets `« »`, espaces insécables avant `: ; ! ? %`. Post-traitement automatique dans `build-guide.py`.
+- **Pas d'énumération en ligne (règle 2026-08-21) : jamais `: - item ; - item` sur une même ligne. Toujours une liste Markdown, une puce par ligne.**
+- **Pitfall python-markdown** : un paragraphe finissant par `:` doit être séparé de la liste par une **ligne vide**, sinon la liste est aplatie en ligne dans le PDF. Ajouter la ligne vide après chaque paragraphe `: ... ` suivi de puces.
+
+Vérification après modif : `python3 build-guide.py`, puis contrôle du texte du PDF (plus de `: - ` en ligne), puis URL 200 après push.
 trigger rebuild
