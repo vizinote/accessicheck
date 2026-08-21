@@ -284,7 +284,7 @@ app.post(route('/lead'), async (req, res) => {
     return makeResponse(res, { ok: false, error: 'Adresse email invalide.' }, 400);
   }
   if (!isAllowed(clientIp, 'lead_guide', 3, 86400)) {
-    return makeResponse(res, { ok: false, error: 'Quota de demandes atteint. Réessayez demain.' }, 429);
+    return makeResponse(res, { ok: false, error: 'Quota de demandes atteint. Réessayez dans quelques heures.' }, 429);
   }
 
   try {
