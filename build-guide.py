@@ -43,6 +43,56 @@ def parse_front_matter(text: str) -> tuple[dict[str, str], str]:
     return meta, text
 
 
+_APO_LETTERS = "A-Za-zÀ-ÖØ-öø-ÿ0-9*_"
+
+
+def french_typography(text: str) -> tuple[str, int]:
+    """Applique une typographie française systématique au texte.
+
+    Opérations (jamais sur le code, les URLs, les balises HTML ni leurs
+    attributs) :
+      - apostrophe droite ' -> \u2019 (U+2019) en fin/fin de mot français ;
+      - guillemets droits "..." -> « ... » avec espaces insécables ;
+      - espace insécable (U+00A0) avant : ; ! ? ;
+      - '--' en incise -> tiret cadratin \u2014.
+
+    Retourne (texte traité, nombre d'apostrophes droites corrigées).
+    """
+    # Contenus à protéger : blocs de code, code inline, URLs, balises HTML.
+    tokens: dict[str, str] = {}
+
+    def _stash(m: re.Match) -> str:
+        key = f"\x00TYPO{len(tokens)}\x00"
+        tokens[key] = m.group(0)
+        return key
+
+    text = re.sub(r"```.*?```", _stash, text, flags=re.S)
+    text = re.sub(r"`[^`\n]*`", _stash, text)
+    text = re.sub(r"https?://[^\s<>'\"]+", _stash, text)
+    text = re.sub(r"<[^>]+>", _stash, text)
+
+    # 1. Apostrophe droite -> apostrophe typographique (entre caractères de mot).
+    apostrophes = 0
+    pattern = re.compile(rf"(?<=[{_APO_LETTERS}])'(?=[{_APO_LETTERS}])")
+    text, n = pattern.subn("\u2019", text)
+    apostrophes += n
+
+    # 2. Guillemets droits encadrant du texte -> « ... » (espaces insécables).
+    text = re.sub(r'"([^"\n]+)"', "\u00ab\u00a0\\1\u00a0\u00bb", text)
+
+    # 3. Espace simple avant : ; ! ? -> espace insécable (jamais de retour ligne).
+    text = re.sub(r"[ \t]+([:;!?])", "\u00a0\\1", text)
+
+    # 4. ' -- ' en incise -> tiret cadratin.
+    text = re.sub(r"[ \t]+--[ \t]+", " \u2014 ", text)
+
+    # Restauration des contenus protégés.
+    for key, value in tokens.items():
+        text = text.replace(key, value)
+
+    return text, apostrophes
+
+
 def ensure_venv() -> Path:
     """Crée un venv local avec weasyprint + markdown si nécessaire."""
     python_bin = VENV_PATH / "bin" / "python"
@@ -307,7 +357,7 @@ def render_pdf(meta: dict[str, str], body_html: str, output: Path) -> None:
   <div class="cover">
     <div class="cover__badge">AccessiCheck · par Brozapi</div>
     <h1 class="cover__title">{title}</h1>
-    <p class="cover__subtitle">Comprendre le RGAA, l'EAA et WCAG, et prioriser les actions pour votre site.</p>
+    <p class="cover__subtitle">Comprendre le RGAA, l\u2019EAA et WCAG, et prioriser les actions pour votre site.</p>
     <div class="cover__meta">
       Auteur : {author}<br>
       Version : {version}<br>
@@ -348,6 +398,13 @@ def main() -> int:
 
     raw = MD_PATH.read_text(encoding="utf-8")
     meta, body = parse_front_matter(raw)
+
+    # Post-traitement typographique français (apostrophes, guillemets,
+    # espaces insécables, tirets cadratins). Ne touche jamais au code, aux
+    # URLs, aux balises HTML ni aux attributs.
+    body, apostrophes = french_typography(body)
+    if apostrophes:
+        log(f"Typographie FR : {apostrophes} apostrophes droites corrigées")
 
     # Conversion markdown -> HTML.
     body_html = markdown.markdown(
