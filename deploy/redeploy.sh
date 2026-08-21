@@ -55,9 +55,11 @@ docker run -d --name "${SERVICE_NAME}-next" \
   -e DATABASE_PATH=/data/scans.db \
   -e SCAN_TIMEOUT=30000 \
   -e MAX_RETRIES=2 \
-  -e WORKER_SCAN_TIMEOUT_MS=120000 \
+  -e WORKER_SCAN_TIMEOUT_MS=90000 \
   -e PORT=8080 \
   -e BASE_PATH= \
+  -e SCANNER_LLM_MODEL=deepseek/deepseek-v4-flash \
+  -e SCANNER_LLM_TIMEOUT_MS=25000 \
   -p "127.0.0.1:${OTHER_PORT}:8080" \
   --restart unless-stopped \
   "$IMAGE_NAME"

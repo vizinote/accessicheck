@@ -24,6 +24,14 @@ function impactLabel(issue) {
   return IMPACT_LABELS[key] ?? key;
 }
 
+function engineLabel(issue) {
+  if (issue.ai || issue.engine === 'ia') return 'Analyse IA';
+  if (issue.layer === 'interaction') return 'Interaction';
+  if (issue.layer === 'contenu') return 'Contenu';
+  if (issue.engine === 'custom') return 'Technique';
+  return issue.engine || '-';
+}
+
 function scoreColor(score) {
   if (score >= 90) return '#16a34a';
   if (score >= 70) return '#ca8a04';
@@ -181,18 +189,20 @@ function actionForIssue(issue) {
   return 'Vérifier ce point avec un expert accessibilité';
 }
 
-function criteriaGrid(result) {
+function criteriaTable(result) {
   const criteria = [
     { id: 'Contrastes', label: 'Contrastes de couleur', ok: !hasIssueLike(result.issues, 'contrast') },
-    { id: 'Images', label: 'Textes alternatifs aux images', ok: !hasIssueLike(result.issues, 'alt') },
-    { id: 'Titres', label: 'Hiérarchie des titres', ok: !hasIssueLike(result.issues, 'heading') },
+    { id: 'Images', label: 'Textes alternatifs aux images (technique + sémantique)', ok: !hasIssueLike(result.issues, 'alt') && !hasIssueLike(result.issues, 'semantique') },
+    { id: 'Titres', label: 'Hiérarchie des titres', ok: !hasIssueLike(result.issues, 'heading') && !hasIssueLike(result.issues, 'no-h1') && !hasIssueLike(result.issues, 'multiple-h1') },
     { id: 'Formulaires', label: 'Labels et formulaires', ok: !hasIssueLike(result.issues, 'label') },
     { id: 'Langue', label: 'Langue de la page', ok: !hasIssueLike(result.issues, 'lang') },
     { id: 'Landmarks', label: 'Structure et landmarks', ok: !hasIssueLike(result.issues, 'landmark') },
-    { id: 'Noms', label: 'Noms accessibles', ok: !hasIssueLike(result.issues, 'name') },
+    { id: 'Navigation', label: 'Navigation clavier, skip-link, focus', ok: !hasIssueLike(result.issues, 'skip') && !hasIssueLike(result.issues, 'focus') && !hasIssueLike(result.issues, 'interaction') },
+    { id: 'Media', label: 'Médias sous-titrés + documents PDF', ok: !hasIssueLike(result.issues, 'media') && !hasIssueLike(result.issues, 'pdf') },
+    { id: 'Declaration', label: 'Déclaration d\'accessibilité + iframes titrées', ok: !hasIssueLike(result.issues, 'accessibility-statement') && !hasIssueLike(result.issues, 'iframe') },
   ];
   return `
-    <table class="criteria-grid">
+    <table class="criteria-table">
       <thead>
         <tr><th>Critère testé automatiquement</th><th>État</th></tr>
       </thead>
@@ -205,7 +215,7 @@ function criteriaGrid(result) {
         `).join('')}
       </tbody>
     </table>
-    <p class="not-tested">Critères non testés automatiquement : navigation clavier, lecteur d'écran, contenus multimédias, documents téléchargeables, formulaires complexes, tableaux de données, changements de langue, etc.</p>
+    <p class="not-tested">La détection automatisée technique + analyse IA couvre une part importante mais non exhaustive des critères RGAA/WCAG : lecteur d'écran réel, contenus très complexes, tableaux de données, changements de langue, etc. restent du ressort d'un audit humain.</p>
   `;
 }
 
@@ -222,11 +232,15 @@ function executiveSummary(result) {
   const score = result.score ?? 0;
   const label = scoreLabel(score);
   const color = scoreColor(score);
+  const summary = result.summary || {};
+  const byLayer = summary.byLayer || {};
+  const nIA = byLayer.ia || 0;
   return `
     <section class="executive-summary">
       <h2>Résumé pour le dirigeant</h2>
       <p>Le site <strong>${escapeHtml(result.pageTitle || result.url)}</strong> a obtenu un score de <strong style="color:${color}">${score}/100</strong> (${label}).</p>
       <p>${executiveText(score, result.issues)}</p>
+      ${nIA > 0 ? `<p>➡ Dont <strong>${nIA}</strong> point(s) signalé(s) par l'analyse IA sémantique (qualité des textes alternatifs, intitulés de liens, labels). Ces points relèvent du jugement qualitatif : à confirmer lors d'un audit humain.</p>` : ''}
     </section>
   `;
 }
@@ -244,17 +258,38 @@ function allIssuesTable(issues) {
     return '<p class="good-news">Aucun problème détecté.</p>';
   }
   const sorted = [...issues].sort((a, b) => impactRank(a) - impactRank(b));
-  return `
-    <table class="issues-table">
-      <thead>
-        <tr><th>Impact</th><th>Problème</th><th>Moteur</th></tr>
-      </thead>
+  const tech = issues.filter((i) => !(i.ai || i.engine === 'ia'));
+  const ia = issues.filter((i) => i.ai || i.engine === 'ia');
+  const aiSection = ia.length > 0 ? `
+    <h3 class="ai-subtitle">🔎 Analyse IA (pertinence sémantique)</h3>
+    <p class="ai-note">Détections issues d'un modèle de langue vérifiant la pertinence des textes alternatifs, des intitulés de liens et des labels de formulaires. À confirmer par un expert.</p>
+    <table class="issues-table compact">
+      <thead><tr><th>Impact</th><th>Problème</th><th>Origine</th></tr></thead>
       <tbody>
-        ${sorted.map(i => `
+        ${ia.map(i => `
           <tr>
             <td><span class="impact-pill impact-${(i.impact || i.type || 'notice').toLowerCase()}">${impactLabel(i)}</span></td>
             <td>${escapeHtml(i.message || i.help || i.description || 'Problème détecté')}</td>
-            <td>${escapeHtml(i.engine || '-')}</td>
+            <td><span class="tag-ai">Analyse IA</span></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  ` : '';
+  return `
+    ${aiSection}
+    <h3 class="ai-subtitle">🧰 Détection technique automatisée</h3>
+    <p class="ai-note">Détections issues de vérifications techniques (contraste, structure, ARIA, formulaires, images, liens, navigation clavier, contenus).</p>
+    <table class="issues-table">
+      <thead>
+        <tr><th>Impact</th><th>Problème</th><th>Origine</th></tr>
+      </thead>
+      <tbody>
+        ${sorted.filter((i) => tech.includes(i)).map(i => `
+          <tr>
+            <td><span class="impact-pill impact-${(i.impact || i.type || 'notice').toLowerCase()}">${impactLabel(i)}</span></td>
+            <td>${escapeHtml(i.message || i.help || i.description || 'Problème détecté')}</td>
+            <td>${escapeHtml(engineLabel(i))}</td>
           </tr>
         `).join('')}
       </tbody>
@@ -281,7 +316,7 @@ function renderOneShot(scan) {
       </section>
       <section>
         <h2>Ce qui a été testé</h2>
-        ${criteriaGrid(result)}
+        ${criteriaTable(result)}
       </section>
     </main>
   `;
@@ -300,7 +335,7 @@ function renderPro(scan) {
       ${summaryCards(result)}
       <section>
         <h2>Grille des critères automatiquement testés</h2>
-        ${criteriaGrid(result)}
+        ${criteriaTable(result)}
       </section>
       <section>
         <h2>Plan de remédiation priorisé</h2>
@@ -346,7 +381,7 @@ function renderMonitoring(scan) {
       </section>
       <section>
         <h2>Critères surveillés</h2>
-        ${criteriaGrid(result)}
+        ${criteriaTable(result)}
       </section>
     </main>
   `;

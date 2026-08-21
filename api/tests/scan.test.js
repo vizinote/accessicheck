@@ -1,6 +1,7 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert');
 const { normalizeUrl, validateUrl, isVagueLinkText, computeScore } = require('../scanner');
+const { parseSemanticResult } = require('../semantic');
 
 describe('scanner helpers', () => {
   it('normalise une URL sans protocole', () => {
@@ -61,18 +62,40 @@ describe('computeScore', () => {
   });
 
   it('plancher à 0', () => {
-    const issues = [
-      { impact: 'critical' },
-      { impact: 'critical' },
-      { impact: 'critical' },
-      { impact: 'critical' },
-      { impact: 'critical' },
-      { impact: 'critical' },
-      { impact: 'critical' },
-      { impact: 'critical' },
-      { impact: 'critical' },
-      { impact: 'critical' },
-    ];
+    const issues = Array(10).fill({ impact: 'critical' });
     assert.strictEqual(computeScore(issues), 0);
+  });
+});
+
+describe('parseSemanticResult (built-in semantic parser)', () => {
+  it('extrait les verdicts "ko" en issues étiquetées IA', () => {
+    const out = parseSemanticResult(JSON.stringify({
+      issues: [
+        { id: 'img-0', verdict: 'ko', impact: 'moderate', reason: 'alt générique image' },
+        { id: 'lnk-1', verdict: 'ok', reason: 'explicite' },
+      ],
+    }));
+    assert.strictEqual(out.length, 1);
+    assert.strictEqual(out[0].engine, 'ia');
+    assert.strictEqual(out[0].ai, true);
+    assert.match(out[0].message, /alt générique/);
+  });
+
+  it('accepte un objet plat indexé par id', () => {
+    const out = parseSemanticResult(JSON.stringify({
+      'img-0': { verdict: 'ko', reason: 'nom de fichier' },
+      'lnk-1': { verdict: 'ok', reason: 'ok' },
+    }));
+    assert.strictEqual(out.length, 1);
+    assert.match(out[0].id, /img-0/);
+  });
+
+  it('renvoie [] quand tout est correct', () => {
+    const out = parseSemanticResult(JSON.stringify({ issues: [{ id: 'img-0', verdict: 'ok' }] }));
+    assert.deepStrictEqual(out, []);
+  });
+
+  it('lève une erreur sur une réponse non structurée', () => {
+    assert.throws(() => parseSemanticResult('pas de json'), /non structurée/);
   });
 });

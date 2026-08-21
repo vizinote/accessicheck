@@ -90,7 +90,7 @@ function sendGuideEmail(email) {
     `Merci pour votre intérêt. Votre guide « Accessibilité web : votre site est-il concerné ? (EAA, RGAA, WCAG) » ` +
     `est disponible ici : ${GUIDE_PDF_URL}\n\n` +
     `Vous pouvez le télécharger gratuitement et le partager au sein de votre équipe.\n\n` +
-    `Important : un scan automatique ne couvre qu'environ 30 % à 40 % des critères RGAA. ` +
+    `Important : un scan automatique combine une détection technique et une analyse IA élargie au-delà des 40 % classiques. ` +
     `Pour une conformité complète, un audit humain reste nécessaire.\n\n` +
     `Ce guide est fourni à titre indicatif. Il ne constitue pas un conseil juridique ` +
     `ni une garantie de conformité.\n\n` +
@@ -108,8 +108,8 @@ function sendGuideEmail(email) {
     `<p><a href="${GUIDE_PDF_URL}" style="display:inline-block; padding:0.75rem 1.25rem; background:#0b6e47; color:#ffffff; text-decoration:none; border-radius:0.5rem; font-weight:600;">Télécharger le guide PDF</a></p>` +
     `<p>Vous pouvez le télécharger gratuitement et le partager au sein de votre équipe.</p>` +
     `<p style="background:#e7f6ef; padding:0.75rem; border-left:3px solid #0b6e47; color:#454545;">` +
-    `<strong>Important :</strong> un scan automatique ne couvre qu'environ 30 % à 40 % des critères RGAA. ` +
-    `Pour une conformité complète, un audit humain reste nécessaire.` +
+    `<strong>Important :</strong> un scan automatique combine une détection technique et une analyse IA élargie au-delà des 40 % classiques. ` +
+    `Pour une conformité complète, un audit humain reste toutefois nécessaire.` +
     `</p>` +
     `<p><small>Ce guide est fourni à titre indicatif. Il ne constitue pas un conseil juridique ` +
     `ni une garantie de conformité.</small></p>` +

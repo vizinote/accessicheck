@@ -521,6 +521,15 @@ a:focus {
   border: 1px solid #f5d6b0;
 }
 
+.coverage-block__note {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: #475569;
+  font-style: italic;
+  border-left: 3px solid #7c3aed;
+  padding-left: 0.6rem;
+}
+
 .coverage__block h3 {
   margin: 0 0 0.75rem;
   font-size: 1.15rem;

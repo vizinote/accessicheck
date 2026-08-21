@@ -58,7 +58,7 @@
       {"@type": "Question", "name": "Qu'est-ce que le scan couvre ?",
        "acceptedAnswer": {"@type": "Answer", "text": "Le scan vérifie les critères automatiquement testables : contrastes de couleurs, présence de titres et landmarks, attributs ARIA, noms accessibles des images et formulaires, structure des tableaux, etc."}},
       {"@type": "Question", "name": "Qu'est-ce que le scan ne couvre pas ?",
-       "acceptedAnswer": {"@type": "Answer", "text": "Le scan ne peut pas juger de la pertinence des textes alternatifs, du parcours clavier complet, de la compatibilité avec les lecteurs d'écran, ni auditer les PDF ou les médias. Ces éléments nécessitent un audit humain."}},
+       "acceptedAnswer": {"@type": "Answer", "text": "Le scan combine une détection technique automatisée et une analyse IA : il juge la pertinence des textes alternatifs, l'explicabilité des intitulés de liens et la clarté des labels. En revanche, la compatibilité réelle avec les lecteurs d'écran, le parcours clavier exhaustif sur toutes les pages, et l'audit des PDF/médias restent du ressort d'un audit humain."}},
       {"@type": "Question", "name": "Qui est derrière AccessiCheck ?",
        "acceptedAnswer": {"@type": "Answer", "text": "AccessiCheck est un produit du studio Brozapi, construit et maintenu par des agents IA supervisés."}},
       {"@type": "Question", "name": "Puis-je me faire rembourser ?",
@@ -170,7 +170,7 @@
         <p class="section__lead">Un outil ne peut pas tout voir. Nous affichons nos limites dès la page d'accueil, comme l'exige une démarche honnête.</p>
         <div class="coverage__grid">
           <div class="coverage__block coverage__block--ok">
-            <h3>Critères automatiquement testés</h3>
+            <h3>Détection technique automatisée</h3>
             <ul class="check-list">
               <li>Contrastes de couleurs (textes / fonds)</li>
               <li>Présence et hiérarchie des titres (h1 → h6)</li>
@@ -179,24 +179,29 @@
               <li>Étiquettes et noms accessibles des formulaires</li>
               <li>Liens vides ou non explicites</li>
               <li>Langue de la page et encodage</li>
-              <li>Structure des tableaux de données</li>
-              <li>Redimensionnement du texte jusqu'à 200 %</li>
-              <li>Identification des erreurs de saisie</li>
-              <li>Focus visible sur les éléments interactifs</li>
-              <li>Duplication d'ID HTML</li>
+              <li>Navigation clavier : skip-link, piège de focus, focus visible</li>
+              <li>Cibles tactiles (min. 44 px) et débordement mobile</li>
+              <li>Médias sans sous-titres, liens PDF, iframes sans titre</li>
+              <li>Absence de « Déclaration d'accessibilité »</li>
             </ul>
+          </div>
+          <div class="coverage__block coverage__block--ok">
+            <h3>Analyse IA (au-delà des 40 % classiques)</h3>
+            <ul class="check-list">
+              <li>Pertinence des textes alternatifs (générique « image », « IMG_1234 », nom de fichier…)</li>
+              <li>Explicabilité des intitulés de liens (« cliquez ici », « en savoir plus »…)</li>
+              <li>Clarté des labels de formulaires et messages d'erreur</li>
+            </ul>
+            <p class="coverage-block__note">L'analyse IA signale les points sémantiques suspects. Ses verdicts restent des pistes à confirmer par un expert : l'outil ne prétend jamais à 100 %.</p>
           </div>
           <div class="coverage__block coverage__block--no">
             <h3>Ce qui nécessite un audit humain</h3>
             <ul class="check-list check-list--minus">
-              <li>Pertinence des textes alternatifs</li>
-              <li>Parcours clavier complet et logique</li>
-              <li>Compatibilité avec les lecteurs d'écran</li>
-              <li>Vidéos, médias et transcriptions</li>
-              <li>Documents PDF accessibles</li>
-              <li>Qualité des étiquettes et messages d'erreur</li>
-              <li>Navigation et compréhension globale</li>
+              <li>Compatibilité réelle avec les lecteurs d'écran</li>
+              <li>Parcours clavier exhaustif sur toutes les pages</li>
               <li>Audit multi-pages (hors offre Pro/Monitoring)</li>
+              <li>Navigation et compréhension globale</li>
+              <li>Validation finale de la conformité RGAA complète</li>
             </ul>
           </div>
         </div>
@@ -259,7 +264,7 @@
         </div>
         <p class="section__lead" style="margin-top: 1.2rem; font-size: 0.95rem;">
           Transparence : 100/100 signifie qu'aucun critère <em>automatiquement testable</em> n'a échoué.
-          Cela ne garantit pas la conformité RGAA complète, qui exige un audit humain (voir la FAQ).
+          Cela ne garantit pas la conformité RGAA complète, qui exige un audit humain (voir la FAQ). L'analyse IA et les tests d'interaction étendent la couverture automatique au-delà des 40 % classiques.
         </p>
       </div>
     </section>
@@ -359,7 +364,7 @@
         <h2 id="faq-title" class="section__title">Foire aux questions</h2>
         <details>
           <summary>AccessiCheck garantit-il la conformité RGAA ?</summary>
-          <p>Non. AccessiCheck est un outil technique d'aide au diagnostic. Il couvre uniquement les critères automatiquement testables. Un audit humain reste nécessaire pour garantir la conformité pleine et entière.</p>
+          <p>Non. AccessiCheck combine une détection technique automatisée et une analyse IA sémantique (textes alternatifs, intitulés de liens, labels). Il couvre une part importante mais non exhaustive des critères RGAA. Un audit humain reste nécessaire pour garantir la conformité pleine et entière.</p>
         </details>
         <details>
           <summary>Le scan couvre-t-il tout mon site ?</summary>

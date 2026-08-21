@@ -173,20 +173,20 @@ h2 {
 .impact-minor, .impact-notice { background: #e5e7eb; color: #374151; }
 
 /* Tables */
-.criteria-grid, .issues-table {
+.criteria-table, .issues-table {
   width: 100%;
   border-collapse: collapse;
   margin: 8pt 0 12pt 0;
   font-size: 9pt;
 }
-.criteria-grid th, .criteria-grid td,
+.criteria-table th, .criteria-table td,
 .issues-table th, .issues-table td {
   border: 1px solid #e5e7eb;
   padding: 6pt 8pt;
   text-align: left;
   vertical-align: top;
 }
-.criteria-grid th, .issues-table th {
+.criteria-table th, .issues-table th {
   background: #f3f4f6;
   font-weight: 700;
   color: #374151;
@@ -263,3 +263,26 @@ h2 {
   .page-break { page-break-before: always; }
   body { font-size: 10pt; }
 }
+
+/* v3 — Analyse IA vs détection technique */
+.tag-ai {
+  display: inline-block;
+  background: #ede9fe;
+  color: #6d28d9;
+  border-radius: 4px;
+  padding: 1pt 6pt;
+  font-size: 8pt;
+  font-weight: 700;
+}
+.ai-subtitle {
+  margin: 14pt 0 4pt;
+  font-size: 12pt;
+  color: #111827;
+}
+.ai-note {
+  font-size: 8.5pt;
+  color: #6b7280;
+  font-style: italic;
+  margin: 2pt 0 8pt;
+}
+.issues-table.compact { margin-bottom: 16pt; }
