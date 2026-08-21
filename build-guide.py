@@ -86,8 +86,12 @@ def french_typography(text: str) -> tuple[str, int]:
     # 4. ' -- ' en incise -> tiret cadratin.
     text = re.sub(r"[ \t]+--[ \t]+", " \u2014 ", text)
 
-    # Restauration des contenus protégés.
-    for key, value in tokens.items():
+    # Restauration des contenus protégés, dans l'ordre INVERSE d'ajout :
+    # un jeton récupéré (URL) peut être imbriqué DANS la valeur d'un jeton HTML.
+    # Si on restaure d'abord le jeton HTML (ajouté le dernier), il ré-injecte le
+    # jeton URL dans le texte ; on peut alors le résoudre ensuite. L'ordre direct
+    # laisserait des jetons \x00TYPO...\x00 non résolus dans les attributs href.
+    for key, value in reversed(list(tokens.items())):
         text = text.replace(key, value)
 
     return text, apostrophes
@@ -308,6 +312,62 @@ def render_pdf(meta: dict[str, str], body_html: str, output: Path) -> None:
       text-align: left;
     }}
 
+    /* Encadré « Pas le temps de tout lire ? » (porte de sortie précoce) */
+    .quick-box {{
+      margin: 0.6cm 0;
+      padding: 0.5cm 0.7cm;
+      border: 2px solid var(--green);
+      background: var(--green-light);
+      border-radius: 6px;
+      page-break-inside: avoid;
+    }}
+
+    .quick-box strong {{
+      display: block;
+      font-size: 12pt;
+      color: var(--green-dark);
+      margin-bottom: 0.2cm;
+    }}
+
+    .quick-box p {{
+      margin: 0 0 0.2cm;
+      text-align: left;
+    }}
+
+    .quick-box a {{
+      color: var(--green-dark);
+      text-decoration: underline;
+    }}
+
+    /* Appel à l'action final (Passez à l'action) */
+    .cta-box {{
+      margin: 0.8cm 0;
+      padding: 0.7cm 0.9cm;
+      border: 2px solid var(--green);
+      background: var(--green-light);
+      border-radius: 8px;
+      text-align: center;
+      page-break-inside: avoid;
+    }}
+
+    .cta-box strong {{
+      display: block;
+      font-size: 13pt;
+      color: var(--green-dark);
+      margin-bottom: 0.2cm;
+    }}
+
+    .cta-box p {{
+      margin: 0;
+      text-align: left;
+    }}
+
+    .cta-box a {{
+      color: var(--green-dark);
+      font-weight: 700;
+      text-decoration: underline;
+    }}
+
     table {{
       width: 100%;
       border-collapse: collapse;
@@ -357,7 +417,7 @@ def render_pdf(meta: dict[str, str], body_html: str, output: Path) -> None:
   <div class="cover">
     <div class="cover__badge">AccessiCheck · par Brozapi</div>
     <h1 class="cover__title">{title}</h1>
-    <p class="cover__subtitle">Comprendre le RGAA, l\u2019EAA et WCAG, et prioriser les actions pour votre site.</p>
+    <p class="cover__subtitle">Le guide du dirigeant (EAA, RGAA, WCAG) — Comprendre le RGAA, l'EAA et WCAG, et prioriser les actions pour votre site.</p>
     <div class="cover__meta">
       Auteur : {author}<br>
       Version : {version}<br>
@@ -365,7 +425,7 @@ def render_pdf(meta: dict[str, str], body_html: str, output: Path) -> None:
       PDF généré le {generated}
     </div>
     <div class="cover__footer">
-      Brozapi — Studio de produits numériques · accessicheck.brozapi.com<br>
+      Brozapi — Studio de produits numériques · <a href="https://accessicheck.brozapi.com/">accessicheck.brozapi.com</a><br>
       Ce guide est fourni à titre indicatif et ne constitue pas un conseil juridique.<br>
       Un scan automatique couvre environ 30 % à 40 % des critères RGAA ; un audit humain reste nécessaire.
     </div>

@@ -1,21 +1,30 @@
 ---
-titre: "Accessibilité web : votre site est-il concerné ? Le guide du dirigeant (EAA, RGAA, WCAG)"
+titre: "Accessibilité web : votre site est-il concerné ?"
 auteur: Brozapi
 date: 2026-08-20
-version: "1.0"
+version: "1.1"
 langue: fr
----
-
-# Accessibilité web : votre site est-il concerné ?
-## Le guide du dirigeant (EAA, RGAA, WCAG)
-
 ---
 
 **Auteur** : Brozapi  
 **Date de publication** : 20 août 2026  
-**Version** : 1.0  
+**Version** : 1.1  
 **Public visé** : dirigeants de PME françaises, non spécialistes du numérique  
 **Objectif** : comprendre en une heure si votre site est concerné par la nouvelle réglementation, ce que vous risquez, et quoi faire concrètement.
+
+---
+
+## Sommaire
+
+1. **Qui est concerné par l'EAA depuis le 28 juin 2025 ?**
+2. **Ce que risque concrètement une PME e-commerce de plus de 10 salariés**
+3. **Les 10 erreurs d'accessibilité les plus fréquentes sur les sites de PME**
+4. **Plan d'action concret sur 90 jours**
+5. **Ressources et outils**
+6. **Les limites de l'automatisation : ce qu'un scan ne voit pas**
+7. **Conclusion**
+8. **Annexe A : glossaire des termes techniques**
+9. **Annexe B : checklist finale à imprimer**
 
 ---
 
@@ -34,6 +43,13 @@ Nous allons voir ensemble :
 - les **ressources et outils** pour avancer sans vous noyer dans le jargon technique.
 
 Une chose importante avant de commencer : ce guide ne vous promet pas une conformité « 100 % garantie » en trois clics. L'accessibilité web est un chemin, pas une case à cocher. Notre objectif est de vous donner une feuille de route réaliste et actionnable.
+
+<div class="quick-box">
+<p><strong>Pas le temps de tout lire ?</strong></p>
+<p>Le scan automatique du chapitre 3 (les 10 erreurs les plus fréquentes) est désormais automatisé : AccessiCheck vérifie en 2 minutes la plupart des points qui y sont décrits — environ 30 à 40 % des critères RGAA testables. Un moyen rapide de savoir déjà si votre site a des angles morts manifestes.</p>
+<p><strong>Scannez votre site en 2 minutes</strong> : diagnostic One-Shot à 29 €, rapport PDF sous 24 h ouvrées — <a href="https://accessicheck.brozapi.com/">accessicheck.brozapi.com</a></p>
+<p>Ce guide reste utile : il vous sert à comprendre la réglementation, évaluer votre exposition et planifier le plan d'action. Le scan, lui, sert à diagnostiquer techniquement. Les deux sont complémentaires — le scan ne remplace pas le guide, et le guide ne remplace pas le scan.</p>
+</div>
 
 ---
 
@@ -275,30 +291,30 @@ Voici une sélection de ressources fiables et gratuites pour approfondir et avan
 
 ### Référentiels officiels
 
-1. **Loi n° 2025-277 du 25 mars 2025** (France) — transposition de l'EAA en droit français. Disponible sur Légifrance.
-2. **Directive (UE) 2019/882** (European Accessibility Act) — texte officiel sur EUR-Lex.
-3. **RGAA 4.1.2** — Référentiel Général d'Amélioration de l'Accessibilité, publié par la Direction interministérielle du numérique (Dinum).
-4. **WCAG 2.1 (et 2.2)** — Web Content Accessibility Guidelines, publiées par le W3C. Traductions en français disponibles via le W3C France.
-5. **Modèle de déclaration d'accessibilité** — fourni par la Dinum sur le site officiel du RGAA.
+1. **Loi n° 2025-277 du 25 mars 2025** (France) — transposition de l'EAA en droit français. Disponible sur [Légifrance](https://www.legifrance.gouv.fr/).
+2. **Directive (UE) 2019/882** (European Accessibility Act) — texte officiel sur [EUR-Lex](https://eur-lex.europa.eu/eli/dir/2019/882/oj).
+3. **RGAA 4.1.2** — Référentiel Général d'Amélioration de l'Accessibilité, publié par la Direction interministérielle du numérique (Dinum). Consulter [la version officielle](https://accessibilite.numerique.gouv.fr/).
+4. **WCAG 2.1 (et 2.2)** — Web Content Accessibility Guidelines, publiées par le W3C. Traductions en français disponibles via [W3C WAI](https://www.w3.org/WAI/standards-guidelines/wcag/).
+5. **Modèle de déclaration d'accessibilité** — fourni par la Dinum sur [le site officiel du RGAA](https://accessibilite.numerique.gouv.fr/obligations/).
 
 ### Guides et méthodologies
 
-6. **AcceDe Web** — collections de recommandations et de bonnes pratiques pour intégrer l'accessibilité dans le développement web. Très pratique pour les équipes techniques.
-7. **Atalan** — outils et formations en français, avec une approche pédagogique adaptée aux équipes projet.
-8. **Orange Digital Accessibility** — guidelines et outils open source développés par Orange, particulièrement utiles pour les tests sur mobile.
-9. **Access42 / ARPD** — ressources et articles sur l'accessibilité numérique en contexte francophone.
+6. **AcceDe Web** — collections de recommandations et de bonnes pratiques pour intégrer l'accessibilité dans le développement web. Très pratique pour les équipes techniques. Voir [AcceDe Web](https://www.accede-web.com/).
+7. **Atalan** — outils et formations en français, avec une approche pédagogique adaptée aux équipes projet. Voir [Atalan](https://atalan.fr/).
+8. **Orange Digital Accessibility** — guidelines et outils open source développés par Orange, particulièrement utiles pour les tests sur mobile. Voir [la ressource d'Orange](https://a11y-guidelines.orange.com/).
+9. **Access42 / ARPD** — ressources et articles sur l'accessibilité numérique en contexte francophone. Voir [Access42](https://access-42.com/).
 
 ### Outils de test
 
-10. **AccessiCheck** (*accessicheck.brozapi.com*) — outil de scan rapide permettant d'identifier les erreurs d'accessibilité les plus courantes sur un site web. C'est un excellent point de départ pour obtenir une photographie instantanée de l'état de votre site et prioriser vos corrections.
-11. **WAVE** (WebAIM) — extension de navigateur qui surligne visuellement les erreurs et alertes d'accessibilité directement sur la page.
-12. **axe DevTools** — extension de navigateur basée sur la bibliothèque axe-core, très utilisée par les développeurs.
-13. **Lighthouse** (intégré à Chrome) — outil de Google qui inclut un audit d'accessibilité avec un score et des recommandations.
+10. **AccessiCheck** — [accessicheck.brozapi.com](https://accessicheck.brozapi.com/) — outil de scan rapide permettant d'identifier les erreurs d'accessibilité les plus courantes sur un site web. C'est un excellent point de départ pour obtenir une photographie instantanée de l'état de votre site et prioriser vos corrections.
+11. **WAVE** (WebAIM) — extension de navigateur qui surligne visuellement les erreurs et alertes d'accessibilité directement sur la page. Voir [WAVE](https://wave.webaim.org/).
+12. **axe DevTools** — extension de navigateur basée sur la bibliothèque axe-core, très utilisée par les développeurs. Voir [axe](https://www.deque.com/axe/).
+13. **Lighthouse** (intégré à Chrome) — outil de Google qui inclut un audit d'accessibilité avec un score et des recommandations. Voir [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/).
 
 ### Formations et sensibilisation
 
-14. **MOOC Accessibilité numérique** (France Université Numérique / divers organismes) — formations en ligne gratuites pour monter en compétence progressivement.
-15. **W3C WAI** (Web Accessibility Initiative) — ressources pédagogiques et tutoriels, disponibles en plusieurs langues.
+14. **MOOC Accessibilité numérique** (France Université Numérique / divers organismes) — formations en ligne gratuites pour monter en compétence progressivement. Voir [le catalogue](https://www.fun-mooc.fr/).
+15. **W3C WAI** (Web Accessibility Initiative) — ressources pédagogiques et tutoriels, disponibles en plusieurs langues. Voir [W3C WAI](https://www.w3.org/WAI/).
 
 ---
 
@@ -370,6 +386,17 @@ Vous n'avez pas besoin d'être parfait demain. Vous avez besoin de commencer auj
 - [ ] Mes vidéos principales ont des sous-titres.
 - [ ] J'ai publié une page Accessibilité sur mon site.
 - [ ] J'ai prévu une revue semestrielle.
+
+---
+
+## Passez à l'action
+
+<div class="cta-box">
+<p><strong>Scannez votre site en 2 minutes</strong></p>
+<p>Obtenez un diagnostic clair des erreurs d'accessibilité techniquement testables sur votre page d'accueil, avec les actions à prioriser. Démarquez-vous avec un rapport PDF reçu par email sous 24 h ouvrées.</p>
+<p><a href="https://accessicheck.brozapi.com/">Scannez votre site dès maintenant — 29 € (One-Shot)</a></p>
+<p>Un audit humain complet RGAA reste nécessaire pour une conformité garantie ; le scan vous en donne la photographie honnête, sans fausse promesse.</p>
+</div>
 
 ---
 
