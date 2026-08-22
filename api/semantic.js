@@ -129,6 +129,8 @@ async function callSemanticAI(signal) {
     temperature: 0.1,
     response_format: { type: 'json_object' },
     max_tokens: 2000,
+    // 22/08 : l'endpoint Baidu d'OpenRouter produit des generations degenerees/vides - on l'exclut
+    provider: { order: ['DeepSeek', 'GMICloud', 'StreamLake'], ignore: ['Baidu'], allow_fallbacks: true },
   };
 
   const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
