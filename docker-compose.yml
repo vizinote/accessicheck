@@ -15,7 +15,7 @@ services:
       - WORKER_SCAN_TIMEOUT_MS=90000
       - PORT=8080
       - BASE_PATH=
-      - SCANNER_LLM_MODEL=deepseek/deepseek-v4-flash
+      - SCANNER_LLM_MODEL=deepseek/deepseek-v4-flash-0731
       - SCANNER_LLM_TIMEOUT_MS=25000
     networks:
       - badgeia-net

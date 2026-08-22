@@ -8,7 +8,7 @@
 
 // Le modèle est lu À CHAQUE APPEL (rebasculement à chaud possible via SCANNER_LLM_MODEL)
 function currentModel() {
-  return process.env.SCANNER_LLM_MODEL || 'deepseek/deepseek-v4-flash';
+  return process.env.SCANNER_LLM_MODEL || 'deepseek/deepseek-v4-flash-0731';
 }
 const SCANNER_LLM_BASE = process.env.SCANNER_LLM_BASE || 'https://openrouter.ai/api/v1/chat/completions';
 const SCANNER_LLM_TIMEOUT_MS = parseInt(process.env.SCANNER_LLM_TIMEOUT_MS || '25000', 10);
@@ -16,7 +16,7 @@ const SCANNER_AI_MAX_ISSUES = parseInt(process.env.SCANNER_AI_MAX_ISSUES || '12'
 
 const PRICING = {
   'mistralai/mistral-nemo': { in: 0.019, out: 0.030 },
-  'deepseek/deepseek-v4-flash': { in: 0.076, out: 0.151 },
+  'deepseek/deepseek-v4-flash-0731': { in: 0.076, out: 0.151 },
   'deepseek/deepseek-v4-flash-latest': { in: 0.076, out: 0.151 },
   'moonshotai/kimi-k2.6': { in: 0.5415, out: 2.28 },
   'qwen/qwen3.7-flash': { in: 0.030, out: 0.130 },
