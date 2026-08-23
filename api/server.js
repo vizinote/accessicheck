@@ -101,13 +101,13 @@ function sendGuideEmail(email) {
   const htmlBody =
     `<html><body style="font-family: system-ui, sans-serif; color:#1a1a1a; background:#ffffff;">` +
     `<div style="max-width:560px; margin:0 auto;">` +
-    `<p style="color:#0b6e47; font-weight:800; font-size:1.1rem;">AccessiCheck · par Brozapi</p>` +
+    `<p style="color:#1d4ed8; font-weight:800; font-size:1.1rem;">AccessiCheck · par Brozapi</p>` +
     `<p>Bonjour,</p>` +
     `<p>Merci pour votre intérêt. Votre guide <strong>« Accessibilité web : votre site est-il concerné ? (EAA, RGAA, WCAG) »</strong> ` +
     `est disponible ici :</p>` +
-    `<p><a href="${GUIDE_PDF_URL}" style="display:inline-block; padding:0.75rem 1.25rem; background:#0b6e47; color:#ffffff; text-decoration:none; border-radius:0.5rem; font-weight:600;">Télécharger le guide PDF</a></p>` +
+    `<p><a href="${GUIDE_PDF_URL}" style="display:inline-block; padding:0.75rem 1.25rem; background:#1d4ed8; color:#ffffff; text-decoration:none; border-radius:0.5rem; font-weight:600;">Télécharger le guide PDF</a></p>` +
     `<p>Vous pouvez le télécharger gratuitement et le partager au sein de votre équipe.</p>` +
-    `<p style="background:#e7f6ef; padding:0.75rem; border-left:3px solid #0b6e47; color:#454545;">` +
+    `<p style="background:#eff6ff; padding:0.75rem; border-left:3px solid #1d4ed8; color:#454545;">` +
     `<strong>Important :</strong> un scan automatique combine une détection technique et une analyse IA élargie au-delà des 40 % classiques. ` +
     `Pour une conformité complète, un audit humain reste toutefois nécessaire.` +
     `</p>` +
@@ -115,7 +115,7 @@ function sendGuideEmail(email) {
     `ni une garantie de conformité.</small></p>` +
     `<p>Bonne lecture,<br>` +
     `L'équipe Brozapi — AccessiCheck<br>` +
-    `<a href="https://accessicheck.brozapi.com" style="color:#0b6e47;">accessicheck.brozapi.com</a></p>` +
+    `<a href="https://accessicheck.brozapi.com" style="color:#1d4ed8;">accessicheck.brozapi.com</a></p>` +
     `<hr style="border:none; border-top:1px solid #d4d4d4; margin:1.5rem 0;">` +
     `<p style="font-size:0.8rem; color:#737373;">` +
     `Brozapi — Studio de produits numériques.<br>` +

@@ -154,9 +154,9 @@ def render_pdf(meta: dict[str, str], body_html: str, output: Path) -> None:
     }}
 
     :root {{
-      --green: #0b6e47;
-      --green-dark: #084f33;
-      --green-light: #e7f6ef;
+      --green: #1d4ed8;
+      --green-dark: #1e3a8a;
+      --green-light: #eff6ff;
       --blue: #003399;
       --blue-dark: #002266;
       --gray-900: #1a1a1a;

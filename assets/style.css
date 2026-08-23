@@ -1,12 +1,12 @@
 /* AccessiCheck — feuille de style
    Zéro dépendance externe, zéro cookie, zéro tracking.
-   Palette : vert accessibilité #0b6e47 + bleu neutre #003399.
+   Palette : bleu profond #1d4ed8 + accent ambre #f59e0b (rebranding 2026-08-23).
 */
 
 :root {
-  --green: #0b6e47;
-  --green-dark: #084f33;
-  --green-light: #e7f6ef;
+  --green: #1d4ed8; /* bleu profond (ex-vert) */
+  --green-dark: #1e3a8a;
+  --green-light: #eff6ff;
   --blue: #003399;
   --blue-dark: #002266;
   --blue-light: #e6ecf9;
@@ -174,8 +174,8 @@ a:focus {
   padding: 0.9rem 1.6rem;
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--white);
-  background: var(--green);
+  color: #1e293b;
+  background: #f59e0b;
   border: 0;
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
@@ -185,8 +185,8 @@ a:focus {
 
 .hero__cta:hover,
 .hero__cta:focus {
-  background: var(--green-dark);
-  color: var(--white);
+  background: #d97706;
+  color: #1e293b;
 }
 
 /* Urgence / contexte */
@@ -343,7 +343,7 @@ a:focus {
 .scan-result {
   padding: 1.25rem;
   background: var(--green-light);
-  border: 1px solid #b8e0cd;
+  border: 1px solid #bfdbfe;
   border-radius: var(--radius);
 }
 
@@ -393,7 +393,7 @@ a:focus {
 
 .scan-result__issues li {
   padding: 0.6rem 0;
-  border-bottom: 1px solid #b8e0cd;
+  border-bottom: 1px solid #bfdbfe;
   color: var(--gray-700);
 }
 
@@ -452,7 +452,7 @@ a:focus {
 
 .scan-result {
   background: var(--green-light);
-  border: 1px solid #b8e0cd;
+  border: 1px solid #bfdbfe;
   border-radius: var(--radius);
   padding: 1.5rem;
 }
@@ -501,7 +501,7 @@ a:focus {
 
 .scan-result__issues li {
   padding: 0.5rem 0;
-  border-bottom: 1px solid #b8e0cd;
+  border-bottom: 1px solid #bfdbfe;
 }
 
 .scan-result__issues li:last-child {
@@ -620,13 +620,14 @@ a:focus {
 }
 
 .btn--primary {
-  color: var(--white);
-  background: var(--green);
+  color: #1e293b;
+  background: #f59e0b;
 }
 
 .btn--primary:hover,
 .btn--primary:focus {
-  background: var(--green-dark);
+  background: #d97706;
+  color: #1e293b;
 }
 
 .btn--secondary {
@@ -636,7 +637,7 @@ a:focus {
 
 .btn--secondary:hover,
 .btn--secondary:focus {
-  background: #d6ede3;
+  background: #dbeafe;
 }
 
 /* Offres */
@@ -671,8 +672,8 @@ a:focus {
   letter-spacing: 0.04em;
   padding: 0.25rem 0.6rem;
   border-radius: 999px;
-  background: var(--green);
-  color: var(--white);
+  background: #f59e0b;
+  color: #1e293b;
   margin-bottom: 0.75rem;
   width: fit-content;
 }
@@ -734,7 +735,7 @@ a:focus {
 
 .coverage__block--ok {
   background: var(--green-light);
-  border: 1px solid #b8e0cd;
+  border: 1px solid #bfdbfe;
 }
 
 .coverage__block--no {
@@ -792,7 +793,7 @@ a:focus {
 }
 
 .honesty .card {
-  border-color: #b8e0cd;
+  border-color: #bfdbfe;
 }
 
 /* FAQ */
@@ -989,13 +990,13 @@ a:focus {
 .breadcrumb a:hover { text-decoration: underline; }
 .intro { font-size: 1.1rem; color: #4a4a4a; margin-bottom: 1.5rem; }
 .highlight-box {
-  background: #e7f3ee;
-  border-left: 4px solid #0b6e47;
+  background: #e3ecfd;
+  border-left: 4px solid #1d4ed8;
   padding: 1rem 1.25rem;
   border-radius: 8px;
   margin-bottom: 2rem;
 }
-.highlight-box strong { color: #0b6e47; }
+.highlight-box strong { color: #1d4ed8; }
 .related { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #e1e7e4; }
 .related h2 { margin-top: 0; }
 .hub-list { columns: 2; column-gap: 2.5rem; }
