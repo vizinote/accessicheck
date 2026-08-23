@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comment tester l’accessibilité de votre site web : méthodes et outils gratuits — AccessiCheck</title>
+  <meta name="description" content="Découvrez comment tester l’accessibilité de votre site web : 3 tests manuels en 5 minutes, les outils gratuits (WAVE, axe DevTools, Lighthouse), leurs limites et quand passer à un audit humain.">
+  <link rel="canonical" href="https://accessicheck.brozapi.com/blog/tester-accessibilite-site-web.html">
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta property="og:title" content="Comment tester l’accessibilité de votre site web : méthodes et outils gratuits">
+  <meta property="og:description" content="3 tests manuels en 5 minutes, les outils gratuits (WAVE, axe DevTools, Lighthouse), leurs limites et quand passer à un audit humain.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://accessicheck.brozapi.com/blog/tester-accessibilite-site-web.html">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:image" content="https://accessicheck.brozapi.com/assets/og-tester-accessibilite-site-web.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://accessicheck.brozapi.com/assets/og-tester-accessibilite-site-web.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Comment tester l’accessibilité de votre site web : méthodes et outils gratuits",
+    "description": "3 tests manuels en 5 minutes, les outils gratuits (WAVE, axe DevTools, Lighthouse), leurs limites et quand passer à un audit humain.",
+    "author": {"@type": "Organization", "name": "Brozapi"},
+    "publisher": {"@type": "Organization", "name": "AccessiCheck", "logo": {"@type": "ImageObject", "url": "https://accessicheck.brozapi.com/favicon.svg"}},
+    "datePublished": "2026-08-23",
+    "dateModified": "2026-08-23",
+    "inLanguage": "fr",
+    "mainEntityOfPage": {"@type": "WebPage", "@id": "https://accessicheck.brozapi.com/blog/tester-accessibilite-site-web.html"}
+  }
+  </script>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.brozapi.com; font-src 'self' data:; base-uri 'self'; form-action 'self' https://api.brozapi.com">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <header class="header">
+    <div class="container">
+      <a class="logo" href="/" aria-label="AccessiCheck — Accueil">
+        <span class="logo__name">AccessiCheck</span>
+        <span class="logo__by">par Brozapi</span>
+      </a>
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="/">Accueil</a>
+        <a href="/blog/">Blog</a>
+        <a href="https://accessicheck.brozapi.com/#offres">Offres</a>
+        <a href="https://accessicheck.brozapi.com/#faq">FAQ</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenu">
+    <article class="page">
+      <div class="container">
+        <nav aria-label="Fil d’Ariane">
+          <ol style="list-style:none;padding:0;margin:0 0 1rem;color:var(--gray-500);font-size:.9rem;">
+            <li style="display:inline;"><a href="/">Accueil</a></li>
+            <li style="display:inline;" aria-hidden="true"> &rsaquo; </li>
+            <li style="display:inline;"><a href="/blog/">Blog</a></li>
+            <li style="display:inline;" aria-hidden="true"> &rsaquo; </li>
+            <li style="display:inline;">Tester l’accessibilité de votre site web</li>
+          </ol>
+        </nav>
+
+        <h1>Comment tester l’accessibilité de votre site web : méthodes et outils</h1>
+        <p><em>Publié le 23 août 2026 · Lecture : 6 minutes · Par l’équipe Brozapi</em></p>
+
+        <p>Tester l’accessibilité de son site web n’est pas réservé aux experts. Avant de payer un audit complet, il existe des gestes simples et des outils gratuits pour repérer soi-même l’essentiel des problèmes.</p>
+
+        <p>Le cadre légal pousse d’ailleurs dans ce sens : l’Acte européen sur l’accessibilité (EAA), applicable depuis le 28 juin 2025, étend les obligations d’accessibilité à de nombreux services grand public du secteur privé, tandis que le RGAA encadre les sites publics français. Autrement dit, savoir tester son site devient une compétence utile, pas seulement pour les développeurs.</p>
+
+        <p>Ce guide vous montre par où commencer, ce que valent réellement les tests automatiques, et à quel moment confier la suite à un professionnel.</p>
+
+        <h2>Trois tests manuels à faire en cinq minutes</h2>
+        <p>Commencez par ces trois vérifications : elles ne demandent aucun outil ni compétence technique, et repèrent déjà une grande partie des problèmes.</p>
+
+        <h3>La navigation au clavier</h3>
+        <p>Débranchez votre souris et parcourez votre site uniquement avec la touche <strong>Tab</strong>. Posez-vous trois questions. Pouvez-vous atteindre tous les liens et tous les boutons ? Voyez-vous toujours où vous êtes, grâce à un contour de focus visible ? Pouvez-vous ressortir des menus déroulants et des fenêtres sans rester piégé ? Si la réponse est non, un utilisateur qui navigue au clavier — ou avec un lecteur d’écran — ne peut tout simplement pas utiliser votre site.</p>
+
+        <h3>Le zoom du texte</h3>
+        <p>Affichez n’importe quelle page et zoomez jusqu’à 200 % environ (touches <strong>Ctrl et +</strong>, ou <strong>Cmd et +</strong>). Le texte doit rester lisible, les blocs ne doivent ni se chevaucher ni disparaître. C’est le niveau de zoom que beaucoup de personnes malvoyantes utilisent au quotidien. Un site qui se casse à 200 % est un site inaccessible pour elles.</p>
+
+        <h3>Les contrastes, à l’œil nu</h3>
+        <p>Regardez vos textes posés sur leur fond : un gris clair sur blanc, un orange sur jaune sont souvent impossibles à lire, surtout en plein soleil. Le référentiel WCAG, sur lequel s’appuie la réglementation française, exige un rapport de contraste d’au moins <strong>4,5:1</strong> pour le texte courant, et <strong>3:1</strong> pour les grands textes.</p>
+
+        <h2>Les outils gratuits pour automatiser le test</h2>
+        <p>Une fois les tests manuels faits, des outils gratuits analysent le code de la page et signalent les problèmes techniques en quelques secondes. Trois références suffisent largement pour débuter.</p>
+
+        <h3>WAVE, de WebAIM</h3>
+        <p>L’extension de navigateur <strong>WAVE</strong>, éditée par l’organisation WebAIM, surligne directement les erreurs sur la page : contrastes insuffisants, images sans texte alternatif, structure des titres, labels de formulaires. C’est l’outil idéal pour avoir une vue visuelle et immédiate des points bloquants, sans jamais toucher au code. Il existe aussi en version en ligne, sans installation.</p>
+
+        <h3>axe DevTools, de Deque</h3>
+        <p><strong>axe DevTools</strong> s’intègre aux outils de développement de Chrome et de Firefox. Il liste les violations par niveau de gravité et, pour chacune, explique la règle WCAG concernée et la façon concrète de la corriger. C’est l’outil de référence de nombreux développeurs, car il pointe précisément l’élément fautif dans le code, à la manière d’un débogueur.</p>
+
+        <h3>Lighthouse, de Google</h3>
+        <p>Intégré à Chrome, <strong>Lighthouse</strong> produit un rapport d’audit complet qui comprend une section dédiée à l’accessibilité, avec un score sur 100 et la liste des éléments à corriger. Pratique pour obtenir un diagnostic global en un clic. Son audit d’accessibilité s’appuie sur le moteur open source <strong>axe-core</strong>, le même que celui d’axe DevTools.</p>
+
+        <h2>Ce que les outils automatiques ne voient pas</h2>
+        <p>Les outils automatiques sont un excellent premier pas, mais ils ne détectent qu’une partie des problèmes — estimée généralement autour de <strong>30 à 40 % des critères</strong>. Ils ne peuvent pas juger si un texte alternatif décrit vraiment l’image, si la navigation au clavier reste logique de bout en bout, ni si l’ensemble reste compréhensible pour un utilisateur réel. Un outil signale des pistes, jamais un verdict de conformité.</p>
+
+        <h2>Quand passer à un audit humain</h2>
+        <p>Vous devriez confier la suite à un auditeur professionnel dans trois situations.</p>
+        <ul class="legal-list">
+          <li><strong>Vous devez justifier d’une conformité RGAA</strong> auprès d’une autorité ou d’un client.</li>
+          <li><strong>Votre site comporte des parcours complexes</strong> : boutique en ligne, espace client, formulaire multi-étapes.</li>
+          <li><strong>Vous voulez un rapport formalisé</strong> avec un taux de conformité global et un plan de correction priorisé.</li>
+        </ul>
+        <p>L’audit humain reste la seule façon d’établir une conformité pleine et entière.</p>
+
+        <h2>Tester régulièrement, pas une fois pour toutes</h2>
+        <p>L’accessibilité n’est pas un état que l’on atteint une fois, mais une habitude à entretenir. Chaque ajout de contenu, chaque refonte, chaque nouveau plugin peut réintroduire des erreurs. L’idéal est d’intégrer un test rapide dans votre routine : un tour de clavier et de zoom à chaque mise en ligne majeure, un scan automatique chaque mois. C’est plus efficace que de tout corriger d’un coup à la veille d’une échéance.</p>
+
+        <div class="scanner__box" style="margin:2.5rem 0;">
+          <h2 style="margin-top:0;">Testez votre site en deux minutes</h2>
+          <p>Vous voulez un premier état des lieux sans configurer le moindre outil ? AccessiCheck scanne gratuitement la page d’accueil de votre site et vous affiche un score avec les problèmes prioritaires. Le diagnostic One-Shot (29 €, rapport PDF + email) documente la page d’accueil ; le rapport Pro (49 €) couvre cinq pages clés avec le code de correction pour chaque erreur.</p>
+          <a class="btn btn--primary" href="https://accessicheck.brozapi.com/#scanner">Scanner mon site gratuitement</a>
+        </div>
+
+        <p>Pour creuser la méthode du diagnostic automatique, lisez notre guide <a href="/audit-accessibilite-site-web.html">« Audit accessibilité site web : scanner les erreurs en 2 minutes »</a>, ou découvrez <a href="/erreurs-accessibilite-frequentes.html">les 10 erreurs d’accessibilité les plus fréquentes</a>.</p>
+
+        <h2>Questions fréquentes</h2>
+        <div class="faq">
+          <details>
+            <summary>Faut-il être développeur pour tester l’accessibilité ?</summary>
+            <p>Non. Les trois tests manuels se font sans aucune compétence technique, et les outils gratuits affichent leurs résultats en clair. Un regard neuf suffit souvent à repérer les blocages majeurs.</p>
+          </details>
+          <details>
+            <summary>Un test automatique suffit-il pour être conforme RGAA ?</summary>
+            <p>Non. Les outils couvrent environ 30 à 40 % des critères. Ils constituent un excellent point de départ pour prioriser les corrections, mais la conformité complète exige un audit humain.</p>
+          </details>
+          <details>
+            <summary>Par quoi commencer en priorité ?</summary>
+            <p>Par la navigation au clavier et le zoom : ce sont les deux tests qui bloquent le plus d’utilisateurs, et ils ne prennent que quelques minutes. Ensuite, lancez un scan gratuit pour obtenir la liste des problèmes techniques.</p>
+          </details>
+        </div>
+
+        <p><em>Cet article est fourni à titre informatif et ne constitue pas un conseil juridique. Pour une analyse de votre situation, consultez un professionnel du droit.</em></p>
+
+        <hr>
+        <p><a href="/">← Retour à l’accueil</a> · <a href="/blog/">Tous les guides</a></p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <p><strong>AccessiCheck</strong><br><a href="https://brozapi.com/">par Brozapi</a></p>
+          <p>AccessiCheck est un produit Brozapi — SIRET 103 472 866 00013</p>
+        </div>
+        <div>
+          <p><a href="/mentions-legales.html">Mentions légales</a></p>
+          <p><a href="/cgv.html">Conditions de vente</a></p>
+          <p><a href="/mentions-legales.html#confidentialite">Politique de confidentialité</a></p>
+          <p><a href="/">Accueil</a></p>
+          <p><a href="/blog/">Blog</a></p>
+        </div>
+        <div>
+          <p>Articles :</p>
+          <p><a href="/blog/tester-accessibilite-site-web.html">Tester l’accessibilité de son site</a></p>
+          <p><a href="/blog/audit-accessibilite-prix-methodes-loi.html">Audit accessibilité : prix et loi</a></p>
+          <p><a href="/audit-rgaa-pas-cher.html">Audit RGAA pas cher</a></p>
+          <p><a href="/audit-accessibilite-site-web.html">Audit accessibilité site web</a></p>
+          <p><a href="/conformite-eaa-ecommerce-2025.html">Conformité EAA e-commerce 2025</a></p>
+        </div>
+      </div>
+      <p class="footer__disclaimer">
+        AccessiCheck est un outil technique d’aide au diagnostic. Il ne constitue ni un conseil juridique ni une garantie de conformité RGAA/WCAG.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
