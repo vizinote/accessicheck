@@ -2,6 +2,7 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const { initDb, createScan, getScan, updateScanStatus, listPendingScans, createOrder, getOrder, getPendingOrderByEmail, updateOrderStatus, saveLead } = require('./db');
 const { generateId, normalizeUrl, validateUrl, scanWithRetry, closeBrowser } = require('./scanner');
+const { scanSiteWithRetry } = require('./multipage');
 const { generateReportHtml, generateReportPdf } = require('./reports/reportGenerator');
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(express.json({ limit: '1mb' }));
 const PORT = process.env.PORT || 8080;
 const BASE_PATH = process.env.BASE_PATH || '';
 const WORKER_SCAN_TIMEOUT_MS = parseInt(process.env.WORKER_SCAN_TIMEOUT_MS || '120000', 10);
+const MULTIPAGE_SCAN_TIMEOUT_MS = parseInt(process.env.MULTIPAGE_SCAN_TIMEOUT_MS || '420000', 10);
 const VALID_OFFERS = new Set(['oneshot', 'pro', 'monitoring', 'free']);
 const ALLOWED_ORIGINS = new Set([
   'https://accessicheck.brozapi.com',
@@ -476,20 +478,26 @@ function withTimeout(promise, ms, label) {
 
 async function processOneScan(scan) {
   const id = scan.id;
-  console.log(`[worker] démarrage scan ${id} : ${scan.url}`);
+  console.log(`[worker] démarrage scan ${id} : ${scan.url} (offre ${scan.offer})`);
   await updateScanStatus(id, 'running', { started_at: new Date().toISOString() });
+
+  // Offres payantes = audit multi-pages (jusqu'à 5 pages clés, 1 seul quota
+  // décompté à la création du scan). Le scan gratuit reste sur la page
+  // d'accueil uniquement (différenciation d'offre).
+  const multipage = scan.offer !== 'free';
+  const timeoutMs = multipage ? MULTIPAGE_SCAN_TIMEOUT_MS : WORKER_SCAN_TIMEOUT_MS;
 
   try {
     const result = await withTimeout(
-      scanWithRetry(scan.url),
-      WORKER_SCAN_TIMEOUT_MS,
+      multipage ? scanSiteWithRetry(scan.url) : scanWithRetry(scan.url),
+      timeoutMs,
       `scan ${id}`
     );
     await updateScanStatus(id, 'done', {
       finished_at: new Date().toISOString(),
       result: JSON.stringify(result),
     });
-    console.log(`[worker] scan ${id} terminé : score ${result.score}`);
+    console.log(`[worker] scan ${id} terminé : score ${result.score}${result.pages_count ? ` (${result.pages_count} pages)` : ''}`);
   } catch (err) {
     const message = err && err.message ? err.message : 'Erreur inconnue.';
     console.error(`[worker] scan ${id} échoué :`, message);

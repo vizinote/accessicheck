@@ -3,6 +3,7 @@ const path = require('path');
 
 const STYLE_CSS = fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8');
 const { correctionsSectionHtml } = require('./corrections');
+const { rgaaSectionHtml, rgaaAnnotation } = require('./rgaa');
 
 const IMPACT_ORDER = { critical: 0, serious: 1, error: 2, moderate: 3, warning: 4, minor: 5, notice: 6 };
 const IMPACT_LABELS = {
@@ -117,6 +118,39 @@ function scoreSection(score) {
         <div class="score-value">${score}<small>/100</small></div>
       </div>
       <div class="score-label" style="color:${color}">${label}</div>
+    </section>
+  `;
+}
+
+// Audit multi-pages : score par page + score global (moyenne des pages scannées).
+function multiPageSection(result) {
+  const pages = result.pages || [];
+  if (pages.length <= 1) return '';
+  const rows = pages.map((p) => {
+    const scoreCell = p.status === 'done'
+      ? `<strong style="color:${scoreColor(p.score)}">${p.score}/100</strong>`
+      : '<span class="status-ko">échec</span>';
+    const issuesCell = p.status === 'done' ? String(p.issuesCount) : escapeHtml(p.error || 'scan impossible');
+    const label = p.pageTitle ? `${escapeHtml(p.path)} <span class="page-title-note">— ${escapeHtml(p.pageTitle)}</span>` : escapeHtml(p.path);
+    return `
+        <tr>
+          <td>${label}</td>
+          <td>${scoreCell}</td>
+          <td>${issuesCell}</td>
+        </tr>`;
+  }).join('');
+  const doneCount = pages.filter((p) => p.status === 'done').length;
+  return `
+    <section class="multipage-section">
+      <h2>Audit multi-pages (${doneCount} page${doneCount > 1 ? 's' : ''} analysée${doneCount > 1 ? 's' : ''})</h2>
+      <p class="corrections-intro">Page d'accueil + pages clés découvertes automatiquement (contact, produits/services, mentions légales, pages principales). Le score global est la moyenne des pages analysées. Un seul audit décompté de votre quota.</p>
+      <table class="criteria-table pages-table">
+        <thead>
+          <tr><th>Page</th><th>Score</th><th>Problèmes</th></tr>
+        </thead>
+        <tbody>${rows}
+        </tbody>
+      </table>
     </section>
   `;
 }
@@ -265,12 +299,13 @@ function allIssuesTable(issues) {
     <h3 class="ai-subtitle">🔎 Analyse IA (pertinence sémantique)</h3>
     <p class="ai-note">Détections issues d'un modèle de langue vérifiant la pertinence des textes alternatifs, des intitulés de liens et des labels de formulaires. À confirmer par un expert.</p>
     <table class="issues-table compact">
-      <thead><tr><th>Impact</th><th>Problème</th><th>Origine</th></tr></thead>
+      <thead><tr><th>Impact</th><th>Problème</th><th>RGAA 4.1</th><th>Origine</th></tr></thead>
       <tbody>
         ${ia.map(i => `
           <tr>
             <td><span class="impact-pill impact-${(i.impact || i.type || 'notice').toLowerCase()}">${impactLabel(i)}</span></td>
             <td>${escapeHtml(i.message || i.help || i.description || 'Problème détecté')}</td>
+            <td>${escapeHtml(rgaaAnnotation(i).text)}</td>
             <td><span class="tag-ai">Analyse IA</span></td>
           </tr>
         `).join('')}
@@ -280,16 +315,17 @@ function allIssuesTable(issues) {
   return `
     ${aiSection}
     <h3 class="ai-subtitle">🧰 Détection technique automatisée</h3>
-    <p class="ai-note">Détections issues de vérifications techniques (contraste, structure, ARIA, formulaires, images, liens, navigation clavier, contenus).</p>
+    <p class="ai-note">Détections issues de vérifications techniques (contraste, structure, ARIA, formulaires, images, liens, navigation clavier, contenus). La colonne RGAA 4.1 traduit chaque problème dans le référentiel français.</p>
     <table class="issues-table">
       <thead>
-        <tr><th>Impact</th><th>Problème</th><th>Origine</th></tr>
+        <tr><th>Impact</th><th>Problème</th><th>RGAA 4.1</th><th>Origine</th></tr>
       </thead>
       <tbody>
         ${sorted.filter((i) => tech.includes(i)).map(i => `
           <tr>
             <td><span class="impact-pill impact-${(i.impact || i.type || 'notice').toLowerCase()}">${impactLabel(i)}</span></td>
             <td>${escapeHtml(i.message || i.help || i.description || 'Problème détecté')}</td>
+            <td>${escapeHtml(rgaaAnnotation(i).text)}</td>
             <td>${escapeHtml(engineLabel(i))}</td>
           </tr>
         `).join('')}
@@ -301,11 +337,15 @@ function allIssuesTable(issues) {
 function renderOneShot(scan) {
   const result = scan.result || {};
   const score = result.score ?? 0;
+  const multipage = multiPageSection(result);
+  const scoreTitle = multipage ? 'Score global (moyenne des pages)' : '';
   const body = `
     <main class="report-body oneshot">
       <h1>Diagnostic express</h1>
       <p class="url">${escapeHtml(result.url || scan.url)}</p>
+      ${scoreTitle ? `<p class="score-note">${scoreTitle}</p>` : ''}
       ${scoreSection(score)}
+      ${multipage}
       ${summaryCards(result)}
       <section>
         <h2>Top 5 des problèmes à corriger</h2>
@@ -315,7 +355,8 @@ function renderOneShot(scan) {
         <h2>Actions prioritaires</h2>
         ${remediationPlan(result.issues)}
       </section>
-      ${correctionsSectionHtml(result.issues, 10)}
+      ${correctionsSectionHtml(result.issues, 5)}
+      ${rgaaSectionHtml(result.issues, { pages: result.pages })}
       <section>
         <h2>Ce qui a été testé</h2>
         ${criteriaTable(result)}
@@ -328,12 +369,14 @@ function renderOneShot(scan) {
 function renderPro(scan) {
   const result = scan.result || {};
   const score = result.score ?? 0;
+  const multipage = multiPageSection(result);
   const body = `
     <main class="report-body pro">
       <h1>Rapport d'audit détaillé</h1>
       <p class="url">${escapeHtml(result.url || scan.url)}</p>
       ${executiveSummary(result)}
       ${scoreSection(score)}
+      ${multipage}
       ${summaryCards(result)}
       <section>
         <h2>Grille des critères automatiquement testés</h2>
@@ -343,7 +386,8 @@ function renderPro(scan) {
         <h2>Plan de remédiation priorisé</h2>
         ${remediationPlan(result.issues)}
       </section>
-      ${correctionsSectionHtml(result.issues, 10)}
+      ${correctionsSectionHtml(result.issues, 5)}
+      ${rgaaSectionHtml(result.issues, { pages: result.pages })}
       <section class="page-break">
         <h2>Liste complète des problèmes détectés</h2>
         ${allIssuesTable(result.issues)}
@@ -373,6 +417,7 @@ function renderMonitoring(scan) {
           <p>Problèmes actifs : <strong>${result.issues ? result.issues.length : 0}</strong></p>
         </div>
       </div>
+      ${multiPageSection(result)}
       ${summaryCards(result)}
       <section>
         <h2>Alertes régression</h2>

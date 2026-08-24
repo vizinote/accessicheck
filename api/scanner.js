@@ -168,7 +168,7 @@ async function runContentChecks(page) {
       impact: 'moderate',
       message: `${mediaNoSubs.length} média(s) (vidéo/audio) sans piste de sous-titres/audiodescription ni lien de transcription.`,
       wcag: '1.2.2',
-      rgaa: '4.5.1',
+      rgaa: '4.3',
       count: mediaNoSubs.length,
       layer: 'contenu',
     });
@@ -194,7 +194,7 @@ async function runContentChecks(page) {
       impact: 'minor',
       message: `${pdfLinks.length} lien(s) vers un fichier PDF détecté(s) (ex : ${examples}). PDF probablement non accessible, à vérifier.`,
       wcag: '1.1.1',
-      rgaa: '4.5.1',
+      rgaa: '13.3',
       count: pdfLinks.length,
       samples: pdfLinks.map((l) => l.href),
       layer: 'contenu',
@@ -219,7 +219,7 @@ async function runContentChecks(page) {
       impact: 'moderate',
       message: `Aucune page ou lien « Déclaration d'accessibilité » détecté. Obligation RGAA pour les services concernés (art. 47 de la loi pour une République numérique).`,
       wcag: '2.4.1',
-      rgaa: '3.1.1',
+      rgaa: null,
       layer: 'contenu',
     });
   }
@@ -242,7 +242,7 @@ async function runContentChecks(page) {
       impact: 'serious',
       message: `${iframesNoTitle.length} iframe(s) sans titre (attribut title ou aria-label absent). Donner à chaque iframe un titre décrivant son contenu.`,
       wcag: '4.1.2',
-      rgaa: '8.2.1',
+      rgaa: '2.1',
       count: iframesNoTitle.length,
       layer: 'contenu',
     });
@@ -278,7 +278,7 @@ async function runInteractionChecks(page, log = console.log) {
         impact: 'serious',
         message: 'Aucun lien d\'évitement (skip-link) détecté : permettre d\'atteindre directement le contenu principal sans repasser la navigation.',
         wcag: '2.4.1',
-        rgaa: '12.1.1',
+        rgaa: '12.7',
         layer: 'interaction',
       });
     } else if (!skip.hasTarget) {
@@ -288,7 +288,7 @@ async function runInteractionChecks(page, log = console.log) {
         impact: 'moderate',
         message: `Le lien d'évitement « ${skip.text} » pointe vers « ${skip.href} » dont la cible n'existe pas.`,
         wcag: '2.4.1',
-        rgaa: '12.1.1',
+        rgaa: '12.7',
         layer: 'interaction',
       });
     }
@@ -334,14 +334,14 @@ async function runInteractionChecks(page, log = console.log) {
       checks.push({
         engine: 'custom', id: 'focus-trap', impact: 'serious',
         message: `Piège de focus possible : la navigation clavier semble bloquée sur « ${trapLabel} ». On doit pouvoir sortir de chaque zone au clavier.`,
-        wcag: '2.4.1', rgaa: '12.1.1', layer: 'interaction',
+        wcag: '2.1.2', rgaa: '12.9', layer: 'interaction',
       });
     }
     if (focusNotVisible && KB_STEPS > 0) {
       checks.push({
         engine: 'custom', id: 'focus-not-visible', impact: 'moderate',
         message: `Indicateur de focus visible incertain sur « ${focusLabel} » : l'élément recevant le focus n'affiche pas de contour (outline) visible.`,
-        wcag: '2.4.7', rgaa: '12.8.1', layer: 'interaction',
+        wcag: '2.4.7', rgaa: '10.7', layer: 'interaction',
       });
     }
 
@@ -390,7 +390,7 @@ async function runInteractionChecks(page, log = console.log) {
       checks.push({
         engine: 'custom', id: 'small-touch-target', impact: 'moderate',
         message: `${smallTargets.length} cible(s) tactile(s) de taille < 44×44 px (min. recommandé) (ex : ${ex}).`,
-        wcag: '2.5.8', rgaa: '10.1.1', count: smallTargets.length, layer: 'interaction',
+        wcag: '2.5.8', rgaa: null, count: smallTargets.length, layer: 'interaction',
         nodes: smallTargets.slice(0, 5).map((t) => ({ target: [t.target], html: t.html })),
       });
     }
@@ -407,7 +407,7 @@ async function runInteractionChecks(page, log = console.log) {
       checks.push({
         engine: 'custom', id: 'horizontal-overflow-mobile', impact: 'serious',
         message: `Débordement horizontal sur mobile (contenu large de ${over.scrollW} px pour un écran de 390 px) : une partie du contenu est inaccessible sans défilement horizontal. Éviter les largeurs fixes dépassant le viewport.`,
-        wcag: '1.4.10', rgaa: '10.2.1', layer: 'interaction',
+        wcag: '1.4.10', rgaa: '10.11', layer: 'interaction',
       });
     }
   } catch (err) {
@@ -428,7 +428,7 @@ async function runCustomChecks(page) {
       impact: 'serious',
       message: 'La langue de la page (attribut lang sur <html>) est absente.',
       wcag: '3.1.1',
-      rgaa: '8.1.1',
+      rgaa: '8.3',
       layer: 'technique',
     });
   }
@@ -443,13 +443,13 @@ async function runCustomChecks(page) {
     checks.push({
       engine: 'custom', id: 'no-h1', impact: 'serious',
       message: 'Aucun titre de niveau 1 (<h1>) détecté.',
-      wcag: '1.3.1', rgaa: '9.1.1', layer: 'technique',
+      wcag: '1.3.1', rgaa: '9.1', layer: 'technique',
     });
   } else if (h1s.length > 1) {
     checks.push({
       engine: 'custom', id: 'multiple-h1', impact: 'moderate',
       message: `Plusieurs titres de niveau 1 détectés (${h1s.length}).`,
-      wcag: '1.3.1', rgaa: '9.1.1', layer: 'technique',
+      wcag: '1.3.1', rgaa: '9.1', layer: 'technique',
     });
   }
 
@@ -458,7 +458,7 @@ async function runCustomChecks(page) {
       checks.push({
         engine: 'custom', id: 'heading-skip', impact: 'moderate',
         message: `Saut dans la hiérarchie des titres : h${headings[i - 1].level} suivi de h${headings[i].level}.`,
-        wcag: '1.3.1', rgaa: '9.1.1', layer: 'technique',
+        wcag: '1.3.1', rgaa: '9.1', layer: 'technique',
       });
       break;
     }
@@ -506,7 +506,7 @@ async function runCustomChecks(page) {
     checks.push({
       engine: 'custom', id: 'form-missing-label', impact: 'serious',
       message: `${formLabels.length} champ(s) de formulaire sans label détecté(s).`,
-      wcag: '1.3.1', rgaa: '11.1.1', count: formLabels.length, layer: 'technique',
+      wcag: '1.3.1', rgaa: '11.1', count: formLabels.length, layer: 'technique',
       nodes: formLabels.slice(0, 5).map((f) => ({ target: [f.target], html: f.html })),
     });
   }
@@ -550,28 +550,28 @@ async function runCustomChecks(page) {
     checks.push({
       engine: 'custom', id: 'landmark-main-missing', impact: 'serious',
       message: 'Aucun repère principal (landmark) détecté pour la zone de contenu (élément <main> ou role="main").',
-      wcag: '1.3.1', rgaa: '8.5.1', layer: 'technique',
+      wcag: '1.3.1', rgaa: '12.6', layer: 'technique',
     });
   }
   if (!structure.hasNav) {
     checks.push({
       engine: 'custom', id: 'landmark-nav-missing', impact: 'moderate',
       message: 'Aucun repère de navigation (landmark) détecté (élément <nav> ou role="navigation").',
-      wcag: '1.3.1', rgaa: '8.5.1', layer: 'technique',
+      wcag: '1.3.1', rgaa: '12.6', layer: 'technique',
     });
   }
   if (!structure.title.trim()) {
     checks.push({
       engine: 'custom', id: 'title-missing', impact: 'serious',
       message: 'La balise <title> (titre de la page) est absente.',
-      wcag: '2.4.2', rgaa: '8.4.1', layer: 'technique',
+      wcag: '2.4.2', rgaa: '8.5', layer: 'technique',
     });
   }
   if (structure.positiveTabindex.length > 0) {
     checks.push({
       engine: 'custom', id: 'positive-tabindex', impact: 'moderate',
       message: `${structure.positiveTabindex.length} élément(s) avec un tabindex positif (> 0) détecté(s), perturbant l'ordre de tabulation naturel.`,
-      wcag: '2.4.3', rgaa: '12.1.1', count: structure.positiveTabindex.length, layer: 'technique',
+      wcag: '2.4.3', rgaa: '12.8', count: structure.positiveTabindex.length, layer: 'technique',
       nodes: structure.positiveTabindex.slice(0, 5).map((t) => ({ target: [t.target], html: t.html })),
     });
   }
@@ -603,14 +603,14 @@ async function runCustomChecks(page) {
     checks.push({
       engine: 'custom', id: 'vague-link-text', impact: 'moderate',
       message: `${links.vague.length} lien(s) avec un texte non explicite (ex : ${examples}). Rendre le libellé du lien explicite hors contexte.`,
-      wcag: '2.4.4', rgaa: '7.5.1', count: links.vague.length, layer: 'technique',
+      wcag: '2.4.4', rgaa: '6.1', count: links.vague.length, layer: 'technique',
     });
   }
   if (links.newTabNoRel > 0) {
     checks.push({
       engine: 'custom', id: 'link-new-tab-no-warning', impact: 'minor',
       message: `${links.newTabNoRel} lien(s) s'ouvrant dans un nouvel onglet (target="_blank") sans rel="noopener" ni avertissement explicite.`,
-      wcag: '2.4.4', rgaa: '7.5.1', count: links.newTabNoRel, samples: links.newTabSamples, layer: 'technique',
+      wcag: '2.4.4', rgaa: '13.2', count: links.newTabNoRel, samples: links.newTabSamples, layer: 'technique',
     });
   }
 
@@ -645,7 +645,8 @@ function deduplicateIssues(issues) {
   });
 }
 
-async function scanUrl(url, log = console.log) {
+async function scanUrl(url, opts = {}) {
+  const { log = console.log, runSemantic = true } = typeof opts === 'function' ? { log: opts } : opts;
   const browser = await getBrowser();
   const page = await browser.newPage();
   try {
@@ -674,8 +675,11 @@ async function scanUrl(url, log = console.log) {
       runInteractionChecks(page, log).catch((err) => { log('interaction warning:', err.message); return []; }),
     ]);
 
-    // Couche sémantique IA (échec gracieux)
-    const aiAnalysis = await runSemanticAnalysis(page);
+    // Couche sémantique IA (échec gracieux) — désactivable pour les scans
+    // de pages secondaires (maîtrise du coût LLM en audit multi-pages).
+    const aiAnalysis = runSemantic
+      ? await runSemanticAnalysis(page)
+      : { issues: [], skipped: true };
 
     const rawIssues = [...pa11yIssues, ...axeIssues, ...customIssues, ...contentIssues, ...interactionIssues, ...aiAnalysis.issues];
     const issues = deduplicateIssues(rawIssues);
@@ -718,7 +722,7 @@ async function scanWithRetry(url, retries = MAX_RETRIES) {
   let lastError;
   for (let i = 0; i <= retries; i++) {
     try {
-      return await scanUrl(url);
+      return await scanUrl(url, {});
     } catch (err) {
       lastError = err;
       if (i < retries && err.message && !err.message.includes('non autorisée')) {
@@ -742,6 +746,7 @@ module.exports = {
   generateId,
   normalizeUrl,
   validateUrl,
+  scanUrl,
   scanWithRetry,
   closeBrowser,
   getBrowser,

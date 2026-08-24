@@ -403,3 +403,37 @@ h2 {
   .fix-cols { grid-template-columns: 1fr 1fr; }
   .fix-code { white-space: pre-wrap; word-break: break-word; }
 }
+
+/* --- Rapport v2 : audit multi-pages + correspondance RGAA --- */
+.score-note {
+  text-align: center;
+  font-size: 9pt;
+  color: #6b7280;
+  margin: 0 0 4pt 0;
+}
+.multipage-section { margin-bottom: 16pt; }
+.pages-table td:first-child { max-width: 260pt; word-break: break-all; }
+.page-title-note { color: #6b7280; font-size: 8.5pt; }
+.rgaa-section h2 { margin-bottom: 4pt; }
+.rgaa-table td { vertical-align: top; }
+.rgaa-id {
+  display: inline-block;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 1pt 5pt;
+  font-size: 8.5pt;
+}
+.rgaa-count { text-align: center; font-weight: 700; }
+.rgaa-pages { font-size: 8.3pt; color: #374151; word-break: break-all; }
+.rgaa-legal-list { margin: 6pt 0 10pt 0; padding-left: 16pt; }
+.rgaa-legal-list li { margin-bottom: 6pt; }
+.issue-pages {
+  font-size: 8.5pt;
+  color: #075985;
+  background: #e0f2fe;
+  border-radius: 4px;
+  padding: 3pt 6pt;
+  margin: 4pt 0 8pt 0;
+}

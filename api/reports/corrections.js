@@ -499,27 +499,46 @@ function correctionBoxHtml(issue, node0) {
 }
 
 // ----------------------------------------------------------------- section complète
-// Rendu de la section « Corrections détaillées » pour les N issues les plus
-// impactantes (par défaut 10). Ne rend que les issues avec un gabarit.
-function correctionsSectionHtml(issues, limit = 10) {
+// Rendu de la section « Corrections détaillées » pour les N problèmes les plus
+// FRÉQUENTS du site (par défaut 5) : occurrences mesurées (éléments fautifs)
+// + présence sur plusieurs pages en audit multi-pages. À impact égal, le plus
+// fréquent passe d'abord.
+function frequencyOf(issue) {
+  let n = elementCount(issue);
+  if (Array.isArray(issue.pages)) n += issue.pages.length - 1;
+  return n;
+}
+
+function impactRankOf(issue) {
+  const order = { critical: 0, serious: 1, error: 2, moderate: 3, warning: 4, minor: 5, notice: 6 };
+  const k = (issue.impact || issue.type || 'notice').toLowerCase();
+  return order[k] ?? 99;
+}
+
+function correctionsSectionHtml(issues, limit = 5) {
   if (!issues || issues.length === 0) {
-    return '<p class="good-news">Aucun problème détecté — aucune correction à proposer.</p>';
+    return `
+    <section class="page-break corrections-section">
+      <h2>Corrections prêtes à coller</h2>
+      <p class="good-news">Aucun problème détecté — aucune correction à proposer.</p>
+    </section>`;
   }
-  const impactRank = (issue) => {
-    const order = { critical: 0, serious: 1, error: 2, moderate: 3, warning: 4, minor: 5, notice: 6 };
-    const k = (issue.impact || issue.type || 'notice').toLowerCase();
-    return order[k] ?? 99;
-  };
-  const top = [...issues].sort((a, b) => impactRank(a) - impactRank(b)).slice(0, limit);
+  const top = [...issues]
+    .sort((a, b) => (frequencyOf(b) - frequencyOf(a)) || (impactRankOf(a) - impactRankOf(b)))
+    .slice(0, limit);
   const items = top.map((issue) => {
     const elems = elementsListHtml(issue, 5);
     const box = correctionBoxHtml(issue, (issue.nodes && issue.nodes[0]) || issue);
+    const pagesHtml = Array.isArray(issue.pages) && issue.pages.length > 1
+      ? `<p class="issue-pages">Présent sur ${issue.pages.length} pages : ${escapeHtml(issue.pages.join(', '))}</p>`
+      : '';
     return `
       <div class="correction-item">
         <div class="correction-head">
           <span class="impact-pill impact-${(issue.impact || issue.type || 'notice').toLowerCase()}">${escapeHtml((issue.impact || issue.type || 'notice').toLowerCase())}</span>
           <span class="correction-msg">${escapeHtml(issue.message || issue.help || issue.description || issue.id || 'Problème')}</span>
         </div>
+        ${pagesHtml}
         ${issue.ai || issue.engine === 'ia'
           ? '<p class="ai-note">Détection sémantique IA : à confirmer par un expert humain. Le gabarit ci-dessous est générique et doit être adapté au contexte réel.</p>' : ''}
         ${elems ? `<div class="elements-block"><h5>Éléments fautifs (${escapeHtml(String(elementCount(issue)))})</h5>${elems}</div>` : ''}
@@ -533,8 +552,8 @@ function correctionsSectionHtml(issues, limit = 10) {
 
   return `
     <section class="page-break corrections-section">
-      <h2>Corrections détaillées</h2>
-      <p class="corrections-intro">Les ${top.length} problèmes les plus impactants, avec les éléments fautifs (sélecteur CSS + extrait HTML) et un exemple de correction prêt à adapter. À valider par vos équipes avant mise en production.</p>
+      <h2>Corrections prêtes à coller</h2>
+      <p class="corrections-intro">Les ${top.length} problèmes les plus fréquents du site, avec les éléments fautifs (sélecteur CSS + extrait HTML) et le code corrigé prêt à adapter (avant / après). Pour les contrastes, la couleur corrigée proposée passe le ratio requis de 4,5:1. À valider par vos équipes avant mise en production.</p>
       ${aiHint}
       ${items}
     </section>
@@ -548,6 +567,7 @@ module.exports = {
   elementsListHtml,
   correctionBoxHtml,
   correctionsSectionHtml,
+  frequencyOf,
   suggestedTextColor,
   templateKey,
   CORRECTION_TEMPLATES,

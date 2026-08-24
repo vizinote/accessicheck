@@ -109,20 +109,43 @@ describe('corrections: section dans les rapports', () => {
         nodes: [{ target: ['#hero img'], html: '<img src="/x.png">' }] },
     ];
     const html = await generateReportHtml(scanWithIssues(issues));
-    assert.ok(html.includes('Corrections détaillées'));
+    assert.ok(html.includes('Corrections prêtes à coller'));
     assert.ok(html.includes('#hero img'));
     assert.ok(html.includes('Comment corriger'));
   });
 
-  it('cap de 10 issues dans la section (par impact décroissant)', async () => {
-    const issues = Array.from({ length: 14 }, (_, k) => ({
+  it('cap de 5 problèmes dans la section (fréquence décroissante)', async () => {
+    const issues = Array.from({ length: 8 }, (_, k) => ({
       engine: 'axe', id: 'button-name', impact: k < 3 ? 'critical' : 'moderate',
       help: `Problème ${k}`, nodes: [{ target: [`#b${k}`], html: '<button></button>' }],
     }));
     const html = await generateReportHtml(scanWithIssues(issues));
-    // 10 corrections items max
     const count = (html.match(/class="correction-item"/g) || []).length;
-    assert.ok(count <= 10, `attendu ≤ 10, obtenu ${count}`);
+    assert.ok(count <= 5, `attendu ≤ 5, obtenu ${count}`);
+  });
+
+  it('trie par fréquence : le plus fréquent passe devant le plus impactant', async () => {
+    const frequent = {
+      engine: 'axe', id: 'image-alt', impact: 'moderate', help: 'Images sans alt',
+      nodes: Array.from({ length: 9 }, (_, k) => ({ target: [`#i${k}`], html: '<img>' })),
+    };
+    const rareCritical = {
+      engine: 'axe', id: 'button-name', impact: 'critical', help: 'Bouton sans nom',
+      nodes: [{ target: ['#b0'], html: '<button></button>' }],
+    };
+    const html = correctionsSectionHtml([rareCritical, frequent], 5);
+    assert.ok(html.indexOf('Images sans alt') < html.indexOf('Bouton sans nom'),
+      'le problème fréquent doit passer avant le problème rare');
+  });
+
+  it('affiche les pages concernées en audit multi-pages', async () => {
+    const issues = [
+      { engine: 'axe', id: 'color-contrast', impact: 'moderate', help: 'Contraste',
+        pages: ['/', '/contact', '/tarifs'],
+        nodes: [{ target: ['.nav a'], html: '<a>x</a>' }] },
+    ];
+    const html = correctionsSectionHtml(issues, 5);
+    assert.ok(html.includes('Présent sur 3 pages'));
   });
 
   it("échappe les sélecteurs/issues dans la section finale", async () => {
@@ -136,7 +159,7 @@ describe('corrections: section dans les rapports', () => {
 
   it('ne rend rien de cassé quand aucune issue n\'a de gabarit', async () => {
     const html = await generateReportHtml(scanWithIssues([]));
-    assert.ok(html.includes('Corrections détaillées'));
+    assert.ok(html.includes('Corrections prêtes à coller'));
     assert.ok(html.includes('Aucun problème détecté'));
   });
 });
