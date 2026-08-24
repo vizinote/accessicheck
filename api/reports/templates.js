@@ -4,6 +4,7 @@ const path = require('path');
 const STYLE_CSS = fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8');
 const { correctionsSectionHtml } = require('./corrections');
 const { rgaaSectionHtml, rgaaAnnotation } = require('./rgaa');
+const { issueMessageFr } = require('./messages-fr');
 
 const IMPACT_ORDER = { critical: 0, serious: 1, error: 2, moderate: 3, warning: 4, minor: 5, notice: 6 };
 const IMPACT_LABELS = {
@@ -34,11 +35,14 @@ function engineLabel(issue) {
   return issue.engine || '-';
 }
 
+// Palette volontairement plus foncée que la charte marketing : chaque couleur
+// passe le ratio 4,5:1 sur fond blanc ET sur #f0fdfa (résumé dirigeant) ET sur
+// #f9fafb (cartes) — vérifié par calcul WCAG (tests/report.test.js).
 function scoreColor(score) {
-  if (score >= 90) return '#16a34a';
-  if (score >= 70) return '#ca8a04';
-  if (score >= 50) return '#ea580c';
-  return '#dc2626';
+  if (score >= 90) return '#15803d';
+  if (score >= 70) return '#a16207';
+  if (score >= 50) return '#c2410c';
+  return '#b91c1c';
 }
 
 function scoreLabel(score) {
@@ -179,7 +183,7 @@ function topIssuesList(issues, limit = 5) {
       ${sorted.map((issue, i) => `
         <li>
           <span class="impact-pill impact-${(issue.impact || issue.type || 'notice').toLowerCase()}">${impactLabel(issue)}</span>
-          <span class="issue-message">${escapeHtml(issue.message || issue.help || issue.description || 'Problème détecté')}</span>
+          <span class="issue-message">${escapeHtml(issueMessageFr(issue))}</span>
         </li>
       `).join('')}
     </ol>
@@ -304,7 +308,7 @@ function allIssuesTable(issues) {
         ${ia.map(i => `
           <tr>
             <td><span class="impact-pill impact-${(i.impact || i.type || 'notice').toLowerCase()}">${impactLabel(i)}</span></td>
-            <td>${escapeHtml(i.message || i.help || i.description || 'Problème détecté')}</td>
+            <td>${escapeHtml(issueMessageFr(i))}</td>
             <td>${escapeHtml(rgaaAnnotation(i).text)}</td>
             <td><span class="tag-ai">Analyse IA</span></td>
           </tr>
@@ -324,7 +328,7 @@ function allIssuesTable(issues) {
         ${sorted.filter((i) => tech.includes(i)).map(i => `
           <tr>
             <td><span class="impact-pill impact-${(i.impact || i.type || 'notice').toLowerCase()}">${impactLabel(i)}</span></td>
-            <td>${escapeHtml(i.message || i.help || i.description || 'Problème détecté')}</td>
+            <td>${escapeHtml(issueMessageFr(i))}</td>
             <td>${escapeHtml(rgaaAnnotation(i).text)}</td>
             <td>${escapeHtml(engineLabel(i))}</td>
           </tr>
@@ -462,4 +466,6 @@ module.exports = {
   renderOneShot,
   renderPro,
   renderMonitoring,
+  scoreColor,
+  scoreLabel,
 };

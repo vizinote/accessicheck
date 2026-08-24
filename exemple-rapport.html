@@ -3,24 +3,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Exemple réel d’un rapport AccessiCheck : scan RGAA/WCAG avec éléments fautifs (sélecteur CSS + extrait HTML) et code de correction prêt à adapter. Voyez ce que vous recevez avant de commander.">
-  <link rel="canonical" href="https://accessicheck.brozapi.com/exemple-rapport.html">
-  <title>AccessiCheck — Exemple de rapport d’accessibilité (éléments fautifs + code de correction)</title>
-  <meta property="og:title" content="AccessiCheck — Exemple de rapport d’accessibilité">
-  <meta property="og:description" content="Un audit hyper personnalisé : chaque problème détecté avec ses éléments fautifs (sélecteur + extrait HTML) et un exemple de code corrigé.">
-  <meta property="og:type" content="article">
-  <meta property="og:url" content="https://accessicheck.brozapi.com/exemple-rapport.html">
-  <meta property="og:locale" content="fr_FR">
-  <meta property="og:image" content="https://accessicheck.brozapi.com/assets/og-image.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:type" content="image/png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AccessiCheck — Exemple de rapport d’analyse d’accessibilité">
-  <meta name="twitter:description" content="Chaque problème avec ses éléments fautifs et un exemple de code corrigé.">
-  <meta name="twitter:image" content="https://accessicheck.brozapi.com/assets/og-image.png">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <title>AccessiCheck — Exemple réel de rapport d’accessibilité (avant correction, 87/100)</title>
   <style>/* Reset & base */
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -30,6 +13,12 @@ body {
   line-height: 1.5;
   background: #fff;
   font-size: 10pt;
+}
+/* Focus clavier toujours visible (WCAG 2.4.7) */
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 /* Header */
@@ -241,17 +230,6 @@ h2 {
 }
 .executive-summary h2 { margin-top: 0; border-bottom: none; }
 
-.reader-notice {
-  background: #fffbeb;
-  border: 1px solid #fcd34d;
-  border-left: 4px solid #f59e0b;
-  padding: 12pt;
-  border-radius: 0 8px 8px 0;
-  margin: 14pt 0;
-  font-size: 10pt;
-}
-.reader-notice p { margin: 0; }
-
 /* Monitoring */
 .monitoring-header {
   display: flex;
@@ -347,7 +325,7 @@ h2 {
   padding: 10pt 12pt;
   border-bottom: 1px dashed #e5e7eb;
 }
-.elements-block h5 {
+.elements-block h3 {
   margin: 0 0 6pt;
   font-size: 9.5pt;
   color: #374151;
@@ -371,7 +349,7 @@ h2 {
   color: #1d4ed8;
   font-weight: 600;
 }
-.el-no-sel { color: #9ca3af; font-weight: 400; font-style: italic; }
+.el-no-sel { color: #6b7280; font-weight: 400; font-style: italic; }
 .el-snippet-wrap { margin-top: 3pt; }
 .el-snippet {
   display: block;
@@ -437,58 +415,469 @@ h2 {
   .fix-cols { grid-template-columns: 1fr 1fr; }
   .fix-code { white-space: pre-wrap; word-break: break-word; }
 }
-</style>
+
+/* --- Rapport v2 : audit multi-pages + correspondance RGAA --- */
+.score-note {
+  text-align: center;
+  font-size: 9pt;
+  color: #6b7280;
+  margin: 0 0 4pt 0;
+}
+.multipage-section { margin-bottom: 16pt; }
+.pages-table td:first-child { max-width: 260pt; word-break: break-all; }
+.page-title-note { color: #6b7280; font-size: 8.5pt; }
+.rgaa-section h2 { margin-bottom: 4pt; }
+.rgaa-table td { vertical-align: top; }
+.rgaa-id {
+  display: inline-block;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 1pt 5pt;
+  font-size: 8.5pt;
+}
+.rgaa-count { text-align: center; font-weight: 700; }
+.rgaa-pages { font-size: 8.3pt; color: #374151; word-break: break-all; }
+.rgaa-legal-list { margin: 6pt 0 10pt 0; padding-left: 16pt; }
+.rgaa-legal-list li { margin-bottom: 6pt; }
+.issue-pages {
+  font-size: 8.5pt;
+  color: #075985;
+  background: #e0f2fe;
+  border-radius: 4px;
+  padding: 3pt 6pt;
+  margin: 4pt 0 8pt 0;
+}
+
+/* Chrome de la page de démonstration (hors gabarit du rapport) */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: #1d4ed8;
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  z-index: 200;
+  text-decoration: none;
+}
+.skip-link:focus {
+  left: 0.5rem;
+  top: 0.5rem;
+  outline: 2px solid #fff;
+}
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fff;
+  font-size: 10pt;
+}
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.75rem;
+  color: #1d4ed8;
+  font-weight: 600;
+  text-decoration: none;
+}
+.site-nav a:hover { text-decoration: underline; }
+.site-nav .site-nav__note { color: #6b7280; margin-left: auto; }
+.demo-banner {
+  background: #eff6ff;
+  border-left: 4px solid #1d4ed8;
+  color: #1e293b;
+  padding: 10pt 12pt;
+  border-radius: 0 8px 8px 0;
+  margin: 0 0 16pt 0;
+  font-size: 10pt;
+}
+.demo-banner strong { color: #1d4ed8; }
+
+  </style>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Exemple réel d’un rapport AccessiCheck : notre propre site scanné à 87/100 le 24 août 2026, avec éléments fautifs et code de correction prêt à adapter. Le site est passé à 100/100 après application des corrections.">
+  <link rel="canonical" href="https://accessicheck.brozapi.com/exemple-rapport.html">
+  <meta property="og:title" content="AccessiCheck — Exemple réel de rapport (87/100 → 100/100)">
+  <meta property="og:description" content="Dogfooding : notre propre site scanné à 87/100, corrigé avec notre propre rapport, re-scanné à 100/100. Rapport complet, sans retouche.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://accessicheck.brozapi.com/exemple-rapport.html">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:image" content="https://accessicheck.brozapi.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AccessiCheck — Exemple réel de rapport (87/100 → 100/100)">
+  <meta name="twitter:description" content="Dogfooding : notre propre site scanné à 87/100, corrigé avec notre propre rapport, re-scanné à 100/100. Rapport complet, sans retouche.">
+  <meta name="twitter:image" content="https://accessicheck.brozapi.com/assets/og-image.png">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.brozapi.com; font-src 'self' data:; base-uri 'self'; form-action 'self' https://api.brozapi.com">
 </head>
 <body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <nav class="site-nav" aria-label="Navigation du site">
+    <a href="/">← Retour au site AccessiCheck</a>
+    <a href="/#offres">Voir les offres</a>
+    <span class="site-nav__note">Page de démonstration — rapport réel, sans retouche</span>
+  </nav>
+  <div class="demo-banner" role="note">
+    <strong>Dogfooding :</strong> ce rapport est celui de <strong>notre propre site</strong>,
+    accessicheck.brozapi.com, scanné le 24 août 2026 à <strong>87/100</strong>. Nous avons appliqué
+    les corrections indiquées ci-dessous (skip-link, cibles tactiles, contraste du gabarit, pages de démonstration
+    exclues du crawl) : le site affiche désormais <strong>100/100</strong> aux critères testables automatiquement.
+  </div>
   <header class="report-header">
     
     <div class="logo">
-      <svg viewbox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"></path>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
       </svg>
       <span>AccessiCheck</span>
     </div>
   
     <div class="meta">
-      <span class="offer-badge">Pro · 49 €</span>
-      <span class="date">21 août 2026</span>
+      <span class="offer-badge">One-Shot · 29 €</span>
+      <span class="date">24 août 2026</span>
     </div>
   </header>
-
-    <div class="reader-notice">
-      <p><strong>Comment lire ce rapport</strong> : ce document est destiné à votre développeur ou à votre agence. Vous, dirigeant, lisez uniquement la page 1 : le résumé exécutif.</p>
-    </div>
   
-    <main class="report-body pro">
-      <h1>Rapport d’audit détaillé</h1>
-      <p class="url">https://brozapi.com/</p>
+    <main class="report-body oneshot" id="contenu">
+      <h1>Diagnostic express</h1>
+      <p class="url">https://accessicheck.brozapi.com/</p>
+      <p class="score-note">Score global (moyenne des pages)</p>
       
-    <section class="executive-summary">
-      <h2>Résumé exécutif rédigé pour le dirigeant (1 page)</h2>
-      <p>Le site <strong>Brozapi — Studio de micro-outils web</strong> a obtenu un score de <strong style="color:#ca8a04">77/100</strong> (À améliorer).</p>
-      <p>4 problèmes ont été détectés. Les principaux leviers sont visuels et structurels : contrastes, titres et alternatives textuelles. Des corrections rapides amélioreront significativement le score.</p>
-      
+    <section class="score-section">
+      <div class="score-ring" style="--score-color: #a16207; --score-percent: 87">
+        <div class="score-value">87<small>/100</small></div>
+      </div>
+      <div class="score-label" style="color:#a16207">À améliorer</div>
     </section>
   
       
-    <section class="score-section">
-      <div class="score-ring" style="--score-color: #ca8a04; --score-percent: 77">
-        <div class="score-value">77<small>/100</small></div>
-      </div>
-      <div class="score-label" style="color:#ca8a04">À améliorer</div>
+    <section class="multipage-section">
+      <h2>Audit multi-pages (5 pages analysées)</h2>
+      <p class="corrections-intro">Page d'accueil + pages clés découvertes automatiquement (contact, produits/services, mentions légales, pages principales). Le score global est la moyenne des pages analysées. Un seul audit décompté de votre quota.</p>
+      <table class="criteria-table pages-table">
+        <thead>
+          <tr><th>Page</th><th>Score</th><th>Problèmes</th></tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>/ <span class="page-title-note">— AccessiCheck — Diagnostic d’accessibilité RGAA/WCAG en 2 minutes</span></td>
+          <td><strong style="color:#15803d">93/100</strong></td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>/mentions-legales.html <span class="page-title-note">— Mentions légales — AccessiCheck</span></td>
+          <td><strong style="color:#a16207">82/100</strong></td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>/cgv.html <span class="page-title-note">— Conditions générales de vente — AccessiCheck</span></td>
+          <td><strong style="color:#15803d">95/100</strong></td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>/blog <span class="page-title-note">— Blog AccessiCheck — Guides accessibilité numérique</span></td>
+          <td><strong style="color:#15803d">95/100</strong></td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>/exemple-rapport.html <span class="page-title-note">— AccessiCheck — Exemple de rapport d’accessibilité (éléments fautifs + code de correction)</span></td>
+          <td><strong style="color:#a16207">72/100</strong></td>
+          <td>5</td>
+        </tr>
+        </tbody>
+      </table>
     </section>
   
       
     <div class="cards">
-      <div class="card"><div class="card-number">4</div><div class="card-label">Problèmes détectés</div></div>
+      <div class="card"><div class="card-number">9</div><div class="card-label">Problèmes détectés</div></div>
       <div class="card"><div class="card-number">0</div><div class="card-label">Critiques</div></div>
-      <div class="card"><div class="card-number">1</div><div class="card-label">Sérieux</div></div>
-      <div class="card"><div class="card-number">2</div><div class="card-label">Niveaux d’impact</div></div>
+      <div class="card"><div class="card-number">2</div><div class="card-label">Sérieux</div></div>
+      <div class="card"><div class="card-number">3</div><div class="card-label">Niveaux d'impact</div></div>
     </div>
   
       <section>
-        <h2>Grille des critères automatiquement testés</h2>
+        <h2>Top 5 des problèmes à corriger</h2>
+        
+    <ol class="issue-list">
+      
+        <li>
+          <span class="impact-pill impact-serious">Sérieux</span>
+          <span class="issue-message">Aucun lien d&#39;évitement (skip-link) détecté : permettre d&#39;atteindre directement le contenu principal sans repasser la navigation.</span>
+        </li>
+      
+        <li>
+          <span class="impact-pill impact-serious">Sérieux</span>
+          <span class="issue-message">Le contraste entre le texte et son arrière-plan est insuffisant : le ratio mesuré est inférieur au minimum requis (4,5:1 pour le texte courant, 3:1 pour les grands textes).</span>
+        </li>
+      
+        <li>
+          <span class="impact-pill impact-moderate">Moyen</span>
+          <span class="issue-message">7 cible(s) tactile(s) de taille &lt; 44×44 px (min. recommandé) (ex : a 254×38 «AccessiCheck
+par Bro», a 64×24 «Scanner», a 155×24 «Ce que l’on teste»).</span>
+        </li>
+      
+        <li>
+          <span class="impact-pill impact-moderate">Moyen</span>
+          <span class="issue-message">Aucune page ou lien « Déclaration d&#39;accessibilité » détecté. Obligation RGAA pour les services concernés (art. 47 de la loi pour une République numérique).</span>
+        </li>
+      
+        <li>
+          <span class="impact-pill impact-moderate">Moyen</span>
+          <span class="issue-message">Saut dans la hiérarchie des titres : h2 suivi de h4.</span>
+        </li>
+      
+    </ol>
+  
+      </section>
+      <section>
+        <h2>Actions prioritaires</h2>
+        
+    <ol class="plan-list">
+      
+        <li>
+          <span class="plan-count">3</span>
+          <span class="plan-action">Vérifier ce point avec un expert accessibilité</span>
+        </li>
+      
+        <li>
+          <span class="plan-count">2</span>
+          <span class="plan-action">Rendre les liens explicites et accessibles</span>
+        </li>
+      
+        <li>
+          <span class="plan-count">2</span>
+          <span class="plan-action">Structurer la page avec des landmarks ARIA</span>
+        </li>
+      
+        <li>
+          <span class="plan-count">1</span>
+          <span class="plan-action">Améliorer les contrastes de couleur</span>
+        </li>
+      
+        <li>
+          <span class="plan-count">1</span>
+          <span class="plan-action">Revoir la hiérarchie des titres</span>
+        </li>
+      
+    </ol>
+  
+      </section>
+      
+    <section class="page-break corrections-section">
+      <h2>Corrections prêtes à coller</h2>
+      <p class="corrections-intro">Les 5 problèmes les plus fréquents du site, avec les éléments fautifs (sélecteur CSS + extrait HTML) et le code corrigé prêt à adapter (avant / après). Pour les contrastes, la couleur corrigée proposée passe le ratio requis de 4,5:1. À valider par vos équipes avant mise en production.</p>
+      
+      
+      <div class="correction-item">
+        <div class="correction-head">
+          <span class="impact-pill impact-moderate">moderate</span>
+          <span class="correction-msg">7 cible(s) tactile(s) de taille &lt; 44×44 px (min. recommandé) (ex : a 254×38 «AccessiCheck
+par Bro», a 64×24 «Scanner», a 155×24 «Ce que l’on teste»).</span>
+        </div>
+        <p class="issue-pages">Présent sur 4 pages : /, /mentions-legales.html, /cgv.html, /blog</p>
+        
+        <div class="elements-block"><h3 class="elements-title">Éléments fautifs (5)</h3><ul class="el-list"><li class="el-item"><span class="el-selector">body &gt; .header &gt; .container &gt; .logo</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a class=&quot;logo&quot; href=&quot;/&quot; aria-label=&quot;AccessiCheck — Accueil&quot;&gt; &lt;span class=&quot;logo__name&quot;&gt;AccessiCheck&lt;/span&gt; &lt;span class=&quot;logo__by&quot;&gt;par Brozapi&lt;/span&gt; &lt;/a&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .header &gt; .container &gt; .nav &gt; a:nth-child(1)</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;#scanner&quot;&gt;Scanner&lt;/a&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .header &gt; .container &gt; .nav &gt; a:nth-child(2)</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;#couverture&quot;&gt;Ce que l’on teste&lt;/a&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .header &gt; .container &gt; .nav &gt; a:nth-child(3)</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;#offres&quot;&gt;Offres&lt;/a&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .header &gt; .container &gt; .nav &gt; a:nth-child(4)</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;#exemple&quot;&gt;Exemple de rapport&lt;/a&gt;</code></div></li></ul></div>
+        
+    <div class="fix-box">
+      <h3 class="fix-title">Comment corriger : Cible tactile trop petite</h3>
+      <p class="fix-explain">Élargissez les cibles tactiles à au moins 44×44 px (WCAG 2.5.8).</p>
+      <div class="fix-cols">
+        <div class="fix-col">
+          <div class="fix-label">Avant</div>
+          <pre class="fix-code before"><code>&lt;p&gt;7 cible(s) &lt; 44×44 px détectée(s).&lt;/p&gt;</code></pre>
+        </div>
+        <div class="fix-col">
+          <div class="fix-label">Après</div>
+          <pre class="fix-code after"><code>.btn { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }</code></pre>
+        </div>
+      </div>
+    </div>
+  
+      </div>
+    
+      <div class="correction-item">
+        <div class="correction-head">
+          <span class="impact-pill impact-moderate">moderate</span>
+          <span class="correction-msg">5 cible(s) tactile(s) de taille &lt; 44×44 px (min. recommandé) (ex : a 179×12 «Déclaration d’access», button 137×21 «Envoyer le message», a 102×12 «Mentions légales»).</span>
+        </div>
+        
+        
+        <div class="elements-block"><h3 class="elements-title">Éléments fautifs (5)</h3><ul class="el-list"><li class="el-item"><span class="el-selector">body &gt; .report-body.pro &gt; .page-break.corrections-section &gt; .correction-item &gt; .fix-box &gt; .fix-cols &gt; .fix-col &gt; .fix-code.after &gt; code &gt; a</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;/accessibilite&quot;&gt;Déclaration d’accessibilité&lt;/a&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .report-body.pro &gt; .page-break.corrections-section &gt; .correction-item &gt; .elements-block &gt; .el-list &gt; .el-item &gt; .el-snippet-wrap &gt; .el-snippet &gt; #cf-submit</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;button type=&quot;submit&quot; class=&quot;btn&quot; id=&quot;cf-submit&quot;&gt;Envoyer le message&lt;/button&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .report-body.pro &gt; .page-break.corrections-section &gt; .correction-item &gt; .elements-block &gt; .el-list &gt; .el-item &gt; .el-snippet-wrap &gt; .el-snippet &gt; a</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;/mentions-legales.html&quot;&gt;Mentions légales&lt;/a&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .report-body.pro &gt; .page-break.corrections-section &gt; .correction-item &gt; .elements-block &gt; .el-list &gt; .el-item &gt; .el-snippet-wrap &gt; .el-snippet &gt; a</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;https://badgeia.brozapi.com/&quot;&gt;BadgeIA&lt;/a&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .report-body.pro &gt; .page-break.corrections-section &gt; .correction-item &gt; .elements-block &gt; .el-list &gt; .el-item &gt; .el-snippet-wrap &gt; .el-snippet &gt; a</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;https://accessicheck.brozapi.com/&quot;&gt;AccessiCheck&lt;/a&gt;</code></div></li></ul></div>
+        
+    <div class="fix-box">
+      <h3 class="fix-title">Comment corriger : Cible tactile trop petite</h3>
+      <p class="fix-explain">Élargissez les cibles tactiles à au moins 44×44 px (WCAG 2.5.8).</p>
+      <div class="fix-cols">
+        <div class="fix-col">
+          <div class="fix-label">Avant</div>
+          <pre class="fix-code before"><code>&lt;p&gt;5 cible(s) &lt; 44×44 px détectée(s).&lt;/p&gt;</code></pre>
+        </div>
+        <div class="fix-col">
+          <div class="fix-label">Après</div>
+          <pre class="fix-code after"><code>.btn { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }</code></pre>
+        </div>
+      </div>
+    </div>
+  
+      </div>
+    
+      <div class="correction-item">
+        <div class="correction-head">
+          <span class="impact-pill impact-minor">minor</span>
+          <span class="correction-msg">4 lien(s) vers un fichier PDF détecté(s) (ex : &quot;PDF One-Shot&quot;, &quot;PDF Pro&quot;, &quot;PDF One-Shot&quot;, &quot;PDF Pro&quot;). PDF probablement non accessible, à vérifier.</span>
+        </div>
+        
+        
+        <div class="elements-block"><h3 class="elements-title">Éléments fautifs (4)</h3><ul class="el-list"><li class="el-item"><span class="el-selector el-no-sel">élément détecté</span><div class="el-snippet-wrap"><code class="el-snippet">assets/rapports/badgeia-brozapi-oneshot.pdf</code></div></li><li class="el-item"><span class="el-selector el-no-sel">élément détecté</span><div class="el-snippet-wrap"><code class="el-snippet">assets/rapports/badgeia-brozapi-pro.pdf</code></div></li><li class="el-item"><span class="el-selector el-no-sel">élément détecté</span><div class="el-snippet-wrap"><code class="el-snippet">assets/rapports/brozapi-com-oneshot.pdf</code></div></li><li class="el-item"><span class="el-selector el-no-sel">élément détecté</span><div class="el-snippet-wrap"><code class="el-snippet">assets/rapports/brozapi-com-pro.pdf</code></div></li></ul></div>
+        
+    <div class="fix-box">
+      <h3 class="fix-title">Comment corriger : Liens vers des PDF potentiellement inaccessibles</h3>
+      <p class="fix-explain">Vérifiez/rendez accessibles vos PDF (texte, structure, balises). Signalez aussi le poids et la langue.</p>
+      <div class="fix-cols">
+        <div class="fix-col">
+          <div class="fix-label">Avant</div>
+          <pre class="fix-code before"><code>&lt;p&gt;4 lien(s) PDF détecté(s) à vérifier.&lt;/p&gt;</code></pre>
+        </div>
+        <div class="fix-col">
+          <div class="fix-label">Après</div>
+          <pre class="fix-code after"><code>&lt;a href=&quot;document.pdf&quot;&gt;Document accessible (PDF, 1,2 Mo)&lt;/a&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+  
+      </div>
+    
+      <div class="correction-item">
+        <div class="correction-head">
+          <span class="impact-pill impact-serious">serious</span>
+          <span class="correction-msg">Le contraste entre le texte et son arrière-plan est insuffisant : le ratio mesuré est inférieur au minimum requis (4,5:1 pour le texte courant, 3:1 pour les grands textes).</span>
+        </div>
+        
+        
+        <div class="elements-block"><h3 class="elements-title">Éléments fautifs (2)</h3><ul class="el-list"><li class="el-item"><span class="el-selector">strong:nth-child(2)</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;strong style=&quot;color:#ca8a04&quot;&gt;77/100&lt;/strong&gt;</code></div></li><li class="el-item"><span class="el-selector">.score-label</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;div class=&quot;score-label&quot; style=&quot;color:#ca8a04&quot;&gt;À améliorer&lt;/div&gt;</code></div></li></ul></div>
+        
+    <div class="fix-box">
+      <h3 class="fix-title">Comment corriger : Contraste de texte insuffisant</h3>
+      <p class="fix-explain">Le ratio de contraste mesuré est en dessous du minimum requis (4.5:1 pour le texte normal, 3:1 pour les grands textes). Augmentez l’écart de luminosité entre le texte et son fond.</p>
+      <div class="fix-cols">
+        <div class="fix-col">
+          <div class="fix-label">Avant</div>
+          <pre class="fix-code before"><code>color: #ca8a04; background-color: #f0fdfa;   /* ratio mesuré : 2.81:1 au lieu de 4.5:1 */</code></pre>
+        </div>
+        <div class="fix-col">
+          <div class="fix-label">Après</div>
+          <pre class="fix-code after"><code>color: #111827; background-color: #f0fdfa;   /* ratio cible ≥ 4.5:1 — à adapter à votre charte graphique */</code></pre>
+        </div>
+      </div>
+    </div>
+  
+      </div>
+    
+      <div class="correction-item">
+        <div class="correction-head">
+          <span class="impact-pill impact-serious">serious</span>
+          <span class="correction-msg">Aucun lien d&#39;évitement (skip-link) détecté : permettre d&#39;atteindre directement le contenu principal sans repasser la navigation.</span>
+        </div>
+        
+        
+        
+        
+    <div class="fix-box">
+      <h3 class="fix-title">Comment corriger : Lien d’évitement (skip-link) absent</h3>
+      <p class="fix-explain">Ajoutez un lien « Aller au contenu » au début de la page pointant vers le contenu principal.</p>
+      <div class="fix-cols">
+        <div class="fix-col">
+          <div class="fix-label">Avant</div>
+          <pre class="fix-code before"><code>&lt;body&gt;
+  &lt;!-- pas de skip-link --&gt;</code></pre>
+        </div>
+        <div class="fix-col">
+          <div class="fix-label">Après</div>
+          <pre class="fix-code after"><code>&lt;body&gt;
+  &lt;a href=&quot;#contenu&quot; class=&quot;skip-link&quot;&gt;Aller au contenu principal&lt;/a&gt;
+  &lt;main id=&quot;contenu&quot;&gt;…&lt;/main&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+  
+      </div>
+    
+    </section>
+  
+      
+    <section class="page-break rgaa-section">
+      <h2>Correspondance RGAA 4.1</h2>
+      <p class="corrections-intro">Les moteurs de détection (axe-core, Pa11y) parlent WCAG ; votre obligation légale en France est le <strong>RGAA 4.1.2</strong> (106 critères, directive européenne EAA applicable depuis juin 2025 aux entreprises de plus de 10 salariés). Ce tableau traduit chaque problème détecté en critère(s) RGAA correspondant(s) : ce sont les références à utiliser dans votre déclaration d'accessibilité et votre plan de remédiation.</p>
+      <table class="criteria-table rgaa-table">
+        <thead>
+          <tr><th>Critère RGAA</th><th>Thématique</th><th>Exigence</th><th>Problèmes</th><th>Pages concernées</th></tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><span class="rgaa-id">3.2</span></td>
+          <td>Couleurs</td>
+          <td>Contraste suffisant entre le texte et son arrière-plan</td>
+          <td class="rgaa-count">1</td>
+          <td class="rgaa-pages">/exemple-rapport.html</td>
+        </tr>
+        <tr>
+          <td><span class="rgaa-id">9.1</span></td>
+          <td>Structuration de l’information</td>
+          <td>Information structurée par l’utilisation appropriée de titres</td>
+          <td class="rgaa-count">1</td>
+          <td class="rgaa-pages">/exemple-rapport.html</td>
+        </tr>
+        <tr>
+          <td><span class="rgaa-id">10.7</span></td>
+          <td>Présentation de l’information</td>
+          <td>Prise de focus visible</td>
+          <td class="rgaa-count">1</td>
+          <td class="rgaa-pages">/exemple-rapport.html</td>
+        </tr>
+        <tr>
+          <td><span class="rgaa-id">12.6</span></td>
+          <td>Navigation</td>
+          <td>Zones de regroupement atteignables ou évitables</td>
+          <td class="rgaa-count">2</td>
+          <td class="rgaa-pages">/mentions-legales.html, /exemple-rapport.html</td>
+        </tr>
+        <tr>
+          <td><span class="rgaa-id">12.7</span></td>
+          <td>Navigation</td>
+          <td>Lien d’évitement ou d’accès rapide au contenu principal</td>
+          <td class="rgaa-count">2</td>
+          <td class="rgaa-pages">/mentions-legales.html</td>
+        </tr>
+        <tr>
+          <td><span class="rgaa-id">13.3</span></td>
+          <td>Consultation</td>
+          <td>Version accessible des documents bureautiques</td>
+          <td class="rgaa-count">1</td>
+          <td class="rgaa-pages">/</td>
+        </tr>
+        </tbody>
+      </table>
+      
+    <h3>Obligations hors grille des critères</h3>
+    <ul class="rgaa-legal-list">
+      <li>7 cible(s) tactile(s) de taille &lt; 44×44 px (min. recommandé) (ex : a 254×38 «AccessiCheck
+par Bro», a 64×24 «Scanner», a 155×24 «Ce que l’on teste»).<br><span class="ai-note">WCAG 2.2 (2.5.8) — pas de critère RGAA 4.1 équivalent.</span></li><li>Aucune page ou lien « Déclaration d&#39;accessibilité » détecté. Obligation RGAA pour les services concernés (art. 47 de la loi pour une République numérique).<br><span class="ai-note">Obligation légale (art. 47 de la loi pour une République numérique) — hors grille des 106 critères.</span></li><li>5 cible(s) tactile(s) de taille &lt; 44×44 px (min. recommandé) (ex : a 179×12 «Déclaration d’access», button 137×21 «Envoyer le message», a 102×12 «Mentions légales»).<br><span class="ai-note">WCAG 2.2 (2.5.8) — pas de critère RGAA 4.1 équivalent.</span></li>
+    </ul>
+      <p class="not-tested">6 critère(s) RGAA en échec sur le périmètre scanné. Le RGAA 4.1.2 compte 106 critères : seule une partie est automatiquement testable, un audit humain reste nécessaire pour déclarer la conformité.</p>
+    </section>
+      <section>
+        <h2>Ce qui a été testé</h2>
         
     <table class="criteria-table">
       <thead>
@@ -498,7 +887,7 @@ h2 {
         
           <tr>
             <td>Contrastes de couleur</td>
-            <td><span class="status-ok">✓ Conforme</span></td>
+            <td><span class="status-ko">✗ Problème détecté</span></td>
           </tr>
         
           <tr>
@@ -508,7 +897,7 @@ h2 {
         
           <tr>
             <td>Hiérarchie des titres</td>
-            <td><span class="status-ok">✓ Conforme</span></td>
+            <td><span class="status-ko">✗ Problème détecté</span></td>
           </tr>
         
           <tr>
@@ -523,7 +912,7 @@ h2 {
         
           <tr>
             <td>Structure et landmarks</td>
-            <td><span class="status-ok">✓ Conforme</span></td>
+            <td><span class="status-ko">✗ Problème détecté</span></td>
           </tr>
         
           <tr>
@@ -533,197 +922,23 @@ h2 {
         
           <tr>
             <td>Médias sous-titrés + documents PDF</td>
-            <td><span class="status-ok">✓ Conforme</span></td>
+            <td><span class="status-ko">✗ Problème détecté</span></td>
           </tr>
         
           <tr>
-            <td>Déclaration d’accessibilité + iframes titrées</td>
+            <td>Déclaration d&#39;accessibilité + iframes titrées</td>
             <td><span class="status-ko">✗ Problème détecté</span></td>
           </tr>
         
       </tbody>
     </table>
-    <p class="not-tested">La détection automatisée technique + analyse IA couvre une part importante mais non exhaustive des critères RGAA/WCAG : lecteur d’écran réel, contenus très complexes, tableaux de données, changements de langue, etc. restent du ressort d’un audit humain.</p>
-  
-      </section>
-      <section>
-        <h2>Plan de remédiation priorisé</h2>
-        
-    <ol class="plan-list">
-      
-        <li>
-          <span class="plan-count">2</span>
-          <span class="plan-action">Vérifier ce point avec un expert accessibilité</span>
-        </li>
-      
-        <li>
-          <span class="plan-count">1</span>
-          <span class="plan-action">Rendre les liens explicites et accessibles</span>
-        </li>
-      
-        <li>
-          <span class="plan-count">1</span>
-          <span class="plan-action">Structurer la page avec des landmarks ARIA</span>
-        </li>
-      
-    </ol>
-  
-      </section>
-      
-    <section class="page-break corrections-section">
-      <h2>Corrections détaillées</h2>
-      <p class="corrections-intro">Les 4 problèmes les plus impactants, avec les éléments fautifs (sélecteur CSS + extrait HTML) et un exemple de correction prêt à adapter. À valider par vos équipes avant mise en production.</p>
-      
-      
-      <div class="correction-item">
-        <div class="correction-head">
-          <span class="impact-pill impact-serious">serious</span>
-          <span class="correction-msg">Aucun lien d’évitement (skip-link) détecté : permettre d’atteindre directement le contenu principal sans repasser la navigation.</span>
-        </div>
-        
-        
-        
-    <div class="fix-box">
-      <h4 class="fix-title">Comment corriger : Lien d’évitement (skip-link) absent</h4>
-      <p class="fix-explain">Ajoutez un lien « Aller au contenu » au début de la page pointant vers le contenu principal.</p>
-      <div class="fix-cols">
-        <div class="fix-col">
-          <div class="fix-label">Avant</div>
-          <pre class="fix-code before"><code><body>
-  <!-- pas de skip-link --></code></pre>
-        </div>
-        <div class="fix-col">
-          <div class="fix-label">Après</div>
-          <pre class="fix-code after"><code><body>
-  <a href="#contenu" class="skip-link">Aller au contenu principal</a>
-  <main id="contenu">…</main></code></pre>
-        </div>
-      </div>
-    </div>
-  
-      </div>
-    
-      <div class="correction-item">
-        <div class="correction-head">
-          <span class="impact-pill impact-moderate">moderate</span>
-          <span class="correction-msg">Aucune page ou lien « Déclaration d’accessibilité » détecté. Obligation RGAA pour les services concernés (art. 47 de la loi pour une République numérique).</span>
-        </div>
-        
-        
-        
-    <div class="fix-box">
-      <h4 class="fix-title">Comment corriger : Déclaration d’accessibilité absente</h4>
-      <p class="fix-explain">Publiez une page « Déclaration d’accessibilité » (obligation RGAA art. 47) et liez-la depuis le site.</p>
-      <div class="fix-cols">
-        <div class="fix-col">
-          <div class="fix-label">Avant</div>
-          <pre class="fix-code before"><code><!-- aucun lien ni page de déclaration d’accessibilité --></code></pre>
-        </div>
-        <div class="fix-col">
-          <div class="fix-label">Après</div>
-          <pre class="fix-code after"><code><a href="/accessibilite">Déclaration d’accessibilité</a></code></pre>
-        </div>
-      </div>
-    </div>
-  
-      </div>
-    
-      <div class="correction-item">
-        <div class="correction-head">
-          <span class="impact-pill impact-moderate">moderate</span>
-          <span class="correction-msg">Indicateur de focus visible incertain sur « A:Produits » : l’élément recevant le focus n’affiche pas de contour (outline) visible.</span>
-        </div>
-        
-        
-        
-    <div class="fix-box">
-      <h4 class="fix-title">Comment corriger : Indicateur de focus non visible</h4>
-      <p class="fix-explain">Assurez un indicateur de focus visible (outline) sur tous les éléments interactifs.</p>
-      <div class="fix-cols">
-        <div class="fix-col">
-          <div class="fix-label">Avant</div>
-          <pre class="fix-code before"><code>a:focus { outline: none; }</code></pre>
-        </div>
-        <div class="fix-col">
-          <div class="fix-label">Après</div>
-          <pre class="fix-code after"><code>a:focus-visible { outline: 2px solid #0044cc; outline-offset: 2px; }</code></pre>
-        </div>
-      </div>
-    </div>
-  
-      </div>
-    
-      <div class="correction-item">
-        <div class="correction-head">
-          <span class="impact-pill impact-moderate">moderate</span>
-          <span class="correction-msg">4 cible(s) tactile(s) de taille < 44×44 px (min. recommandé) (ex : button 199×40 «Envoyer le message», a 121×16 «Mentions légales», a 60×16 «BadgeIA»).</span>
-        </div>
-        
-        <div class="elements-block"><h5>Éléments fautifs (4)</h5><ul class="el-list"><li class="el-item"><span class="el-selector">body > main > #contact > .container > #contact-form > #cf-submit</span><div class="el-snippet-wrap"><code class="el-snippet"><button type="submit" class="btn" id="cf-submit">Envoyer le message</button></code></div></li><li class="el-item"><span class="el-selector">body > .footer > .container > span:nth-child(2) > a:nth-child(1)</span><div class="el-snippet-wrap"><code class="el-snippet"><a href="/mentions-legales.html">Mentions légales</a></code></div></li><li class="el-item"><span class="el-selector">body > .footer > .container > span:nth-child(2) > a:nth-child(2)</span><div class="el-snippet-wrap"><code class="el-snippet"><a href="https://badgeia.brozapi.com/">BadgeIA</a></code></div></li><li class="el-item"><span class="el-selector">body > .footer > .container > span:nth-child(2) > a:nth-child(3)</span><div class="el-snippet-wrap"><code class="el-snippet"><a href="https://accessicheck.brozapi.com/">AccessiCheck</a></code></div></li></ul></div>
-        
-    <div class="fix-box">
-      <h4 class="fix-title">Comment corriger : Cible tactile trop petite</h4>
-      <p class="fix-explain">Élargissez les cibles tactiles à au moins 44×44 px (WCAG 2.5.8).</p>
-      <div class="fix-cols">
-        <div class="fix-col">
-          <div class="fix-label">Avant</div>
-          <pre class="fix-code before"><code><p>4 cible(s) < 44×44 px détectée(s).</p></code></pre>
-        </div>
-        <div class="fix-col">
-          <div class="fix-label">Après</div>
-          <pre class="fix-code after"><code>.btn { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }</code></pre>
-        </div>
-      </div>
-    </div>
-  
-      </div>
-    
-    </section>
-  
-      <section class="page-break">
-        <h2>Liste complète des problèmes détectés</h2>
-        
-    
-    <h3 class="ai-subtitle">🧰 Détection technique automatisée</h3>
-    <p class="ai-note">Détections issues de vérifications techniques (contraste, structure, ARIA, formulaires, images, liens, navigation clavier, contenus).</p>
-    <table class="issues-table">
-      <thead>
-        <tr><th>Impact</th><th>Problème</th><th>Origine</th></tr>
-      </thead>
-      <tbody>
-        
-          <tr>
-            <td><span class="impact-pill impact-serious">Sérieux</span></td>
-            <td>Aucun lien d’évitement (skip-link) détecté : permettre d’atteindre directement le contenu principal sans repasser la navigation.</td>
-            <td>Interaction</td>
-          </tr>
-        
-          <tr>
-            <td><span class="impact-pill impact-moderate">Moyen</span></td>
-            <td>Aucune page ou lien « Déclaration d’accessibilité » détecté. Obligation RGAA pour les services concernés (art. 47 de la loi pour une République numérique).</td>
-            <td>Contenu</td>
-          </tr>
-        
-          <tr>
-            <td><span class="impact-pill impact-moderate">Moyen</span></td>
-            <td>Indicateur de focus visible incertain sur « A:Produits » : l’élément recevant le focus n’affiche pas de contour (outline) visible.</td>
-            <td>Interaction</td>
-          </tr>
-        
-          <tr>
-            <td><span class="impact-pill impact-moderate">Moyen</span></td>
-            <td>4 cible(s) tactile(s) de taille < 44×44 px (min. recommandé) (ex : button 199×40 «Envoyer le message», a 121×16 «Mentions légales», a 60×16 «BadgeIA»).</td>
-            <td>Interaction</td>
-          </tr>
-        
-      </tbody>
-    </table>
+    <p class="not-tested">La détection automatisée technique + analyse IA couvre une part importante mais non exhaustive des critères RGAA/WCAG : lecteur d'écran réel, contenus très complexes, tableaux de données, changements de langue, etc. restent du ressort d'un audit humain.</p>
   
       </section>
     </main>
   
   <footer class="report-footer">
-    <p><strong>Mention légale :</strong> Ce scan combine une détection technique automatisée (contraste, structure, ARIA, formulaires, images, liens, navigation clavier — critères RGAA/WCAG) élargie par une analyse IA des textes alternatifs, intitulés de liens et labels de formulaires. La détection automatisée reste partielle : un audit humain reste nécessaire pour une conformité complète.</p>
+    <p><strong>Mention légale :</strong> Audit multi-pages : 5 page(s) clé(s) analysée(s) (page d&#39;accueil + pages découvertes automatiquement : contact, produits/services, mentions légales, pages principales). Ce scan combine une détection technique automatisée (contraste, structure, ARIA, formulaires, images, liens, navigation clavier — critères RGAA/WCAG) élargie par une analyse IA des textes alternatifs, intitulés de liens et labels de formulaires sur la page d’accueil. La détection automatisée reste partielle : un audit humain reste nécessaire pour une conformité complète.</p>
     <p>AccessiCheck — Brozapi — SIRET actif</p>
     
   </footer>

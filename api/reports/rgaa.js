@@ -12,6 +12,7 @@
 // est figée et testée.
 
 const { escapeHtml } = require('./corrections');
+const { issueMessageFr } = require('./messages-fr');
 
 // ---------------------------------------------------------------- référentiel RGAA 4.1.2
 // Thématiques officielles (1 à 13).
@@ -228,7 +229,7 @@ function rgaaSectionHtml(issues, opts = {}) {
       entry.count += 1;
       (issue.pages || (issue.page ? [issue.page] : ['/'])).forEach((p) => entry.pages.add(p));
       if (entry.examples.length < 2) {
-        entry.examples.push(issue.message || issue.help || issue.description || issue.id || 'Problème détecté');
+        entry.examples.push(issueMessageFr(issue));
       }
     }
   }
@@ -250,7 +251,7 @@ function rgaaSectionHtml(issues, opts = {}) {
   const legalHtml = legalNotes.length > 0 ? `
     <h3>Obligations hors grille des critères</h3>
     <ul class="rgaa-legal-list">
-      ${legalNotes.map((i) => `<li>${escapeHtml(i.message || i.id)}<br><span class="ai-note">${escapeHtml(SPECIAL_NOTES[String(i.id).toLowerCase()])}</span></li>`).join('')}
+      ${legalNotes.map((i) => `<li>${escapeHtml(issueMessageFr(i))}<br><span class="ai-note">${escapeHtml(SPECIAL_NOTES[String(i.id).toLowerCase()])}</span></li>`).join('')}
     </ul>` : '';
 
   return `

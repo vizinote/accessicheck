@@ -104,6 +104,8 @@ function suggestedTextColor(bgHex) {
 // before/after peuvent être des fonctions (issue, node0) → string, pour injecter
 // les valeurs mesurées. Toute valeur est ensuite échappée par le rendu.
 
+const { issueMessageFr } = require('./messages-fr');
+
 const CORRECTION_TEMPLATES = {};
 
 CORRECTION_TEMPLATES['image-alt'] = {
@@ -482,7 +484,7 @@ function correctionBoxHtml(issue, node0) {
   const after = safe(tpl.after, '<!-- correction adaptée -->');
   return `
     <div class="fix-box">
-      <h4 class="fix-title">Comment corriger : ${escapeHtml(tpl.title)}</h4>
+      <h3 class="fix-title">Comment corriger : ${escapeHtml(tpl.title)}</h3>
       <p class="fix-explain">${escapeHtml(tpl.explain)}</p>
       <div class="fix-cols">
         <div class="fix-col">
@@ -536,12 +538,12 @@ function correctionsSectionHtml(issues, limit = 5) {
       <div class="correction-item">
         <div class="correction-head">
           <span class="impact-pill impact-${(issue.impact || issue.type || 'notice').toLowerCase()}">${escapeHtml((issue.impact || issue.type || 'notice').toLowerCase())}</span>
-          <span class="correction-msg">${escapeHtml(issue.message || issue.help || issue.description || issue.id || 'Problème')}</span>
+          <span class="correction-msg">${escapeHtml(issueMessageFr(issue))}</span>
         </div>
         ${pagesHtml}
         ${issue.ai || issue.engine === 'ia'
           ? '<p class="ai-note">Détection sémantique IA : à confirmer par un expert humain. Le gabarit ci-dessous est générique et doit être adapté au contexte réel.</p>' : ''}
-        ${elems ? `<div class="elements-block"><h5>Éléments fautifs (${escapeHtml(String(elementCount(issue)))})</h5>${elems}</div>` : ''}
+        ${elems ? `<div class="elements-block"><h3 class="elements-title">Éléments fautifs (${escapeHtml(String(elementCount(issue)))})</h3>${elems}</div>` : ''}
         ${box}
       </div>
     `;

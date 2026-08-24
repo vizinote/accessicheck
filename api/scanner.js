@@ -175,28 +175,46 @@ async function runContentChecks(page) {
   }
 
   // 2. Liens vers des PDF (documents probablement non accessibles)
+  // RGAA 13.3 : un PDF n'est un problème que s'il n'existe pas de version
+  // accessible. Si la page propose à côté du lien PDF une version HTML /
+  // « en ligne » du même document, le lien n'est pas signalé.
   const pdfLinks = await page.evaluate(() => {
     const out = [];
     for (const a of document.querySelectorAll('a[href]')) {
       const h = (a.getAttribute('href') || '').toLowerCase();
       if (/\.pdf\b|\.pdf\?/.test(h)) {
-        out.push({ text: (a.innerText || '').trim().slice(0, 60), href: (a.getAttribute('href') || '').slice(0, 80) });
-        if (out.length >= 8) break;
+        const container = a.closest('article, section, li, td, div, p') || a.parentElement;
+        let hasHtmlAlternative = false;
+        if (container) {
+          for (const other of container.querySelectorAll('a[href]')) {
+            if (other === a) continue;
+            const oh = (other.getAttribute('href') || '').toLowerCase();
+            const ot = (other.innerText || '').toLowerCase();
+            const isHtmlPage = /\.html?\b|\/$|^\/[^.]*$/.test(oh) && !/\.pdf\b/.test(oh);
+            if (isHtmlPage && /en ligne|version html|version accessible|html/i.test(ot)) {
+              hasHtmlAlternative = true;
+              break;
+            }
+          }
+        }
+        out.push({ text: (a.innerText || '').trim().slice(0, 60), href: (a.getAttribute('href') || '').slice(0, 80), hasHtmlAlternative });
+        if (out.length >= 12) break;
       }
     }
     return out;
   });
-  if (pdfLinks.length > 0) {
-    const examples = pdfLinks.map((l) => `"${l.text || l.href}"`).join(', ');
+  const flaggedPdfLinks = pdfLinksWithoutAlternative(pdfLinks);
+  if (flaggedPdfLinks.length > 0) {
+    const examples = flaggedPdfLinks.map((l) => `"${l.text || l.href}"`).join(', ');
     checks.push({
       engine: 'custom',
       id: 'pdf-links',
       impact: 'minor',
-      message: `${pdfLinks.length} lien(s) vers un fichier PDF détecté(s) (ex : ${examples}). PDF probablement non accessible, à vérifier.`,
+      message: `${flaggedPdfLinks.length} lien(s) vers un fichier PDF détecté(s) sans version accessible équivalente (ex : ${examples}). PDF probablement non accessible, à vérifier — ou proposez une version HTML à côté du lien.`,
       wcag: '1.1.1',
       rgaa: '13.3',
-      count: pdfLinks.length,
-      samples: pdfLinks.map((l) => l.href),
+      count: flaggedPdfLinks.length,
+      samples: flaggedPdfLinks.map((l) => l.href),
       layer: 'contenu',
     });
   }
@@ -617,6 +635,12 @@ async function runCustomChecks(page) {
   return checks;
 }
 
+// RGAA 13.3 : ne retient que les liens PDF dépourvus d'une version accessible
+// (lien HTML « en ligne » détecté à proximité par runContentChecks).
+function pdfLinksWithoutAlternative(pdfLinks) {
+  return (pdfLinks || []).filter((l) => !l.hasHtmlAlternative);
+}
+
 function computeScore(issues) {
   if (issues.length === 0) return 100;
 
@@ -755,4 +779,5 @@ module.exports = {
   runCustomChecks,
   runContentChecks,
   runInteractionChecks,
+  pdfLinksWithoutAlternative,
 };

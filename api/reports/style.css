@@ -8,6 +8,12 @@ body {
   background: #fff;
   font-size: 10pt;
 }
+/* Focus clavier toujours visible (WCAG 2.4.7) */
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
 
 /* Header */
 .report-header {
@@ -313,7 +319,7 @@ h2 {
   padding: 10pt 12pt;
   border-bottom: 1px dashed #e5e7eb;
 }
-.elements-block h5 {
+.elements-block h3 {
   margin: 0 0 6pt;
   font-size: 9.5pt;
   color: #374151;
@@ -337,7 +343,7 @@ h2 {
   color: #1d4ed8;
   font-weight: 600;
 }
-.el-no-sel { color: #9ca3af; font-weight: 400; font-style: italic; }
+.el-no-sel { color: #6b7280; font-weight: 400; font-style: italic; }
 .el-snippet-wrap { margin-top: 3pt; }
 .el-snippet {
   display: block;

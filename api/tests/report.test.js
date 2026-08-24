@@ -91,4 +91,35 @@ describe('report generator', () => {
     const html = await generateReportHtml(makeScan('monitoring'));
     assert(!html.includes('Audit multi-pages'));
   });
+
+  it('traduit les messages axe bruts en français dans le rendu', async () => {
+    const scan = makeScan('pro');
+    scan.result.issues = [
+      { engine: 'axe', id: 'color-contrast', impact: 'serious', help: 'Elements must meet minimum color contrast ratio thresholds' },
+    ];
+    const html = await generateReportHtml(scan);
+    assert(!html.includes('Elements must meet minimum color contrast'));
+    assert(html.includes('contraste'));
+  });
+
+  it('les couleurs du score passent le ratio 4,5:1 sur les fonds du gabarit', async () => {
+    const { scoreColor } = require('../reports/templates');
+    assert(typeof scoreColor === 'function');
+    const lum = (hex) => {
+      const c = parseInt(hex.slice(1), 16);
+      const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+      return 0.2126 * f((c >> 16) & 255) + 0.7152 * f((c >> 8) & 255) + 0.0722 * f(c & 255);
+    };
+    const ratio = (fg, bg) => {
+      const [l1, l2] = [lum(fg), lum(bg)].sort((a, b) => b - a);
+      return (l1 + 0.05) / (l2 + 0.05);
+    };
+    const fonds = ['#ffffff', '#f0fdfa', '#f9fafb']; // corps, résumé dirigeant, cartes
+    for (const score of [95, 75, 55, 20]) {
+      const color = scoreColor(score);
+      for (const fond of fonds) {
+        assert(ratio(color, fond) >= 4.5, `score ${score} : ${color} sur ${fond} = ${ratio(color, fond).toFixed(2)}:1 < 4,5:1`);
+      }
+    }
+  });
 });

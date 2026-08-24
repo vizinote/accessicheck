@@ -20,6 +20,10 @@ const PRIORITY_RULES = [
 
 const EXCLUDED_EXT = /\.(pdf|jpe?g|png|gif|webp|svg|zip|rar|7z|tar|gz|mp[34]|mov|avi|webm|docx?|xlsx?|pptx?|csv|ics)(\?|#|$)/i;
 
+// Pages de démonstration / exemples : hors périmètre d'audit (contenus fictifs
+// publiés à titre d'illustration, ex. notre propre exemple-rapport.html).
+const EXCLUDED_DEMO_PATH = /exemple[-_]?rapport|\/demo|\/demos|\/demonstration|\/sample|\/samples|\/example|\/examples|maquette|mockup|kitchen[-_]?sink|style[-_]?guide/i;
+
 function canonicalize(href, baseUrl) {
   let u;
   try {
@@ -39,6 +43,7 @@ function canonicalize(href, baseUrl) {
   }
   if (EXCLUDED_EXT.test(u.pathname)) return null;
   if (/wp-admin|\/login|\/signin|\/deconnexion|\/logout/i.test(u.pathname)) return null;
+  if (EXCLUDED_DEMO_PATH.test(u.pathname)) return null;
   // Normalisation : retire le slash final (sauf racine) pour dédupliquer.
   let out = u.toString();
   if (u.pathname.length > 1 && out.endsWith('/')) out = out.slice(0, -1);

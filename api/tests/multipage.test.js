@@ -24,6 +24,17 @@ describe('multipage: canonicalize', () => {
     assert.strictEqual(canonicalize('/contact#form', BASE), 'https://exemple.fr/contact');
     assert.strictEqual(canonicalize('/services?utm_source=nl&id=12', BASE), 'https://exemple.fr/services?id=12');
   });
+
+  it('écarte les pages de démonstration / exemple du crawl', () => {
+    assert.strictEqual(canonicalize('/exemple-rapport.html', BASE), null);
+    assert.strictEqual(canonicalize('/exemple_rapport', BASE), null);
+    assert.strictEqual(canonicalize('/demo/produit', BASE), null);
+    assert.strictEqual(canonicalize('/examples/grid', BASE), null);
+    assert.strictEqual(canonicalize('/maquettes/v2', BASE), null);
+    // Les vraies pages métier ne sont pas affectées
+    assert.strictEqual(canonicalize('/contact', BASE), 'https://exemple.fr/contact');
+    assert.strictEqual(canonicalize('/demarrage', BASE), 'https://exemple.fr/demarrage');
+  });
 });
 
 describe('multipage: rankLinks', () => {

@@ -1,6 +1,6 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert');
-const { normalizeUrl, validateUrl, isVagueLinkText, computeScore } = require('../scanner');
+const { normalizeUrl, validateUrl, isVagueLinkText, computeScore, pdfLinksWithoutAlternative } = require('../scanner');
 const { parseSemanticResult } = require('../semantic');
 
 describe('scanner helpers', () => {
@@ -97,5 +97,23 @@ describe('parseSemanticResult (built-in semantic parser)', () => {
 
   it('lève une erreur sur une réponse non structurée', () => {
     assert.throws(() => parseSemanticResult('pas de json'), /non structurée/);
+  });
+});
+describe('pdfLinksWithoutAlternative (RGAA 13.3)', () => {
+  it('écarte les PDF accompagnés d\'une version HTML accessible', () => {
+    const links = [
+      { text: 'PDF One-Shot', href: 'assets/rapports/a.pdf', hasHtmlAlternative: true },
+      { text: 'Brochure', href: 'doc.pdf', hasHtmlAlternative: false },
+    ];
+    const flagged = pdfLinksWithoutAlternative(links);
+    assert.strictEqual(flagged.length, 1);
+    assert.strictEqual(flagged[0].href, 'doc.pdf');
+  });
+
+  it('signale tout si aucune alternative, rien si tout est couvert', () => {
+    assert.strictEqual(pdfLinksWithoutAlternative([{ href: 'a.pdf' }, { href: 'b.pdf' }]).length, 2);
+    assert.strictEqual(pdfLinksWithoutAlternative([{ href: 'a.pdf', hasHtmlAlternative: true }]).length, 0);
+    assert.strictEqual(pdfLinksWithoutAlternative([]).length, 0);
+    assert.strictEqual(pdfLinksWithoutAlternative(null).length, 0);
   });
 });
