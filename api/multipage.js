@@ -80,6 +80,7 @@ async function discoverLinks(baseUrl, log = console.log) {
   const page = await browser.newPage();
   try {
     await page.setUserAgent('AccessiCheck-Scanner/0.1 (+https://accessicheck.brozapi.com)');
+    await page.setCacheEnabled(false); // navigateur mutualise : pas de cache entre scans
     await page.goto(baseUrl, { waitUntil: 'networkidle2', timeout: PAGE_SCAN_TIMEOUT_MS });
     const links = await page.evaluate(() => {
       const out = [];

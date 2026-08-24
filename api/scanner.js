@@ -678,6 +678,9 @@ async function scanUrl(url, opts = {}) {
   const page = await browser.newPage();
   try {
     await page.setUserAgent(USER_AGENT);
+    // Le navigateur est mutualise entre scans : desactiver le cache HTTP
+    // pour ne jamais rescanner une version perimee d'un site corrige.
+    await page.setCacheEnabled(false);
     await page.setViewport({ width: 1280, height: 1024 });
 
     const response = await page.goto(url, {
