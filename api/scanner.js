@@ -395,6 +395,9 @@ async function runInteractionChecks(page, log = console.log) {
         if (r.width === 0 && r.height === 0) continue;
         // hors champ visible (skip-link caché, éléments offscreen pour le focus) : pas une cible tactile
         if (r.bottom < 0 || r.top > vh || r.right < 0 || r.left > vw) continue;
+        // Exemption WCAG 2.5.8 : les liens au fil du texte (rendus inline dans
+        // une phrase ou un bloc de texte) ne sont pas des cibles tactiles.
+        if (el.tagName === 'A' && getComputedStyle(el).display === 'inline') continue;
         if (r.width < 44 || r.height < 44) {
           const i = info(el);
           out.push({ tag: el.tagName.toLowerCase(), w: Math.round(r.width), h: Math.round(r.height), text: (el.innerText || el.value || '').trim().slice(0, 20) || el.tagName, target: i.target, html: i.html });
