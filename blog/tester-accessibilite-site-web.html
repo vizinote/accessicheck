@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Comment tester l’accessibilité de votre site web : méthodes et outils gratuits — AccessiCheck</title>
-  <meta name="description" content="Découvrez comment tester l’accessibilité de votre site web : 3 tests manuels en 5 minutes, les outils gratuits (WAVE, axe DevTools, Lighthouse), leurs limites et quand passer à un audit humain.">
+  <meta name="description" content="Découvrez comment tester l’accessibilité de votre site web : 3 tests manuels en 5 minutes, les outils gratuits (WAVE, axe DevTools, Lighthouse), et pourquoi tester n’est pas encore être conforme RGAA.">
   <link rel="canonical" href="https://accessicheck.brozapi.com/blog/tester-accessibilite-site-web.html">
   <link rel="stylesheet" href="../assets/style.css">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -28,7 +28,7 @@
     "author": {"@type": "Organization", "name": "Brozapi"},
     "publisher": {"@type": "Organization", "name": "AccessiCheck", "logo": {"@type": "ImageObject", "url": "https://accessicheck.brozapi.com/favicon.svg"}},
     "datePublished": "2026-08-23",
-    "dateModified": "2026-08-23",
+    "dateModified": "2026-08-24",
     "inLanguage": "fr",
     "mainEntityOfPage": {"@type": "WebPage", "@id": "https://accessicheck.brozapi.com/blog/tester-accessibilite-site-web.html"}
   }
@@ -67,13 +67,13 @@
         </nav>
 
         <h1>Comment tester l’accessibilité de votre site web : méthodes et outils</h1>
-        <p><em>Publié le 23 août 2026 · Lecture : 6 minutes · Par l’équipe Brozapi</em></p>
+        <p><em>Publié le 23 août 2026 · Mis à jour le 24 août 2026 · Lecture : 7 minutes · Par l’équipe Brozapi</em></p>
 
-        <p>Tester l’accessibilité de son site web n’est pas réservé aux experts. Avant de payer un audit complet, il existe des gestes simples et des outils gratuits pour repérer soi-même l’essentiel des problèmes.</p>
+        <p>Tester l’accessibilité de son site web est à la portée de tous, et il existe d’excellents outils gratuits pour repérer soi-même les principaux problèmes. Mais il faut lever une confusion fréquente : <strong>tester n’est pas être conforme</strong>. Un outil qui dresse une liste d’erreurs ne vous dit pas, à lui seul, si votre site est en règle avec la loi française.</p>
 
         <p>Le cadre légal pousse d’ailleurs dans ce sens : l’Acte européen sur l’accessibilité (EAA), applicable depuis le 28 juin 2025, étend les obligations d’accessibilité à de nombreux services grand public du secteur privé, tandis que le RGAA encadre les sites publics français. Autrement dit, savoir tester son site devient une compétence utile, pas seulement pour les développeurs.</p>
 
-        <p>Ce guide vous montre par où commencer, ce que valent réellement les tests automatiques, et à quel moment confier la suite à un professionnel.</p>
+        <p>Ce guide vous montre comment tester efficacement, ce que valent réellement les outils gratuits, et où se situe la vraie frontière entre « repérer des erreurs » et « être conforme » — sans avoir besoin de devenir développeur.</p>
 
         <h2>Trois tests manuels à faire en cinq minutes</h2>
         <p>Commencez par ces trois vérifications : elles ne demandent aucun outil ni compétence technique, et repèrent déjà une grande partie des problèmes.</p>
@@ -99,24 +99,38 @@
         <h3>Lighthouse, de Google</h3>
         <p>Intégré à Chrome, <strong>Lighthouse</strong> produit un rapport d’audit complet qui comprend une section dédiée à l’accessibilité, avec un score sur 100 et la liste des éléments à corriger. Pratique pour obtenir un diagnostic global en un clic. Son audit d’accessibilité s’appuie sur le moteur open source <strong>axe-core</strong>, le même que celui d’axe DevTools.</p>
 
+        <h2>La vraie frontière : tester n’est pas être conforme</h2>
+        <p>Ces trois outils sont excellents, mais ils font une seule chose : sortir une <strong>liste brute d’erreurs techniques</strong>, le plus souvent <strong>en anglais</strong>, avec des intitulés comme « contrast ratio », « landmark », « aria-hidden » ou « focusable element ». Ce n’est pas un reproche — c’est leur métier, et ils le font remarquablement bien. Mais une liste d’erreurs n’est pas un plan de mise en conformité.</p>
+
+        <p>Pour un dirigeant qui n’est pas développeur, cette liste ne répond à aucune des questions qui comptent vraiment :</p>
+        <ul class="legal-list">
+          <li><strong>Qui interprète ?</strong> Traduire « contrast ratio 2,9:1 » en action concrète sur votre site demande des connaissances techniques que vous n’avez pas à acquérir.</li>
+          <li><strong>Qui priorise ?</strong> Toutes les erreurs ne bloquent pas le même nombre d’utilisateurs : il faut savoir par où commencer pour un effet immédiat.</li>
+          <li><strong>Qui évalue la conformité RGAA ?</strong> Les outils gratuits testent contre le référentiel international WCAG, pas contre le RGAA, le référentiel français qui fait foi devant la loi.</li>
+          <li><strong>Qui fournit un rapport partageable ?</strong> Pour justifier votre état d’avancement auprès d’un client, d’une agence ou d’une autorité, une capture d’écran d’extension ne suffit pas.</li>
+          <li><strong>Qui surveille dans le temps ?</strong> L’accessibilité se dégrade à chaque mise en ligne : une vérification ponctuelle est vite dépassée.</li>
+        </ul>
+
+        <p>C’est précisément le chaînon manquant que vient combler AccessiCheck : non pas refaire ce que WAVE et axe font déjà, mais transformer la liste brute en un état des lieux clair, priorisé et en français. Et rester honnête sur la dernière étape : la conformité pleine et opposable demeure du ressort d’un audit humain.</p>
+
         <h2>Ce que les outils automatiques ne voient pas</h2>
         <p>Les outils automatiques sont un excellent premier pas, mais ils ne détectent qu’une partie des problèmes — estimée généralement autour de <strong>30 à 40 % des critères</strong>. Ils ne peuvent pas juger si un texte alternatif décrit vraiment l’image, si la navigation au clavier reste logique de bout en bout, ni si l’ensemble reste compréhensible pour un utilisateur réel. Un outil signale des pistes, jamais un verdict de conformité.</p>
 
-        <h2>Quand passer à un audit humain</h2>
-        <p>Vous devriez confier la suite à un auditeur professionnel dans trois situations.</p>
-        <ul class="legal-list">
-          <li><strong>Vous devez justifier d’une conformité RGAA</strong> auprès d’une autorité ou d’un client.</li>
-          <li><strong>Votre site comporte des parcours complexes</strong> : boutique en ligne, espace client, formulaire multi-étapes.</li>
-          <li><strong>Vous voulez un rapport formalisé</strong> avec un taux de conformité global et un plan de correction priorisé.</li>
-        </ul>
-        <p>L’audit humain reste la seule façon d’établir une conformité pleine et entière.</p>
+        <h2>De la liste brute à la conformité, sans compétence technique</h2>
+        <p>Si vous voulez dépasser le stade du test ponctuel, inutile d’installer trois extensions ni d’apprendre à lire des rapports techniques. Le chemin le plus court tient en deux gestes.</p>
+
+        <h3>Un scan gratuit comme premier geste</h3>
+        <p>Plutôt que de configurer WAVE, axe et Lighthouse, saisissez simplement l’adresse de votre site : AccessiCheck scanne la page d’accueil en deux minutes et vous affiche un score avec les problèmes prioritaires. C’est plus simple, et c’est le point de départ logique avant toute décision.</p>
+
+        <h3>Un rapport interprété pour aller plus loin</h3>
+        <p>Pour ceux qui veulent un document exploitable sans compétence technique, le rapport One-Shot à 29 € documente votre page d’accueil : un résumé clair, les problèmes expliqués en français et un plan de correction priorisé à transmettre directement à votre développeur ou à votre agence.</p>
 
         <h2>Tester régulièrement, pas une fois pour toutes</h2>
         <p>L’accessibilité n’est pas un état que l’on atteint une fois, mais une habitude à entretenir. Chaque ajout de contenu, chaque refonte, chaque nouveau plugin peut réintroduire des erreurs. L’idéal est d’intégrer un test rapide dans votre routine : un tour de clavier et de zoom à chaque mise en ligne majeure, un scan automatique chaque mois. C’est plus efficace que de tout corriger d’un coup à la veille d’une échéance.</p>
 
         <div class="scanner__box" style="margin:2.5rem 0;">
           <h2 style="margin-top:0;">Testez votre site en deux minutes</h2>
-          <p>Vous voulez un premier état des lieux sans configurer le moindre outil ? AccessiCheck scanne gratuitement la page d’accueil de votre site et vous affiche un score avec les problèmes prioritaires. Le diagnostic One-Shot (29 €, rapport PDF + email) documente la page d’accueil ; le rapport Pro (49 €) couvre cinq pages clés avec le code de correction pour chaque erreur.</p>
+          <p>Pas besoin d’installer le moindre outil : AccessiCheck scanne gratuitement la page d’accueil de votre site et vous affiche un score avec les problèmes prioritaires. Pour ceux qui veulent un document exploitable sans compétence technique, le rapport One-Shot (29 €) documente votre page d’accueil en français, avec un plan de correction priorisé.</p>
           <a class="btn btn--primary" href="https://accessicheck.brozapi.com/#scanner">Scanner mon site gratuitement</a>
         </div>
 
@@ -131,6 +145,10 @@
           <details>
             <summary>Un test automatique suffit-il pour être conforme RGAA ?</summary>
             <p>Non. Les outils couvrent environ 30 à 40 % des critères. Ils constituent un excellent point de départ pour prioriser les corrections, mais la conformité complète exige un audit humain.</p>
+          </details>
+          <details>
+            <summary>Quelle différence entre tester gratuitement et être conforme ?</summary>
+            <p>Tester vous montre où sont les problèmes ; être conforme signifie être en règle avec le RGAA ou le WCAG, ce qui exige d’interpréter, de prioriser, de corriger et de surveiller dans la durée. Les outils gratuits couvrent la première étape ; un rapport interprété comme celui d’AccessiCheck vous fait gagner les suivantes, et l’audit humain reste nécessaire pour une conformité opposable.</p>
           </details>
           <details>
             <summary>Par quoi commencer en priorité ?</summary>
