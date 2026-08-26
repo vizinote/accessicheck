@@ -24,7 +24,7 @@
     "author": {"@type": "Organization", "name": "Brozapi"},
     "publisher": {"@type": "Organization", "name": "AccessiCheck", "logo": {"@type": "ImageObject", "url": "https://accessicheck.brozapi.com/favicon.svg"}},
     "datePublished": "2026-08-25",
-    "dateModified": "2026-08-25",
+    "dateModified": "2026-08-26",
     "inLanguage": "fr",
     "mainEntityOfPage": {"@type": "WebPage", "@id": "https://accessicheck.brozapi.com/blog/carrefour-condamne-accessibilite-conformite-partielle.html"}
   }
@@ -63,7 +63,7 @@
         </nav>
 
         <h1>Conformité partielle accessibilité : pourquoi 71 % ne suffit pas (affaire Carrefour)</h1>
-        <p><em>Publié le 25 août 2026 · Lecture : 7 minutes · Par l’équipe Brozapi</em></p>
+        <p><em>Publié le 25 août 2026 · Mis à jour le 26 août 2026 · Lecture : 10 minutes · Par l’équipe Brozapi</em></p>
 
         <p>Le 4 juin 2026, le tribunal judiciaire de Caen a condamné Carrefour France pour l’inaccessibilité de son site carrefour.fr et de son application mobile de courses en ligne. L’ordonnance, rendue en référé, ordonne au distributeur de rendre ses services pleinement accessibles aux personnes en situation de handicap — notamment malvoyantes — dans un délai de six mois, sous peine d’une astreinte de 500 € par jour de retard. Elle accorde en outre 10 000 € de dommages et intérêts aux associations requérantes.</p>
 
@@ -94,6 +94,23 @@
         <p>Les outils gratuits — extensions de navigateur, tests automatiques en ligne — sont excellents pour ce qu’ils font : ils vous donnent un score, un pourcentage, une liste d’erreurs techniques. Mais un score n’est pas un jugement de conformité. Un score de 71 %, de 85 % ou même de 90 % ne dit pas si vous êtes en règle avec le RGAA ou l’EAA. Il dit seulement quelle proportion des critères testés automatiquement a été cochée.</p>
 
         <p>Or c’est exactement l’erreur qu’a commise Carrefour, à une échelle industrielle : présenter un pourcentage comme une preuve d’effort suffisant. Le juge a rappelé que l’accessibilité est une obligation de résultat, pas de moyens. Un score, aussi encourageant soit-il, ne remplace pas un état des lieux qui dit clairement ce qui bloque, ce qui est prioritaire, et ce qu’il reste à faire pour viser la conformité pleine et entière.</p>
+
+        <h2>Nous avons passé carrefour.fr dans notre propre scanner</h2>
+        <p>Puisque l’affaire porte précisément sur ce site, nous avons voulu vérifier par nous-mêmes ce que donne une mesure automatisée, aujourd’hui.</p>
+
+        <p>Le 26 août 2026, nous avons fait passer carrefour.fr dans AccessiCheck, notre propre audit d’accessibilité. Périmètre audité : la page d’accueil plus quatre pages clés découvertes automatiquement (nous contacter, contact enseignes, courses en 5 minutes, nouveautés du mois). Le score obtenu : <strong>66 sur 100</strong>, en moyenne sur ces cinq pages, pour 25 problèmes détectés — dont un critique, sept sérieux, quatre modérés et treize mineurs.</p>
+
+        <p>Quatre constats, factuels, tels que notre outil les a mesurés :</p>
+        <ul class="legal-list">
+          <li><strong>Des contrastes insuffisants.</strong> Plusieurs textes passent sous le seuil WCAG AA de 4,5:1. Le lien « Profiter de l’offre » affiche un ratio de 4,21:1 (bleu #0970e6 sur fond rose), et les boutons du bandeau de consentement aux cookies mesurent 4,01:1 et 4,16:1. Pour une personne malvoyante, c’est la différence entre un texte lisible et un texte qui s’efface.</li>
+          <li><strong>Des images sans alternative textuelle.</strong> Sur la page « Contact enseignes », une image porte un attribut alt contenant seulement un espace insécable, que les lecteurs d’écran ne restituent pas. L’analyse sémantique de l’outil a en outre relevé une douzaine d’images non décoratives sans texte alternatif sur la page d’accueil.</li>
+          <li><strong>Une hiérarchie de titres fragile.</strong> La page « Nous contacter » ne comporte aucun titre de niveau 1 (&lt;h1&gt;), et la page d’accueil saute du h2 au h4. Les titres sont la table des matières que les lecteurs d’écran utilisent pour naviguer : des trous dans cette hiérarchie compliquent le parcours.</li>
+          <li><strong>Des cibles tactiles trop petites et un débordement sur mobile.</strong> Huit éléments cliquables mesurent moins de 44×44 pixels (la taille minimale recommandée), et la page « Contact enseignes » affiche un contenu de 810 pixels de large sur un écran de 390 pixels, forçant un défilement horizontal.</li>
+        </ul>
+
+        <p>Un point de méthode, essentiel pour lire ces chiffres correctement : AccessiCheck est un audit automatisé de surface. Il combine une détection technique (contraste, structure, ARIA, images, liens, navigation clavier) et une analyse IA des textes alternatifs et des intitulés, sur un échantillon de cinq pages. Il ne couvre qu’une partie des 106 critères du RGAA — ceux qu’une machine peut vérifier. Il ne préjuge en rien d’une conformité juridique complète, qui exige un audit humain.</p>
+
+        <p>Et c’est précisément la leçon de cet exercice : notre score de 66 ne se compare pas directement aux 71 % revendiqués par Carrefour. Méthodes différentes, périmètres différents — les deux chiffres ne mesurent pas la même chose. C’est exactement la raison pour laquelle un pourcentage, seul, ne dit jamais si un site est conforme.</p>
 
         <h2>Ce que cela change pour votre site e-commerce</h2>
         <p>La décision de Caen ne concerne pas que les grandes enseignes. Elle pose un principe qui s’applique à tous les acteurs du e-commerce et, plus largement, à tout service numérique grand public : e-boutiques, banques en ligne, billetterie, transports, télécoms, livres numériques, streaming. Seules les microentreprises — moins de dix salariés et moins de 2 millions d’euros de chiffre d’affaires ou de total de bilan — échappent aux règles de l’EAA.</p>
@@ -132,6 +149,10 @@
             <p>Parce que la conformité au RGAA n’est pas un pourcentage : les 106 critères du référentiel doivent être respectés dans leur intégralité. Un service accessible à 71 % reste, pour la personne concernée, inutilisable sur les points manquants. La justice l’a rappelé : il n’existe pas de « note de passage » en dessous de 100 %.</p>
           </details>
           <details>
+            <summary>Votre scan donne 66, pas 71 % — qui a raison ?</summary>
+            <p>Personne, et c’est le point. Notre outil AccessiCheck mesure une chose : un échantillon de cinq pages, sur les critères qu’une machine peut vérifier automatiquement. Le taux de 71 % de Carrefour reposait sur une méthodologie et un périmètre différents. Les deux chiffres ne sont pas directement comparables — ce qui illustre justement pourquoi un pourcentage isolé ne constitue jamais, à lui seul, une preuve de conformité.</p>
+          </details>
+          <details>
             <summary>Mon site est-il concerné par cette obligation ?</summary>
             <p>Si vous proposez un service numérique grand public (e-commerce, banque en ligne, billetterie, télécoms, streaming, livres numériques) et que vous n’êtes pas une microentreprise (moins de 10 salariés et moins de 2 M€ de chiffre d’affaires ou de total de bilan), vous êtes concerné par l’EAA depuis le 28 juin 2025.</p>
           </details>
@@ -141,7 +162,7 @@
           </details>
         </div>
 
-        <p><em>Sources : ordonnance du tribunal judiciaire de Caen du 4 juin 2026 ; handicap.fr (« Accessibilité web : Carrefour condamné par la justice », 15 juin 2026) ; LSA Conso ; analyses Deque, Eye-Able et Accessiway (juin-juillet 2026).</em></p>
+        <p><em>Sources : ordonnance du tribunal judiciaire de Caen du 4 juin 2026 ; handicap.fr (« Accessibilité web : Carrefour condamné par la justice », 15 juin 2026) ; LSA Conso ; analyses Deque, Eye-Able et Accessiway (juin-juillet 2026). Scan AccessiCheck réalisé le 26 août 2026 sur carrefour.fr (5 pages clés, audit automatisé de surface).</em></p>
 
         <p><em>Cet article est fourni à titre informatif et ne constitue pas un conseil juridique. Pour une analyse de votre situation, consultez un professionnel du droit.</em></p>
 
