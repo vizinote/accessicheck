@@ -159,6 +159,57 @@ const PA11Y_PATTERNS_FR = [
 
 // ---------------------------------------------------------------- API
 const ENGINE_FR = { axe: 'axe-core', pa11y: 'Pa11y', custom: 'contrôle AccessiCheck', ia: 'analyse IA' };
+const ENGINE_EN = { axe: 'axe-core', pa11y: 'Pa11y', custom: 'AccessiCheck check', ia: 'AI analysis' };
+
+// Messages anglais des contrôles custom AccessiCheck et de l'analyse IA, dont
+// les messages source sont rédigés en français (clé = id du contrôle).
+const CUSTOM_MESSAGES_EN = {
+  'page-lang-missing': 'The page language (lang attribute on <html>) is missing.',
+  'no-h1': 'The page has no level-1 heading (h1).',
+  'multiple-h1': 'The page has several level-1 headings (h1): only one is expected.',
+  'heading-skip': 'The heading hierarchy skips a level (e.g. h1 followed by h3).',
+  'form-missing-label': 'Some form fields have no label or accessible name.',
+  'landmark-main-missing': 'The page has no main landmark (<main>) around its main content.',
+  'landmark-nav-missing': 'The page has no navigation landmark (<nav>).',
+  'title-missing': 'The page has no <title> in its <head>.',
+  'positive-tabindex': 'Elements with tabindex greater than 0 disturb the natural tab order.',
+  'vague-link-text': 'Some link labels are not explicit out of context (“click here”, “read more”…).',
+  'link-new-tab-no-warning': 'Some links open in a new tab without warning the user.',
+  'skip-link-missing': 'The page has no skip link (“Skip to content”).',
+  'skip-link-broken': 'The skip link points to a target that does not exist.',
+  'focus-trap': 'Keyboard focus may be trapped in an area of the page.',
+  'focus-not-visible': 'The keyboard focus indicator is not visible on all interactive elements.',
+  'small-touch-target': 'Some touch targets are smaller than 44×44 px.',
+  'horizontal-overflow-mobile': 'The page overflows horizontally on mobile (390 px viewport).',
+  'media-missing-subtitles': 'Audio/video media have no subtitles or transcript.',
+  'pdf-links': 'Links point to PDF documents that may not be accessible.',
+  'accessibility-statement-missing': 'No accessibility statement page (French legal requirement, art. 47) was found.',
+  'iframe-no-title': 'Some iframes have no title describing their content.',
+  'text-alternatives': 'Some alternative texts are not informative (file names, empty keywords…).',
+  'visual-and-relative-content': 'Some links/elements rely on visual position alone to be understood.',
+};
+
+// Message d'une issue dans la langue demandée.
+// FR : table déterministe (aucun anglais brut dans un rapport client).
+// EN : axe et pa11y émettent nativement en anglais (help/message) — on les
+// utilise tels quels ; les contrôles custom/IA passent par CUSTOM_MESSAGES_EN.
+function issueMessage(issue, lang = 'fr') {
+  if (lang !== 'en') return issueMessageFr(issue);
+  const engine = issue.engine || '';
+  if (engine === 'custom' || engine === 'ia' || issue.ai) {
+    const id = String(issue.id || issue.code || '').toLowerCase();
+    if (CUSTOM_MESSAGES_EN[id]) return CUSTOM_MESSAGES_EN[id];
+    // Repli : message source si déjà anglais (analyse IA configurable), sinon générique.
+    const raw = issue.message_en || issue.help_en;
+    if (raw) return raw;
+    return `Accessibility issue detected by ${ENGINE_EN[engine] || engine || 'the detection engine'} (rule “${issue.id || issue.code || 'unknown'}”): see the related WCAG documentation for the fix.`;
+  }
+  // axe : help/description natifs en anglais. pa11y : message natif en anglais.
+  const native = issue.help || issue.message || issue.description;
+  if (native && /[a-z]/i.test(native)) return native;
+  const rule = issue.id || issue.code || 'unknown';
+  return `Accessibility issue detected by ${ENGINE_EN[engine] || engine || 'the detection engine'} (rule “${rule}”): see the related WCAG documentation for the fix.`;
+}
 
 // Extrait un id de règle axe depuis un code pa11y éventuel
 // (ex : « WCAG2AA.Principle1.Guideline1_1.1_1_1.axe.image-alt » ou « image-alt »).
@@ -195,4 +246,4 @@ function issueMessageFr(issue) {
   return `Problème d'accessibilité détecté par ${engineName} (règle « ${rule} ») : voir la documentation WCAG associée pour le détail de la correction.`;
 }
 
-module.exports = { issueMessageFr, AXE_MESSAGES_FR, PA11Y_PATTERNS_FR };
+module.exports = { issueMessageFr, issueMessage, AXE_MESSAGES_FR, PA11Y_PATTERNS_FR, CUSTOM_MESSAGES_EN };

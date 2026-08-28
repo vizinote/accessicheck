@@ -1,5 +1,5 @@
 const { getBrowser } = require('../scanner');
-const { renderOneShot, renderPro, renderMonitoring } = require('./templates');
+const { renderOneShot, renderPro, renderMonitoring, normalizeLang } = require('./templates');
 
 const RENDERERS = {
   oneshot: renderOneShot,
@@ -7,7 +7,7 @@ const RENDERERS = {
   monitoring: renderMonitoring,
 };
 
-async function generateReportHtml(scan) {
+async function generateReportHtml(scan, lang) {
   const offer = scan.offer || 'oneshot';
   const renderer = RENDERERS[offer];
   if (!renderer) {
@@ -21,11 +21,13 @@ async function generateReportHtml(scan) {
       throw new Error('Résultat de scan invalide (JSON cassé).');
     }
   }
-  return renderer(normalized);
+  // Langue du rapport : paramètre explicite > champ scan.lang > français.
+  const reportLang = normalizeLang(lang || normalized.lang || (normalized.result || {}).lang || 'fr');
+  return renderer(normalized, reportLang);
 }
 
-async function generateReportPdf(scan) {
-  const html = await generateReportHtml(scan);
+async function generateReportPdf(scan, lang) {
+  const html = await generateReportHtml(scan, lang);
   const browser = await getBrowser();
   const page = await browser.newPage();
   try {

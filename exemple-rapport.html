@@ -230,6 +230,53 @@ h2 {
 }
 .executive-summary h2 { margin-top: 0; border-bottom: none; }
 
+/* Encart « Comment lire ce rapport » (vulgarisation, non-développeurs) */
+.howto-box {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-left: 4px solid #1d4ed8;
+  padding: 12pt 14pt;
+  border-radius: 0 8px 8px 0;
+  margin: 12pt 0 16pt;
+  page-break-inside: avoid;
+}
+.howto-box h2 { margin-top: 0; border-bottom: none; font-size: 13pt; }
+.howto-box ul { margin: 6pt 0 0; padding-left: 16pt; }
+.howto-box li { margin: 5pt 0; font-size: 10pt; line-height: 1.45; }
+
+/* Phrase « En clair » avant le détail technique d'un constat */
+.plain-explain {
+  background: #fefce8;
+  border-left: 3px solid #a16207;
+  color: #3f3f46;
+  padding: 7pt 10pt;
+  border-radius: 0 6px 6px 0;
+  font-size: 10pt;
+  line-height: 1.45;
+  margin: 6pt 0 10pt;
+}
+
+/* Glossaire en fin de rapport */
+.glossary-section {
+  margin-top: 18pt;
+  padding-top: 10pt;
+  border-top: 2px solid #e5e7eb;
+}
+.glossary-section dl { margin: 8pt 0 0; }
+.glossary-section dt {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 10pt;
+  margin-top: 8pt;
+}
+.glossary-section dd {
+  margin: 2pt 0 0;
+  padding-left: 0;
+  font-size: 9.5pt;
+  color: #4b5563;
+  line-height: 1.4;
+}
+
 /* Monitoring */
 .monitoring-header {
   display: flex;
@@ -551,6 +598,16 @@ h2 {
     <main class="report-body oneshot" id="contenu">
       <h1>Diagnostic express</h1>
       <p class="url">https://accessicheck.brozapi.com/</p>
+      
+    <section class="howto-box">
+      <h2>Comment lire ce rapport</h2>
+      <ul>
+        <li><strong>Ce que cet outil vérifie</strong> : les critères d’accessibilité testables automatiquement (contrastes de couleurs, structure des titres, formulaires, navigation clavier, textes alternatifs…) sur la ou les pages analysées.</li>
+        <li><strong>Ce qu’il ne vérifie pas</strong> : tout ce qui demande un jugement humain (navigation réelle au lecteur d’écran, contenus complexes, pertinence fine des textes). Un audit humain reste nécessaire pour déclarer la conformité RGAA.</li>
+        <li><strong>Par où commencer</strong> : lisez le résumé ci-dessous, puis traitez d’abord les problèmes marqués « Critique » ou « Sérieux ». Chaque problème commence par une explication en langage courant ; le code prêt à adapter vient ensuite — transmettez-le tel quel à votre développeur ou votre agence.</li>
+      </ul>
+    </section>
+  
       <p class="score-note">Score global (moyenne des pages)</p>
       
     <section class="score-section">
@@ -563,7 +620,7 @@ h2 {
       
     <section class="multipage-section">
       <h2>Audit multi-pages (5 pages analysées)</h2>
-      <p class="corrections-intro">Page d'accueil + pages clés découvertes automatiquement (contact, produits/services, mentions légales, pages principales). Le score global est la moyenne des pages analysées. Un seul audit décompté de votre quota.</p>
+      <p class="corrections-intro">Page d’accueil + pages clés découvertes automatiquement (contact, produits/services, mentions légales, pages principales). Le score global est la moyenne des pages analysées. Un seul audit décompté de votre quota.</p>
       <table class="criteria-table pages-table">
         <thead>
           <tr><th>Page</th><th>Score</th><th>Problèmes</th></tr>
@@ -603,7 +660,7 @@ h2 {
       <div class="card"><div class="card-number">9</div><div class="card-label">Problèmes détectés</div></div>
       <div class="card"><div class="card-number">0</div><div class="card-label">Critiques</div></div>
       <div class="card"><div class="card-number">2</div><div class="card-label">Sérieux</div></div>
-      <div class="card"><div class="card-number">3</div><div class="card-label">Niveaux d'impact</div></div>
+      <div class="card"><div class="card-number">3</div><div class="card-label">Niveaux d’impact</div></div>
     </div>
   
       <section>
@@ -646,13 +703,13 @@ par Bro», a 64×24 «Scanner», a 155×24 «Ce que l’on teste»).</span>
     <ol class="plan-list">
       
         <li>
-          <span class="plan-count">3</span>
-          <span class="plan-action">Vérifier ce point avec un expert accessibilité</span>
+          <span class="plan-count">2</span>
+          <span class="plan-action">Rendre les liens explicites et accessibles</span>
         </li>
       
         <li>
           <span class="plan-count">2</span>
-          <span class="plan-action">Rendre les liens explicites et accessibles</span>
+          <span class="plan-action">Vérifier ce point avec un expert accessibilité</span>
         </li>
       
         <li>
@@ -670,13 +727,18 @@ par Bro», a 64×24 «Scanner», a 155×24 «Ce que l’on teste»).</span>
           <span class="plan-action">Revoir la hiérarchie des titres</span>
         </li>
       
+        <li>
+          <span class="plan-count">1</span>
+          <span class="plan-action">Vérifier les boutons et leur nom accessible</span>
+        </li>
+      
     </ol>
   
       </section>
       
     <section class="page-break corrections-section">
       <h2>Corrections prêtes à coller</h2>
-      <p class="corrections-intro">Les 5 problèmes les plus fréquents du site, avec les éléments fautifs (sélecteur CSS + extrait HTML) et le code corrigé prêt à adapter (avant / après). Pour les contrastes, la couleur corrigée proposée passe le ratio requis de 4,5:1. À valider par vos équipes avant mise en production.</p>
+      <p class="corrections-intro">Les 5 problèmes les plus fréquents du site, avec une explication en langage courant, les éléments fautifs (sélecteur CSS + extrait HTML) et le code corrigé prêt à adapter (avant / après). Pour les contrastes, la couleur corrigée proposée passe le ratio requis de 4,5:1. À valider par vos équipes avant mise en production.</p>
       
       
       <div class="correction-item">
@@ -685,6 +747,7 @@ par Bro», a 64×24 «Scanner», a 155×24 «Ce que l’on teste»).</span>
           <span class="correction-msg">7 cible(s) tactile(s) de taille &lt; 44×44 px (min. recommandé) (ex : a 254×38 «AccessiCheck
 par Bro», a 64×24 «Scanner», a 155×24 «Ce que l’on teste»).</span>
         </div>
+        <p class="plain-explain">En clair : des zones cliquables sont trop petites sur mobile — difficile de viser juste, surtout avec des tremblements.</p>
         <p class="issue-pages">Présent sur 4 pages : /, /mentions-legales.html, /cgv.html, /blog</p>
         
         <div class="elements-block"><h3 class="elements-title">Éléments fautifs (5)</h3><ul class="el-list"><li class="el-item"><span class="el-selector">body &gt; .header &gt; .container &gt; .logo</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a class=&quot;logo&quot; href=&quot;/&quot; aria-label=&quot;AccessiCheck — Accueil&quot;&gt; &lt;span class=&quot;logo__name&quot;&gt;AccessiCheck&lt;/span&gt; &lt;span class=&quot;logo__by&quot;&gt;par Brozapi&lt;/span&gt; &lt;/a&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .header &gt; .container &gt; .nav &gt; a:nth-child(1)</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;#scanner&quot;&gt;Scanner&lt;/a&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .header &gt; .container &gt; .nav &gt; a:nth-child(2)</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;#couverture&quot;&gt;Ce que l’on teste&lt;/a&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .header &gt; .container &gt; .nav &gt; a:nth-child(3)</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;#offres&quot;&gt;Offres&lt;/a&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .header &gt; .container &gt; .nav &gt; a:nth-child(4)</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;#exemple&quot;&gt;Exemple de rapport&lt;/a&gt;</code></div></li></ul></div>
@@ -711,6 +774,7 @@ par Bro», a 64×24 «Scanner», a 155×24 «Ce que l’on teste»).</span>
           <span class="impact-pill impact-moderate">moderate</span>
           <span class="correction-msg">5 cible(s) tactile(s) de taille &lt; 44×44 px (min. recommandé) (ex : a 179×12 «Déclaration d’access», button 137×21 «Envoyer le message», a 102×12 «Mentions légales»).</span>
         </div>
+        <p class="plain-explain">En clair : des zones cliquables sont trop petites sur mobile — difficile de viser juste, surtout avec des tremblements.</p>
         
         
         <div class="elements-block"><h3 class="elements-title">Éléments fautifs (5)</h3><ul class="el-list"><li class="el-item"><span class="el-selector">body &gt; .report-body.pro &gt; .page-break.corrections-section &gt; .correction-item &gt; .fix-box &gt; .fix-cols &gt; .fix-col &gt; .fix-code.after &gt; code &gt; a</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;/accessibilite&quot;&gt;Déclaration d’accessibilité&lt;/a&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .report-body.pro &gt; .page-break.corrections-section &gt; .correction-item &gt; .elements-block &gt; .el-list &gt; .el-item &gt; .el-snippet-wrap &gt; .el-snippet &gt; #cf-submit</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;button type=&quot;submit&quot; class=&quot;btn&quot; id=&quot;cf-submit&quot;&gt;Envoyer le message&lt;/button&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .report-body.pro &gt; .page-break.corrections-section &gt; .correction-item &gt; .elements-block &gt; .el-list &gt; .el-item &gt; .el-snippet-wrap &gt; .el-snippet &gt; a</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;/mentions-legales.html&quot;&gt;Mentions légales&lt;/a&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .report-body.pro &gt; .page-break.corrections-section &gt; .correction-item &gt; .elements-block &gt; .el-list &gt; .el-item &gt; .el-snippet-wrap &gt; .el-snippet &gt; a</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;https://badgeia.brozapi.com/&quot;&gt;BadgeIA&lt;/a&gt;</code></div></li><li class="el-item"><span class="el-selector">body &gt; .report-body.pro &gt; .page-break.corrections-section &gt; .correction-item &gt; .elements-block &gt; .el-list &gt; .el-item &gt; .el-snippet-wrap &gt; .el-snippet &gt; a</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;a href=&quot;https://accessicheck.brozapi.com/&quot;&gt;AccessiCheck&lt;/a&gt;</code></div></li></ul></div>
@@ -737,6 +801,7 @@ par Bro», a 64×24 «Scanner», a 155×24 «Ce que l’on teste»).</span>
           <span class="impact-pill impact-minor">minor</span>
           <span class="correction-msg">4 lien(s) vers un fichier PDF détecté(s) (ex : &quot;PDF One-Shot&quot;, &quot;PDF Pro&quot;, &quot;PDF One-Shot&quot;, &quot;PDF Pro&quot;). PDF probablement non accessible, à vérifier.</span>
         </div>
+        <p class="plain-explain">En clair : des documents PDF liés depuis le site sont probablement illisibles par un lecteur d’écran — à vérifier ou remplacer.</p>
         
         
         <div class="elements-block"><h3 class="elements-title">Éléments fautifs (4)</h3><ul class="el-list"><li class="el-item"><span class="el-selector el-no-sel">élément détecté</span><div class="el-snippet-wrap"><code class="el-snippet">assets/rapports/badgeia-brozapi-oneshot.pdf</code></div></li><li class="el-item"><span class="el-selector el-no-sel">élément détecté</span><div class="el-snippet-wrap"><code class="el-snippet">assets/rapports/badgeia-brozapi-pro.pdf</code></div></li><li class="el-item"><span class="el-selector el-no-sel">élément détecté</span><div class="el-snippet-wrap"><code class="el-snippet">assets/rapports/brozapi-com-oneshot.pdf</code></div></li><li class="el-item"><span class="el-selector el-no-sel">élément détecté</span><div class="el-snippet-wrap"><code class="el-snippet">assets/rapports/brozapi-com-pro.pdf</code></div></li></ul></div>
@@ -763,6 +828,7 @@ par Bro», a 64×24 «Scanner», a 155×24 «Ce que l’on teste»).</span>
           <span class="impact-pill impact-serious">serious</span>
           <span class="correction-msg">Le contraste entre le texte et son arrière-plan est insuffisant : le ratio mesuré est inférieur au minimum requis (4,5:1 pour le texte courant, 3:1 pour les grands textes).</span>
         </div>
+        <p class="plain-explain">En clair : certains textes sont difficiles à lire car leur couleur est trop proche de celle du fond — les personnes malvoyantes sont les premières pénalisées. Voici la couleur exacte à appliquer.</p>
         
         
         <div class="elements-block"><h3 class="elements-title">Éléments fautifs (2)</h3><ul class="el-list"><li class="el-item"><span class="el-selector">strong:nth-child(2)</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;strong style=&quot;color:#ca8a04&quot;&gt;77/100&lt;/strong&gt;</code></div></li><li class="el-item"><span class="el-selector">.score-label</span><div class="el-snippet-wrap"><code class="el-snippet">&lt;div class=&quot;score-label&quot; style=&quot;color:#ca8a04&quot;&gt;À améliorer&lt;/div&gt;</code></div></li></ul></div>
@@ -789,6 +855,7 @@ par Bro», a 64×24 «Scanner», a 155×24 «Ce que l’on teste»).</span>
           <span class="impact-pill impact-serious">serious</span>
           <span class="correction-msg">Aucun lien d&#39;évitement (skip-link) détecté : permettre d&#39;atteindre directement le contenu principal sans repasser la navigation.</span>
         </div>
+        <p class="plain-explain">En clair : il manque un lien « Aller au contenu » — l’utilisateur au clavier doit traverser tout le menu à chaque page.</p>
         
         
         
@@ -818,7 +885,7 @@ par Bro», a 64×24 «Scanner», a 155×24 «Ce que l’on teste»).</span>
       
     <section class="page-break rgaa-section">
       <h2>Correspondance RGAA 4.1</h2>
-      <p class="corrections-intro">Les moteurs de détection (axe-core, Pa11y) parlent WCAG ; votre obligation légale en France est le <strong>RGAA 4.1.2</strong> (106 critères, directive européenne EAA applicable depuis juin 2025 aux entreprises de plus de 10 salariés). Ce tableau traduit chaque problème détecté en critère(s) RGAA correspondant(s) : ce sont les références à utiliser dans votre déclaration d'accessibilité et votre plan de remédiation.</p>
+      <p class="corrections-intro">Les moteurs de détection (axe-core, Pa11y) parlent WCAG ; votre obligation légale en France est le <strong>RGAA 4.1.2</strong> (106 critères, directive européenne EAA applicable depuis juin 2025 aux entreprises de plus de 10 salariés). Ce tableau traduit chaque problème détecté en critère(s) RGAA correspondant(s) : ce sont les références à utiliser dans votre déclaration d’accessibilité et votre plan de remédiation.</p>
       <table class="criteria-table rgaa-table">
         <thead>
           <tr><th>Critère RGAA</th><th>Thématique</th><th>Exigence</th><th>Problèmes</th><th>Pages concernées</th></tr>
@@ -926,15 +993,28 @@ par Bro», a 64×24 «Scanner», a 155×24 «Ce que l’on teste»).<br><span cl
           </tr>
         
           <tr>
-            <td>Déclaration d&#39;accessibilité + iframes titrées</td>
+            <td>Déclaration d’accessibilité + iframes titrées</td>
             <td><span class="status-ko">✗ Problème détecté</span></td>
           </tr>
         
       </tbody>
     </table>
-    <p class="not-tested">La détection automatisée technique + analyse IA couvre une part importante mais non exhaustive des critères RGAA/WCAG : lecteur d'écran réel, contenus très complexes, tableaux de données, changements de langue, etc. restent du ressort d'un audit humain.</p>
+    <p class="not-tested">La détection automatisée technique + analyse IA couvre une part importante mais non exhaustive des critères RGAA/WCAG : lecteur d’écran réel, contenus très complexes, tableaux de données, changements de langue, etc. restent du ressort d’un audit humain.</p>
   
       </section>
+      
+    <section class="glossary-section">
+      <h2>Glossaire (pour les non-développeurs)</h2>
+      <dl>
+        <dt>Skip-link (lien d’évitement)</dt><dd>Lien « Aller au contenu » placé en tout début de page : il permet aux utilisateurs de clavier ou de lecteur d’écran de sauter les menus répétitifs.</dd>
+        <dt>Ratio de contraste</dt><dd>Mesure de l’écart de luminosité entre un texte et son fond. Minimum légal : 4,5:1 pour le texte courant (3:1 pour les grands textes).</dd>
+        <dt>ARIA</dt><dd>Attributs invisibles ajoutés au code pour décrire les éléments aux technologies d’assistance (lecteurs d’écran).</dd>
+        <dt>Cible tactile</dt><dd>Zone cliquable d’un bouton ou lien. Sur mobile, elle doit mesurer au moins 44×44 px pour être utilisable confortablement.</dd>
+        <dt>Texte alternatif (alt)</dt><dd>Texte attaché à une image, lu par les lecteurs d’écran et affiché si l’image ne charge pas.</dd>
+        <dt>RGAA</dt><dd>Référentiel français d’accessibilité (106 critères). C’est lui qui fait foi pour l’obligation légale en France.</dd>
+      </dl>
+    </section>
+  
     </main>
   
   <footer class="report-footer">

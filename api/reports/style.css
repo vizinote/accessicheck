@@ -224,6 +224,53 @@ h2 {
 }
 .executive-summary h2 { margin-top: 0; border-bottom: none; }
 
+/* Encart « Comment lire ce rapport » (vulgarisation, non-développeurs) */
+.howto-box {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-left: 4px solid #1d4ed8;
+  padding: 12pt 14pt;
+  border-radius: 0 8px 8px 0;
+  margin: 12pt 0 16pt;
+  page-break-inside: avoid;
+}
+.howto-box h2 { margin-top: 0; border-bottom: none; font-size: 13pt; }
+.howto-box ul { margin: 6pt 0 0; padding-left: 16pt; }
+.howto-box li { margin: 5pt 0; font-size: 10pt; line-height: 1.45; }
+
+/* Phrase « En clair » avant le détail technique d'un constat */
+.plain-explain {
+  background: #fefce8;
+  border-left: 3px solid #a16207;
+  color: #3f3f46;
+  padding: 7pt 10pt;
+  border-radius: 0 6px 6px 0;
+  font-size: 10pt;
+  line-height: 1.45;
+  margin: 6pt 0 10pt;
+}
+
+/* Glossaire en fin de rapport */
+.glossary-section {
+  margin-top: 18pt;
+  padding-top: 10pt;
+  border-top: 2px solid #e5e7eb;
+}
+.glossary-section dl { margin: 8pt 0 0; }
+.glossary-section dt {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 10pt;
+  margin-top: 8pt;
+}
+.glossary-section dd {
+  margin: 2pt 0 0;
+  padding-left: 0;
+  font-size: 9.5pt;
+  color: #4b5563;
+  line-height: 1.4;
+}
+
 /* Monitoring */
 .monitoring-header {
   display: flex;

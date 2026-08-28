@@ -432,8 +432,14 @@ app.get(route('/report/:id'), async (req, res) => {
     }
 
     const format = (req.query.format || 'pdf').toLowerCase();
+    // Langue du rapport : ?lang=fr|en (défaut fr). Le PDF livré par email reste
+    // en français tant que le parcours client est francophone.
+    const lang = (req.query.lang || 'fr').toLowerCase();
+    if (!['fr', 'en'].includes(lang)) {
+      return makeResponse(res, { ok: false, error: 'Langue invalide. Utilisez ?lang=fr ou ?lang=en.' }, 400);
+    }
     if (format === 'html') {
-      const html = await generateReportHtml(scan);
+      const html = await generateReportHtml(scan, lang);
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       return res.send(html);
     }
@@ -442,9 +448,9 @@ app.get(route('/report/:id'), async (req, res) => {
       return makeResponse(res, { ok: false, error: 'Format invalide. Utilisez ?format=html ou ?format=pdf (par défaut).' }, 400);
     }
 
-    const pdf = await generateReportPdf(scan);
+    const pdf = await generateReportPdf(scan, lang);
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="accessicheck-rapport-${scan.id}.pdf"`);
+    res.setHeader('Content-Disposition', `inline; filename="accessicheck-rapport-${scan.id}${lang === 'en' ? '-en' : ''}.pdf"`);
     return res.send(pdf);
   } catch (err) {
     console.error('generateReport error:', err);

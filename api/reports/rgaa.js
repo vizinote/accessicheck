@@ -12,14 +12,21 @@
 // est figée et testée.
 
 const { escapeHtml } = require('./corrections');
-const { issueMessageFr } = require('./messages-fr');
+const { issueMessage } = require('./messages-fr');
 
 // ---------------------------------------------------------------- référentiel RGAA 4.1.2
 // Thématiques officielles (1 à 13).
 const RGAA_THEMES = {
   1: 'Images', 2: 'Cadres', 3: 'Couleurs', 4: 'Multimédia', 5: 'Tableaux',
-  6: 'Liens', 7: 'Scripts', 8: 'Éléments obligatoires', 9: 'Structuration de l\u2019information',
-  10: 'Présentation de l\u2019information', 11: 'Formulaires', 12: 'Navigation', 13: 'Consultation',
+  6: 'Liens', 7: 'Scripts', 8: 'Éléments obligatoires', 9: 'Structuration de l’information',
+  10: 'Présentation de l’information', 11: 'Formulaires', 12: 'Navigation', 13: 'Consultation',
+};
+
+// Thématiques en anglais (rapport EN).
+const RGAA_THEMES_EN = {
+  1: 'Images', 2: 'Frames', 3: 'Colours', 4: 'Multimedia', 5: 'Tables',
+  6: 'Links', 7: 'Scripts', 8: 'Mandatory elements', 9: 'Information structure',
+  10: 'Information presentation', 11: 'Forms', 12: 'Navigation', 13: 'Consultation',
 };
 
 // Libellés courts des critères cités par la grille (sous-ensemble des 106).
@@ -144,9 +151,82 @@ const SPECIAL_NOTES = {
   'target-size': 'WCAG 2.2 (2.5.8) — pas de critère RGAA 4.1 équivalent.',
 };
 
-function themeOf(criterionId) {
+// Versions anglaises des notes hors grille.
+const SPECIAL_NOTES_EN = {
+  'accessibility-statement-missing': 'Legal requirement (art. 47 of the French digital republic law) — outside the 106-criteria grid.',
+  'small-touch-target': 'WCAG 2.2 (2.5.8) — no equivalent RGAA 4.1 criterion.',
+  'target-size': 'WCAG 2.2 (2.5.8) — no equivalent RGAA 4.1 criterion.',
+};
+
+// Libellés anglais courts des critères (traduction de RGAA_LABELS).
+const RGAA_LABELS_EN = {
+  '1.1': 'Every informative image has a text alternative',
+  '1.8': 'Every text image is replaced with styled text where possible',
+  '2.1': 'Every frame has a frame title',
+  '3.1': 'Information is not conveyed by colour alone',
+  '3.2': 'Sufficient contrast between text and its background',
+  '3.3': 'Interface component colours are sufficiently contrasted',
+  '4.1': 'Time-based media: text transcript or audio description',
+  '4.3': 'Synchronised time-based media: synchronised captions',
+  '4.5': 'Pre-recorded time-based media: synchronised audio description',
+  '4.8': 'Non-time-based media: alternative',
+  '4.10': 'Automatically triggered sound can be controlled',
+  '5.4': 'Title correctly associated with the data table',
+  '5.6': 'Column and row headers correctly declared',
+  '5.7': 'Cell/header association with the appropriate technique',
+  '6.1': 'Every link is explicit',
+  '6.2': 'Every link has a label',
+  '7.1': 'Every script is compatible with assistive technologies',
+  '7.3': 'Every script is keyboard-controllable',
+  '7.4': 'Context change: user warned or in control',
+  '7.5': 'Status messages correctly conveyed',
+  '8.2': 'Source code valid for the document type',
+  '8.3': 'Default language present',
+  '8.4': 'Relevant language code',
+  '8.5': 'Every page has a page title',
+  '8.7': 'Every language change is indicated',
+  '8.8': 'Language code of every change valid and relevant',
+  '8.9': 'Tags not used for presentation purposes only',
+  '9.1': 'Information structured through appropriate headings',
+  '9.2': 'Consistent document structure',
+  '9.3': 'Every list correctly structured',
+  '10.3': 'Information understandable with style sheets disabled',
+  '10.4': 'Text readable at 200 %',
+  '10.7': 'Focus is visible',
+  '10.9': 'Information not conveyed by shape, size or position alone',
+  '10.11': 'Content presentable without scrolling in a reduced window',
+  '10.12': 'Text spacing properties can be overridden',
+  '10.13': 'Additional content on focus/hover is controllable',
+  '11.1': 'Every form field has a label',
+  '11.3': 'Consistent labels for fields with the same function',
+  '11.9': 'Relevant label for every button',
+  '11.10': 'Input validation used appropriately',
+  '11.11': 'Input validation accompanied by suggestions',
+  '11.12': 'Data editable/recoverable (financial/legal consequences)',
+  '11.13': 'Field purpose deductible (autofill)',
+  '12.1': 'At least two different navigation systems',
+  '12.2': 'Menu and navigation bars always in the same place',
+  '12.6': 'Grouping regions reachable or skippable',
+  '12.7': 'Skip link or quick access to main content',
+  '12.8': 'Consistent tab order',
+  '12.9': 'No keyboard trap in navigation',
+  '12.10': 'Single-character keyboard shortcuts controllable',
+  '12.11': 'Additional content reachable by keyboard',
+  '13.1': 'Every time limit is controllable',
+  '13.2': 'No new window opens without user action',
+  '13.3': 'Accessible version of office documents',
+  '13.7': 'Sudden brightness changes correctly used',
+  '13.8': 'Moving or blinking content is controllable',
+  '13.9': 'Content usable in any orientation',
+  '13.10': 'Complex gestures available as simple gestures',
+  '13.11': 'Pointer actions cancellable',
+  '13.12': 'Alternatives to motion-based features',
+};
+
+function themeOf(criterionId, lang = 'fr') {
   const theme = parseInt(String(criterionId).split('.')[0], 10);
-  return RGAA_THEMES[theme] || '';
+  const table = lang === 'en' ? RGAA_THEMES_EN : RGAA_THEMES;
+  return table[theme] || '';
 }
 
 // Extrait le critère de succès WCAG d'une issue (champ explicite, ou tags axe
@@ -164,7 +244,8 @@ function wcagCriterionOf(issue) {
 // Critères RGAA applicables à une issue : [{ id, label, theme }].
 // Ordre de résolution : champ rgaa explicite (issues custom) → surcharge par
 // règle → correspondance générique par critère WCAG.
-function rgaaCriteriaFor(issue) {
+function rgaaCriteriaFor(issue, lang = 'fr') {
+  const labels = lang === 'en' ? RGAA_LABELS_EN : RGAA_LABELS;
   const ids = [];
   const push = (id) => { if (id && RGAA_LABELS[id] && !ids.includes(id)) ids.push(id); };
 
@@ -181,16 +262,17 @@ function rgaaCriteriaFor(issue) {
     const wcag = wcagCriterionOf(issue);
     if (wcag && WCAG_TO_RGAA[wcag]) WCAG_TO_RGAA[wcag].forEach(push);
   }
-  return ids.map((id) => ({ id, label: RGAA_LABELS[id], theme: themeOf(id) }));
+  return ids.map((id) => ({ id, label: labels[id], theme: themeOf(id, lang) }));
 }
 
 // Annotation courte pour la colonne RGAA du tableau des problèmes.
-function rgaaAnnotation(issue) {
-  const note = SPECIAL_NOTES[String(issue.id || '').toLowerCase()];
-  const criteria = rgaaCriteriaFor(issue);
+function rgaaAnnotation(issue, lang = 'fr') {
+  const note = (lang === 'en' ? SPECIAL_NOTES_EN : SPECIAL_NOTES)[String(issue.id || '').toLowerCase()];
+  const criteria = rgaaCriteriaFor(issue, lang);
   const wcag = wcagCriterionOf(issue);
   if (criteria.length === 0 && !note) {
-    return wcag ? { text: `WCAG ${wcag} — pas de critère RGAA direct`, wcag, criteria: [] }
+    return wcag
+      ? { text: lang === 'en' ? `WCAG ${wcag} — no direct RGAA criterion` : `WCAG ${wcag} — pas de critère RGAA direct`, wcag, criteria: [] }
       : { text: '—', wcag: null, criteria: [] };
   }
   const parts = criteria.map((c) => c.id);
@@ -205,21 +287,44 @@ function rgaaAnnotation(issue) {
 // ---------------------------------------------------------------- section rapport
 // Synthèse « Correspondance RGAA 4.1 » : regroupe les problèmes détectés par
 // critère RGAA, avec thématique et pages concernées (audit multi-pages).
+const RGAA_SECTION_STRINGS = {
+  fr: {
+    title: 'Correspondance RGAA 4.1',
+    empty: 'Aucun problème détecté : aucun critère RGAA 4.1.2 automatiquement testable n’est en échec sur le périmètre scanné.',
+    emptyReminder: 'Rappel : le RGAA 4.1.2 compte 106 critères. Seule une partie est automatiquement testable — un audit humain reste nécessaire pour déclarer la conformité.',
+    intro: 'Les moteurs de détection (axe-core, Pa11y) parlent WCAG ; votre obligation légale en France est le <strong>RGAA 4.1.2</strong> (106 critères, directive européenne EAA applicable depuis juin 2025 aux entreprises de plus de 10 salariés). Ce tableau traduit chaque problème détecté en critère(s) RGAA correspondant(s) : ce sont les références à utiliser dans votre déclaration d’accessibilité et votre plan de remédiation.',
+    thCriterion: 'Critère RGAA', thTheme: 'Thématique', thRequirement: 'Exigence', thIssues: 'Problèmes', thPages: 'Pages concernées',
+    legalTitle: 'Obligations hors grille des critères',
+    summary: (n) => `${n} critère(s) RGAA en échec sur le périmètre scanné. Le RGAA 4.1.2 compte 106 critères : seule une partie est automatiquement testable, un audit humain reste nécessaire pour déclarer la conformité.`,
+  },
+  en: {
+    title: 'RGAA 4.1 mapping',
+    empty: 'No issue detected: no automatically testable RGAA 4.1.2 criterion is failing on the scanned perimeter.',
+    emptyReminder: 'Reminder: RGAA 4.1.2 has 106 criteria. Only part of them can be tested automatically — a human audit is still required to declare compliance.',
+    intro: 'The detection engines (axe-core, Pa11y) speak WCAG; your legal obligation in France is the <strong>RGAA 4.1.2</strong> (106 criteria, European EAA directive applicable since June 2025 to companies with more than 10 employees). This table translates each detected issue into the corresponding RGAA criterion/criteria: these are the references to use in your accessibility statement and remediation plan.',
+    thCriterion: 'RGAA criterion', thTheme: 'Theme', thRequirement: 'Requirement', thIssues: 'Issues', thPages: 'Affected pages',
+    legalTitle: 'Requirements outside the criteria grid',
+    summary: (n) => `${n} RGAA criterion/criteria failing on the scanned perimeter. RGAA 4.1.2 has 106 criteria: only part of them can be tested automatically, a human audit is still required to declare compliance.`,
+  },
+};
+
 function rgaaSectionHtml(issues, opts = {}) {
+  const lang = opts.lang === 'en' ? 'en' : 'fr';
+  const s = RGAA_SECTION_STRINGS[lang];
   const multipage = Array.isArray(opts.pages) && opts.pages.length > 1;
   if (!issues || issues.length === 0) {
     return `
     <section class="page-break rgaa-section">
-      <h2>Correspondance RGAA 4.1</h2>
-      <p class="good-news">Aucun problème détecté : aucun critère RGAA 4.1.2 automatiquement testable n'est en échec sur le périmètre scanné.</p>
-      <p class="not-tested">Rappel : le RGAA 4.1.2 compte 106 critères. Seule une partie est automatiquement testable — un audit humain reste nécessaire pour déclarer la conformité.</p>
+      <h2>${s.title}</h2>
+      <p class="good-news">${s.empty}</p>
+      <p class="not-tested">${s.emptyReminder}</p>
     </section>`;
   }
 
   const byCriterion = new Map(); // id -> { id, label, theme, count, pages:Set, examples:[] }
   const unmapped = [];
   for (const issue of issues) {
-    const criteria = rgaaCriteriaFor(issue);
+    const criteria = rgaaCriteriaFor(issue, lang);
     if (criteria.length === 0) { unmapped.push(issue); continue; }
     for (const c of criteria) {
       if (!byCriterion.has(c.id)) {
@@ -229,7 +334,7 @@ function rgaaSectionHtml(issues, opts = {}) {
       entry.count += 1;
       (issue.pages || (issue.page ? [issue.page] : ['/'])).forEach((p) => entry.pages.add(p));
       if (entry.examples.length < 2) {
-        entry.examples.push(issueMessageFr(issue));
+        entry.examples.push(issueMessage(issue, lang));
       }
     }
   }
@@ -237,7 +342,8 @@ function rgaaSectionHtml(issues, opts = {}) {
   const rows = [...byCriterion.values()]
     .sort((a, b) => parseFloat(a.id) - parseFloat(b.id) || a.id.localeCompare(b.id));
 
-  const legalNotes = issues.filter((i) => SPECIAL_NOTES[String(i.id || '').toLowerCase()]);
+  const specialTable = lang === 'en' ? SPECIAL_NOTES_EN : SPECIAL_NOTES;
+  const legalNotes = issues.filter((i) => specialTable[String(i.id || '').toLowerCase()]);
 
   const tableRows = rows.map((c) => `
         <tr>
@@ -249,33 +355,36 @@ function rgaaSectionHtml(issues, opts = {}) {
         </tr>`).join('');
 
   const legalHtml = legalNotes.length > 0 ? `
-    <h3>Obligations hors grille des critères</h3>
+    <h3>${s.legalTitle}</h3>
     <ul class="rgaa-legal-list">
-      ${legalNotes.map((i) => `<li>${escapeHtml(issueMessageFr(i))}<br><span class="ai-note">${escapeHtml(SPECIAL_NOTES[String(i.id).toLowerCase()])}</span></li>`).join('')}
+      ${legalNotes.map((i) => `<li>${escapeHtml(issueMessage(i, lang))}<br><span class="ai-note">${escapeHtml(specialTable[String(i.id).toLowerCase()])}</span></li>`).join('')}
     </ul>` : '';
 
   return `
     <section class="page-break rgaa-section">
-      <h2>Correspondance RGAA 4.1</h2>
-      <p class="corrections-intro">Les moteurs de détection (axe-core, Pa11y) parlent WCAG ; votre obligation légale en France est le <strong>RGAA 4.1.2</strong> (106 critères, directive européenne EAA applicable depuis juin 2025 aux entreprises de plus de 10 salariés). Ce tableau traduit chaque problème détecté en critère(s) RGAA correspondant(s) : ce sont les références à utiliser dans votre déclaration d'accessibilité et votre plan de remédiation.</p>
+      <h2>${s.title}</h2>
+      <p class="corrections-intro">${s.intro}</p>
       <table class="criteria-table rgaa-table">
         <thead>
-          <tr><th>Critère RGAA</th><th>Thématique</th><th>Exigence</th><th>Problèmes</th>${multipage ? '<th>Pages concernées</th>' : ''}</tr>
+          <tr><th>${s.thCriterion}</th><th>${s.thTheme}</th><th>${s.thRequirement}</th><th>${s.thIssues}</th>${multipage ? `<th>${s.thPages}</th>` : ''}</tr>
         </thead>
         <tbody>${tableRows}
         </tbody>
       </table>
       ${legalHtml}
-      <p class="not-tested">${rows.length} critère(s) RGAA en échec sur le périmètre scanné. Le RGAA 4.1.2 compte 106 critères : seule une partie est automatiquement testable, un audit humain reste nécessaire pour déclarer la conformité.</p>
+      <p class="not-tested">${s.summary(rows.length)}</p>
     </section>`;
 }
 
 module.exports = {
   RGAA_THEMES,
+  RGAA_THEMES_EN,
   RGAA_LABELS,
+  RGAA_LABELS_EN,
   WCAG_TO_RGAA,
   RULE_TO_RGAA,
   SPECIAL_NOTES,
+  SPECIAL_NOTES_EN,
   wcagCriterionOf,
   rgaaCriteriaFor,
   rgaaAnnotation,
