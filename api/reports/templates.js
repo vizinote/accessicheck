@@ -280,6 +280,18 @@ function logo() {
   `;
 }
 
+// Note de couverture du pied de page. Les notes stockées par le scanner sont
+// rédigées en français (données historiques incluses) : en rapport EN, on rend
+// l'équivalent anglais régénéré depuis les données structurées du résultat.
+function coverageNote(result, lang) {
+  if (lang !== 'en') return result.coverage_note || T[lang].defaultCoverage;
+  const nPages = Array.isArray(result.pages) && result.pages.length > 1 ? result.pages.filter((p) => p.status === 'done').length : 0;
+  const multi = nPages > 1
+    ? `Multi-page audit: ${nPages} key pages analysed (home page + automatically discovered pages: contact, products/services, legal notice, main pages). `
+    : '';
+  return multi + 'This scan combines automated technical detection (contrast, structure, ARIA, forms, images, links, keyboard navigation — RGAA/WCAG criteria) extended by an AI analysis of alternative texts, link labels and form labels. Automated detection remains partial: a human audit is still required for full compliance.';
+}
+
 function layout({ title, offerLabel, scan, body, footerExtra = '', lang = 'fr' }) {
   const t = T[lang];
   const result = scan.result || {};
@@ -301,7 +313,7 @@ function layout({ title, offerLabel, scan, body, footerExtra = '', lang = 'fr' }
   </header>
   ${body}
   <footer class="report-footer">
-    <p><strong>${t.legalFooter}</strong> ${escapeHtml(result.coverage_note || t.defaultCoverage)}</p>
+    <p><strong>${t.legalFooter}</strong> ${escapeHtml(coverageNote(result, lang))}</p>
     <p>AccessiCheck — Brozapi — SIRET actif</p>
     ${footerExtra}
   </footer>

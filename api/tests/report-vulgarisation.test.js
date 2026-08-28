@@ -143,4 +143,18 @@ describe('vulgarisation du rapport (non-développeurs)', () => {
     assert(htmlEn.includes('Legal requirement'));
     assert(htmlEn.includes('Requirements outside the criteria grid'));
   });
+
+  it('note de couverture traduite en EN (multi-pages), FR préservée', async () => {
+    const scan = makeScan('pro');
+    scan.result.pages = [
+      { url: 'https://example.com/', path: '/', pageTitle: 'Home', score: 60, issuesCount: 4, status: 'done', error: null },
+      { url: 'https://example.com/contact', path: '/contact', pageTitle: 'Contact', score: 70, issuesCount: 2, status: 'done', error: null },
+    ];
+    const htmlFr = await generateReportHtml(scan);
+    assert(htmlFr.includes('Ce scan couvre uniquement'), 'note FR conservée');
+    const htmlEn = await generateReportHtml(scan, 'en');
+    assert(htmlEn.includes('Multi-page audit: 2 key pages analysed'), 'note EN multi-pages');
+    assert(htmlEn.includes('a human audit is still required'), 'note EN');
+    assert(!htmlEn.includes('Ce scan couvre uniquement'), 'pas de note FR dans le rapport EN');
+  });
 });
