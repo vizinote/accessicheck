@@ -1,9 +1,91 @@
-/* AccessiCheck — interactions légères, commande AccessiCheck et mesures d'audience anonymes.
-   Aucun cookie, aucune IP, aucun identifiant personnel n'est transmis hors du formulaire de commande. */
+/* AccessiCheck — light interactions, AccessiCheck ordering and anonymous audience metrics.
+   No cookie, no IP, no personal identifier is sent outside the order form. */
 (function () {
   'use strict';
 
   var API_BASE = 'https://api.brozapi.com';
+
+  // Language-aware UI strings (detected from <html lang>).
+  var LANG = (typeof document !== 'undefined' && document.documentElement &&
+    document.documentElement.lang === 'en') ? 'en' : 'fr';
+
+  var I18N = {
+    fr: {
+      score_good: 'Bon',
+      score_improve: 'À améliorer',
+      score_fix: 'À corriger en priorité',
+      issues_title: 'Problèmes prioritaires détectés',
+      impact_important: 'Important',
+      impact_medium: 'Moyen',
+      impact_check: 'À vérifier',
+      no_issues: 'Aucun problème automatiquement détecté. Pensez tout de même à un audit humain pour valider la conformité RGAA complète.',
+      cta_report: 'Recevoir le rapport complet avec corrections détaillées — 29 €',
+      scan_note: 'Ce scan gratuit couvre les critères automatiquement testables. Le rapport payant ajoute le code de correction et un résumé pour le dirigeant.',
+      scan_failed: 'Le scan a échoué.',
+      scan_done: 'Scan terminé.',
+      scan_slow: 'Le scan prend plus de temps que prévu. Rechargez la page ou choisissez une offre ci-dessous.',
+      scan_conn_error: 'Erreur de connexion au serveur de scan.',
+      need_https: 'Merci d’indiquer une adresse commençant par https://',
+      need_email: 'Merci d’indiquer un email valide pour recevoir le rapport.',
+      scan_starting: 'Lancement du scan gratuit…',
+      scan_launch_error: 'Erreur de lancement du scan.',
+      scan_progress: 'Scan en cours, cela peut prendre jusqu’à 60 secondes…',
+      scan_launch_failed: 'Impossible de lancer le scan.',
+      need_site_first: 'Commencez par saisir votre adresse de site (https://…).',
+      need_email_first: 'Commencez par saisir votre email pour recevoir le rapport.',
+      unknown_offer: 'Offre inconnue.',
+      preparing_payment: 'Préparation du paiement…',
+      order_error: 'Erreur de commande.',
+      payment_failed_prefix: 'Impossible de préparer le paiement : ',
+      payment_failed_suffix: ' Contactez-nous via la page Mentions légales.',
+      guide_default: 'Recevoir le guide',
+      guide_invalid_email: 'Veuillez saisir une adresse email valide.',
+      guide_need_consent: 'Vous devez accepter la politique de confidentialité.',
+      guide_sending: 'Envoi en cours…',
+      guide_sent: 'Merci ! Le guide vous a été envoyé par email.',
+      guide_error: 'Réessayez dans quelques instants.'
+    },
+    en: {
+      score_good: 'Good',
+      score_improve: 'Needs improvement',
+      score_fix: 'Fix first',
+      issues_title: 'Priority issues detected',
+      impact_important: 'Important',
+      impact_medium: 'Medium',
+      impact_check: 'To verify',
+      no_issues: 'No issues automatically detected. Still consider a human audit to validate full WCAG compliance.',
+      cta_report: 'Get the full report with detailed fixes — €29',
+      scan_note: 'This free scan covers automatically-testable criteria. The paid report adds correction code and an executive summary.',
+      scan_failed: 'The scan failed.',
+      scan_done: 'Scan complete.',
+      scan_slow: 'The scan is taking longer than expected. Reload the page or choose an offer below.',
+      scan_conn_error: 'Could not reach the scan server.',
+      need_https: 'Please enter an address starting with https://',
+      need_email: 'Please enter a valid email to receive the report.',
+      scan_starting: 'Starting the free scan…',
+      scan_launch_error: 'Failed to start the scan.',
+      scan_progress: 'Scan in progress, may take up to 60 seconds…',
+      scan_launch_failed: 'Could not start the scan.',
+      need_site_first: 'First enter your site address (https://…).',
+      need_email_first: 'First enter your email to receive the report.',
+      unknown_offer: 'Unknown offer.',
+      preparing_payment: 'Preparing payment…',
+      order_error: 'Order error.',
+      payment_failed_prefix: 'Could not prepare the payment: ',
+      payment_failed_suffix: ' Contact us via the Legal notice page.',
+      guide_default: 'Get the guide',
+      guide_invalid_email: 'Please enter a valid email address.',
+      guide_need_consent: 'You must accept the privacy policy.',
+      guide_sending: 'Sending…',
+      guide_sent: 'Thank you! The guide has been sent by email.',
+      guide_error: 'Please try again in a moment.'
+    }
+  };
+
+  function t(key) {
+    var table = I18N[LANG] || I18N.fr;
+    return table[key] || I18N.fr[key] || key;
+  }
 
   // Liens de paiement Stripe AccessiCheck (créés par Franck, compte Stripe Brozapi).
   var PAYMENT_LINKS = {
@@ -104,9 +186,9 @@
     }
 
     function scoreLabel(score) {
-      if (score >= 90) return 'Bon';
-      if (score >= 70) return 'À améliorer';
-      return 'À corriger en priorité';
+      if (score >= 90) return t('score_good');
+      if (score >= 70) return t('score_improve');
+      return t('score_fix');
     }
 
     function renderScanResult(data) {
@@ -123,21 +205,21 @@
       html += '</div>';
       html += '<p class="scan-result__url">' + (result.url || '').replace(/</g, '&lt;') + '</p>';
       if (issues.length > 0) {
-        html += '<h3>Problèmes prioritaires détectés</h3><ul class="scan-result__issues">';
+        html += '<h3>' + t('issues_title') + '</h3><ul class="scan-result__issues">';
         issues.forEach(function (issue) {
           var impact = (issue.impact || issue.type || 'notice').toLowerCase();
           var impactClass = 'impact-' + impact;
-          var impactLabel = impact === 'serious' || impact === 'critical' || impact === 'error' ? 'Important' :
-                            impact === 'moderate' || impact === 'warning' ? 'Moyen' : 'À vérifier';
+          var impactLabel = impact === 'serious' || impact === 'critical' || impact === 'error' ? t('impact_important') :
+                            impact === 'moderate' || impact === 'warning' ? t('impact_medium') : t('impact_check');
           html += '<li><span class="impact-pill ' + impactClass + '">' + impactLabel + '</span> ' +
                   (issue.message || '').replace(/</g, '&lt;') + '</li>';
         });
         html += '</ul>';
       } else {
-        html += '<p class="scan-result__good">Aucun problème automatiquement détecté. Pensez tout de même à un audit humain pour valider la conformité RGAA complète.</p>';
+        html += '<p class="scan-result__good">' + t('no_issues') + '</p>';
       }
-      html += '<a class="btn btn--primary" href="#offres" data-track="click_scan_cta_offres">Recevoir le rapport complet avec corrections détaillées — 29 €</a>';
-      html += '<p class="scan-result__note">Ce scan gratuit couvre les critères automatiquement testables. Le rapport payant ajoute le code de correction et un résumé pour le dirigeant.</p>';
+      html += '<a class="btn btn--primary" href="#offres" data-track="click_scan_cta_offres">' + t('cta_report') + '</a>';
+      html += '<p class="scan-result__note">' + t('scan_note') + '</p>';
       html += '</div>';
       scanResults.innerHTML = html;
       scanResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -156,13 +238,13 @@
           .then(function (data) {
             if (!data || !data.ok) {
               clearInterval(timer);
-              setScanStatus(data && data.error ? data.error : 'Le scan a échoué.', true);
+              setScanStatus(data && data.error ? data.error : t('scan_failed'), true);
               if (scanSubmit) scanSubmit.disabled = false;
               return;
             }
             if (data.status === 'done') {
               clearInterval(timer);
-              setScanStatus('Scan terminé.', false);
+              setScanStatus(t('scan_done'), false);
               if (scanSubmit) scanSubmit.disabled = false;
               renderScanResult(data);
               trackEvent('scan_done_free', '/');
@@ -170,19 +252,19 @@
             }
             if (data.status === 'failed') {
               clearInterval(timer);
-              setScanStatus(data.error || 'Le scan a échoué.', true);
+              setScanStatus(data.error || t('scan_failed'), true);
               if (scanSubmit) scanSubmit.disabled = false;
               return;
             }
             if (attempts >= maxAttempts) {
               clearInterval(timer);
-              setScanStatus('Le scan prend plus de temps que prévu. Rechargez la page ou choisissez une offre ci-dessous.', true);
+              setScanStatus(t('scan_slow'), true);
               if (scanSubmit) scanSubmit.disabled = false;
             }
           })
           .catch(function () {
             clearInterval(timer);
-            setScanStatus('Erreur de connexion au serveur de scan.', true);
+            setScanStatus(t('scan_conn_error'), true);
             if (scanSubmit) scanSubmit.disabled = false;
           });
       }, 2000);
@@ -193,15 +275,15 @@
         e.preventDefault();
         var input = readScanInputs();
         if (!validUrl(input.url)) {
-          setScanStatus('Merci d\’indiquer une adresse commençant par https://', true);
+          setScanStatus(t('need_https'), true);
           return;
         }
         if (!validEmail(input.email)) {
-          setScanStatus('Merci d\’indiquer un email valide pour recevoir le rapport.', true);
+          setScanStatus(t('need_email'), true);
           return;
         }
         if (scanSubmit) scanSubmit.disabled = true;
-        setScanStatus('Lancement du scan gratuit…', false);
+        setScanStatus(t('scan_starting'), false);
         if (scanResults) scanResults.innerHTML = '';
         trackEvent('scan_entered', '/');
 
@@ -213,14 +295,14 @@
           .then(function (r) { return r.json(); })
           .then(function (data) {
             if (!data || !data.ok || !data.id) {
-              throw new Error((data && data.error) || 'Erreur de lancement du scan.');
+              throw new Error((data && data.error) || t('scan_launch_error'));
             }
             lastScanId = data.id;
-            setScanStatus('Scan en cours, cela peut prendre jusqu\’à 60 secondes…', false);
+            setScanStatus(t('scan_progress'), false);
             pollScan(data.id);
           })
           .catch(function (err) {
-            setScanStatus(err.message || 'Impossible de lancer le scan.', true);
+            setScanStatus(err.message || t('scan_launch_failed'), true);
             if (scanSubmit) scanSubmit.disabled = false;
           });
       });
@@ -234,22 +316,22 @@
         var offer = el.getAttribute('data-offer');
         var input = readScanInputs();
         if (!validUrl(input.url)) {
-          setScanStatus('Commencez par saisir votre adresse de site (https://…).', true);
+          setScanStatus(t('need_site_first'), true);
           var scanner = document.getElementById('scanner');
           if (scanner) scanner.scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
         }
         if (!validEmail(input.email)) {
-          setScanStatus('Commencez par saisir votre email pour recevoir le rapport.', true);
+          setScanStatus(t('need_email_first'), true);
           var scanner2 = document.getElementById('scanner');
           if (scanner2) scanner2.scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
         }
         if (!PAYMENT_LINKS[offer]) {
-          setScanStatus('Offre inconnue.', true);
+          setScanStatus(t('unknown_offer'), true);
           return;
         }
-        setScanStatus('Préparation du paiement…', false);
+        setScanStatus(t('preparing_payment'), false);
         el.setAttribute('aria-disabled', 'true');
         trackEvent('scan_triggered_' + offer, '/');
         fetch(API_BASE + '/accessicheck/orders', {
@@ -260,14 +342,14 @@
           .then(function (r) { return r.json(); })
           .then(function (data) {
             if (!data || !data.ok) {
-              throw new Error((data && data.error) || 'Erreur de commande.');
+              throw new Error((data && data.error) || t('order_error'));
             }
             var paymentUrl = PAYMENT_LINKS[offer] + '?prefilled_email=' + encodeURIComponent(input.email);
             window.location.href = paymentUrl;
           })
           .catch(function (err) {
             el.removeAttribute('aria-disabled');
-            setScanStatus('Impossible de préparer le paiement : ' + err.message + ' Contactez-nous via la page Mentions légales.', true);
+            setScanStatus(t('payment_failed_prefix') + err.message + t('payment_failed_suffix'), true);
           });
       });
     });
@@ -281,7 +363,7 @@
       var consentInput = document.getElementById('guide-consent');
       var guideStatus = document.getElementById('guide-status');
       var guideSubmit = guideForm.querySelector('button[type="submit"]');
-      var originalText = guideSubmit ? guideSubmit.textContent : 'Recevoir le guide';
+      var originalText = guideSubmit ? guideSubmit.textContent : t('guide_default');
 
       var email = emailInput ? emailInput.value.trim() : '';
       var consent = consentInput ? consentInput.checked : false;
@@ -293,19 +375,19 @@
       }
 
       if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        setGuideStatus('Veuillez saisir une adresse email valide.', true);
+        setGuideStatus(t('guide_invalid_email'), true);
         if (emailInput) emailInput.focus();
         return;
       }
       if (!consent) {
-        setGuideStatus('Vous devez accepter la politique de confidentialité.', true);
+        setGuideStatus(t('guide_need_consent'), true);
         if (consentInput) consentInput.focus();
         return;
       }
 
       if (guideSubmit) {
         guideSubmit.disabled = true;
-        guideSubmit.textContent = 'Envoi en cours…';
+        guideSubmit.textContent = t('guide_sending');
       }
 
       fetch(API_BASE + '/accessicheck/lead', {
@@ -316,15 +398,15 @@
         .then(function (r) { return r.json(); })
         .then(function (data) {
           if (!data || !data.ok) {
-            throw new Error((data && data.error) || 'Réessayez dans quelques instants.');
+            throw new Error((data && data.error) || t('guide_error'));
           }
-          setGuideStatus('Merci ! Le guide vous a été envoyé par email.', false);
+          setGuideStatus(t('guide_sent'), false);
           trackEvent('download_guide', location.pathname || '/');
           if (emailInput) emailInput.value = '';
           if (consentInput) consentInput.checked = false;
         })
         .catch(function (err) {
-          setGuideStatus(err.message || 'Réessayez dans quelques instants.', true);
+          setGuideStatus(err.message || t('guide_error'), true);
         })
         .finally(function () {
           if (guideSubmit) {

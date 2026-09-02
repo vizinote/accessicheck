@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AccessiCheck — WCAG/EAA accessibility diagnostic in 2 minutes</title>
+  <meta name="description" content="Automated WCAG/EAA accessibility scan for small sites and agencies. Express diagnostic at €29, Pro report at €49, monitoring at €9/month. No compliance guarantee: a human audit remains necessary.">
+  <meta property="og:title" content="AccessiCheck — WCAG/EAA accessibility diagnostic">
+  <meta property="og:description" content="Automated accessibility scan for small sites. Express diagnostic at €29. No magic claims.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://accessicheck.brozapi.com/en/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:image" content="https://accessicheck.brozapi.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AccessiCheck — WCAG/EAA accessibility diagnostic">
+  <meta name="twitter:description" content="Web accessibility, checked in 2 minutes. Express diagnostic at €29, Pro report at €49, monitoring at €9/month.">
+  <meta name="twitter:image" content="https://accessicheck.brozapi.com/assets/og-image.png">
+  <link rel="canonical" href="https://accessicheck.brozapi.com/en/">
+  <link rel="alternate" hreflang="fr" href="https://accessicheck.brozapi.com/">
+  <link rel="alternate" hreflang="en" href="https://accessicheck.brozapi.com/en/">
+  <link rel="alternate" hreflang="x-default" href="https://accessicheck.brozapi.com/">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://accessicheck.brozapi.com/en/#organization",
+    "name": "AccessiCheck",
+    "alternateName": "AccessiCheck by Brozapi",
+    "url": "https://accessicheck.brozapi.com/en/",
+    "parentOrganization": {
+      "@type": "Organization",
+      "name": "Brozapi",
+      "url": "https://brozapi.com"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "11 rue Chevalier Tristan",
+      "postalCode": "56800",
+      "addressLocality": "Ploërmel",
+      "addressRegion": "Morbihan",
+      "addressCountry": "FR"
+    },
+    "areaServed": [
+      {"@type": "AdministrativeArea", "name": "Brittany"},
+      {"@type": "Country", "name": "France"}
+    ],
+    "description": "AccessiCheck, a Breton studio based in Ploërmel, scans the WCAG/EAA (and French RGAA) accessibility of websites. Automated audit complemented by a recommended human audit, without any guarantee of compliance."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "Does AccessiCheck guarantee WCAG compliance?",
+       "acceptedAnswer": {"@type": "Answer", "text": "No. AccessiCheck is a technical diagnostic tool. It only covers WCAG/RGAA criteria that can be tested automatically. A human audit remains necessary to guarantee full and complete compliance."}},
+      {"@type": "Question", "name": "What does the scan cover?",
+       "acceptedAnswer": {"@type": "Answer", "text": "The scan checks automatically-testable criteria: colour contrasts, presence of headings and landmarks, ARIA attributes, accessible names for images and forms, table structure, etc."}},
+      {"@type": "Question", "name": "What does the scan not cover?",
+       "acceptedAnswer": {"@type": "Answer", "text": "The scan combines automated technical detection with AI analysis: it judges the relevance of alternative texts, the clarity of link labels and form labels. However, real screen-reader compatibility, exhaustive keyboard navigation across all pages, and auditing PDFs/media remain the job of a human audit."}},
+      {"@type": "Question", "name": "Who is behind AccessiCheck?",
+       "acceptedAnswer": {"@type": "Answer", "text": "AccessiCheck is a product of the Brozapi studio, built and maintained by supervised AI agents."}},
+      {"@type": "Question", "name": "Can I get a refund?",
+       "acceptedAnswer": {"@type": "Answer", "text": "If the scan has not yet been launched, contact us for a refund within 14 days. Once the report has been generated, the service is considered delivered."}},
+      {"@type": "Question", "name": "Aren't accessiBe-style overlay tools enough?",
+       "acceptedAnswer": {"@type": "Answer", "text": "No. Overlays are discredited by the accessibility community. They often create new problems and do not replace a real audit."}}
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.brozapi.com; font-src 'self' data:; base-uri 'self'; form-action 'self' https://api.brozapi.com">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Skip to content</a>
+
+  <header class="header">
+    <div class="container">
+      <a class="logo" href="/en/" aria-label="AccessiCheck — Home">
+        <span class="logo__name">AccessiCheck</span>
+        <span class="logo__by">by Brozapi</span>
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#scanner">Scanner</a>
+        <a href="#couverture">What we test</a>
+        <a href="#offres">Pricing</a>
+        <a href="#exemple">Sample report</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenu">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <h1 id="hero-title">Save days of manual auditing: your site's accessibility errors detected in 2 minutes.</h1>
+        <p class="hero__subtitle">
+          A human WCAG audit typically costs €1,500 to €5,500 and takes several days.
+          AccessiCheck spots the automatically-testable errors in 2 minutes and hands you a prioritized action plan — the same one that took our own site from 87 to 100/100. And above all: no false promises of compliance.
+        </p>
+        <a class="hero__cta" href="#offres">Audit my site — €29</a>
+      </div>
+    </section>
+
+    <div class="urgency">
+      <div class="container">
+        <strong>Is your site ready for the European Accessibility Act (EAA)?</strong> Check your WCAG errors in 2 minutes.
+      </div>
+    </div>
+
+    <section id="scanner" class="section scanner" aria-labelledby="scanner-title">
+      <div class="container">
+        <h2 id="scanner-title" class="section__title">Free scan</h2>
+        <p class="section__lead">Enter your site's address. We analyze the testable WCAG criteria on your homepage for free and show you a score with the priority issues.</p>
+        <div class="scanner__box">
+          <form id="scan-form" class="form" novalidate>
+            <div class="form__row">
+              <label for="scan-url" class="visually-hidden">Site address</label>
+              <input id="scan-url" type="url" name="url" placeholder="https://your-site.com" required inputmode="url" autocomplete="url" spellcheck="false">
+            </div>
+            <div class="form__row">
+              <label for="scan-email" class="visually-hidden">Your email</label>
+              <input id="scan-email" type="email" name="email" placeholder="you@example.com" required inputmode="email" autocomplete="email" spellcheck="false">
+            </div>
+            <button class="btn btn--primary" type="submit" id="scan-submit">Run the free scan</button>
+            <p class="status-msg" id="scan-status" role="status" aria-live="polite"></p>
+          </form>
+          <div id="scan-results" class="scan-results" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="couverture" class="section coverage" aria-labelledby="couverture-title">
+      <div class="container">
+        <h2 id="couverture-title" class="section__title">What we test — and what we don't</h2>
+        <p class="section__lead">A tool can't see everything. We state our limits right on the homepage, as an honest approach requires.</p>
+        <div class="coverage__grid">
+          <div class="coverage__block coverage__block--ok">
+            <h3>Automated technical detection</h3>
+            <ul class="check-list">
+              <li>Text readable on any background (colour contrast)</li>
+              <li>Well-structured page headings (h1 → h6)</li>
+              <li>Clear page structure for screen readers (ARIA landmarks)</li>
+              <li>Images with a text description (<code>alt</code> attribute)</li>
+              <li>Understandable forms (labels and accessible names)</li>
+              <li>Links whose label makes sense out of context</li>
+              <li>Page language correctly declared</li>
+              <li>Keyboard navigation usable end-to-end (skip-link, visible focus)</li>
+              <li>Buttons and links large enough on mobile (min. 44 px)</li>
+              <li>Videos, PDFs and iframes correctly identified</li>
+              <li>Presence of an accessibility statement (WCAG/EAA requirement)</li>
+            </ul>
+          </div>
+          <div class="coverage__block coverage__block--ok">
+            <h3>AI analysis (beyond the classic 40%)</h3>
+            <ul class="check-list">
+              <li>Relevance of alternative texts (generic "image", "IMG_1234", filename…)</li>
+              <li>Clarity of link labels ("click here", "read more"…)</li>
+              <li>Clarity of form labels and error messages</li>
+            </ul>
+            <p class="coverage-block__note">The AI analysis flags suspicious semantic points. Its verdicts remain leads to be confirmed by an expert: the tool never claims 100%.</p>
+          </div>
+          <div class="coverage__block coverage__block--no">
+            <h3>What requires a human audit</h3>
+            <ul class="check-list check-list--minus">
+              <li>Real screen-reader compatibility</li>
+              <li>Exhaustive keyboard navigation across all pages</li>
+              <li>Multi-page audit (outside the Pro/Monitoring offers)</li>
+              <li>Overall navigation and comprehension</li>
+              <li>Final validation of full WCAG compliance</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section honesty" aria-labelledby="honn-title">
+      <div class="container">
+        <h2 id="honn-title" class="section__title">No WCAG guarantee. No magic.</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>AccessiCheck is an express diagnostic</h3>
+            <p>It detects technical issues that are automatically visible and gives you a list of priority actions. It's a first step, not a certification.</p>
+          </article>
+          <article class="card">
+            <h3>Why it's useful anyway</h3>
+            <p>Most sites have dozens of simple technical errors to fix. Identifying them quickly saves you time and money before a possible full audit.</p>
+          </article>
+          <article class="card">
+            <h3>False positives are possible</h3>
+            <p>Like any scanner, AccessiCheck may flag items that aren't real violations. The report states the confidence level each time.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="exemple" class="section exemple" aria-labelledby="exemple-title">
+      <div class="container">
+        <h2 id="exemple-title" class="section__title">What you receive by email (real report, unedited)</h2>
+        <p class="section__lead">
+          Dogfooding: we scan our own sites with AccessiCheck. Here are real reports,
+          generated by our pa11y/axe-core engine — unedited.
+        </p>
+        <div class="cards">
+          <article class="card">
+            <h3>badgeia.brozapi.com — 100/100</h3>
+            <ul class="features">
+              <li>0 issues detected (One-Shot diagnostic)</li>
+              <li>Contrasts, headings, labels, landmarks, language: compliant</li>
+              <li>BadgeIA product site, scanned on 11 August 2026</li>
+            </ul>
+            <p>
+              <a class="btn btn--secondary" href="../exemple-rapport.html">View the report online</a>
+              <a class="btn btn--primary" href="../assets/rapports/badgeia-brozapi-oneshot.pdf" download data-track="click_exemple_pdf_oneshot">PDF One-Shot</a>
+              <a class="btn btn--primary" href="../assets/rapports/badgeia-brozapi-pro.pdf" download data-track="click_exemple_pdf_pro">PDF Pro</a>
+            </p>
+          </article>
+          <article class="card">
+            <h3>brozapi.com — 100/100</h3>
+            <ul class="features">
+              <li>0 issues detected (One-Shot diagnostic)</li>
+              <li>The scan caught a real incident: the site was unreachable over HTTPS (server config overwritten during a deploy). Fixed, then re-scanned: 100/100.</li>
+              <li>Studio site, scanned on 11 August 2026</li>
+            </ul>
+            <p>
+              <a class="btn btn--primary" href="../assets/rapports/brozapi-com-oneshot.pdf" download data-track="click_exemple_pdf_oneshot_brozapi">PDF One-Shot</a>
+              <a class="btn btn--primary" href="../assets/rapports/brozapi-com-pro.pdf" download data-track="click_exemple_pdf_pro_brozapi">PDF Pro</a>
+            </p>
+          </article>
+        </div>
+        <p class="section__lead" style="margin-top: 1.2rem; font-size: 0.95rem;">
+          Transparency: 100/100 means no <em>automatically-testable</em> criterion failed.
+          It does not guarantee full WCAG compliance, which requires a human audit (see the FAQ). The AI analysis and interaction tests extend the automatic coverage beyond the classic 40%.
+        </p>
+      </div>
+    </section>
+
+    <section id="offres" class="section pricing" aria-labelledby="offres-title">
+      <div class="container">
+        <h2 id="offres-title" class="section__title">Our offers</h2>
+        <p class="section__lead">For €29, you know exactly what to fix first — before considering a full human audit, only if your situation really requires it.</p>
+        <div class="cards">
+          <article class="card">
+            <h3>One-Shot Diagnostic</h3>
+            <p class="price">€29 <span>one-time</span></p>
+            <ul class="features">
+              <li>Homepage scan</li>
+              <li>Simplified accessibility score</li>
+              <li>Top 10 issues detected</li>
+              <li>Priority actions ranked by severity</li>
+              <li>PDF report + summary email</li>
+            </ul>
+            <a class="btn btn--primary" href="https://buy.stripe.com/00w5kx2cxccR7tN1ZbcZa06" target="_blank" rel="noopener nofollow" data-offer="oneshot" data-track="click_buy_oneshot">Order and pay — €29</a>
+          </article>
+          <article class="card card--featured">
+            <span class="badge">Most complete</span>
+            <h3>Pro Report</h3>
+            <p class="price">€49 <span>one-time</span></p>
+            <ul class="features">
+              <li>Everything in the One-Shot Diagnostic</li>
+              <li>Audit of 5 key pages (home, contact, etc.)</li>
+              <li>Detailed WCAG criteria grid</li>
+              <li>Executive summary written for the owner (1 page)</li>
+              <li>Correction code for each error</li>
+            </ul>
+            <a class="btn btn--primary" href="https://buy.stripe.com/9B6cMZ2cx7WB9BV1ZbcZa07" target="_blank" rel="noopener nofollow" data-offer="pro" data-track="click_buy_pro">Order and pay for Pro — €49</a>
+          </article>
+          <article class="card">
+            <h3>Monthly monitoring</h3>
+            <p class="price">€9 <span>/ month</span></p>
+            <ul class="features">
+              <li>1 monthly scan of the homepage</li>
+              <li>Email alert on regression</li>
+              <li>Score tracking dashboard</li>
+              <li>Month-over-month comparison report</li>
+              <li>No commitment, cancel anytime</li>
+            </ul>
+            <a class="btn btn--primary" href="https://buy.stripe.com/cNi5kxcRbekZ01l8nzcZa08" target="_blank" rel="noopener nofollow" data-offer="monitoring" data-track="click_buy_monitoring">Subscribe and pay — €9/month</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section faq" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title" class="section__title">Frequently asked questions</h2>
+        <details>
+          <summary>How much time and money will I save?</summary>
+          <p>A professional accessibility audit costs on average €1,500 to €5,500 and takes several days. AccessiCheck doesn't replace it: in 2 minutes (free scan) or within 24 business hours (paid report) it gives you the list of automatically-detectable technical errors, ranked by severity. You fix the most urgent first — and you only commit to a more expensive human audit if your situation really requires it.</p>
+        </details>
+        <details>
+          <summary>Does AccessiCheck guarantee WCAG compliance?</summary>
+          <p>No. AccessiCheck combines automated technical detection with semantic AI analysis (alternative texts, link labels, form labels). It covers a significant but non-exhaustive part of the WCAG criteria. A human audit remains necessary to guarantee full and complete compliance.</p>
+        </details>
+        <details>
+          <summary>Does the scan cover my whole site?</summary>
+          <p>The One-Shot offer analyzes the homepage. The Pro Report covers 5 key pages. Monthly monitoring returns to the homepage each month. For a complete audit of the entire site, you need a human WCAG auditor.</p>
+        </details>
+        <details>
+          <summary>How do I receive the report?</summary>
+          <p>By email, within 24 business hours after payment. The report includes a readable PDF and a list of priority actions.</p>
+        </details>
+        <details>
+          <summary>What payment methods are available?</summary>
+          <p>Payments are secured by Stripe (credit card). Delivery is automatic: you receive the report by email within 24 business hours.</p>
+        </details>
+        <details>
+          <summary>Who is behind AccessiCheck?</summary>
+          <p>AccessiCheck is a product of the Brozapi studio, built and maintained by supervised AI agents. The goal is to make web accessibility understandable for small sites.</p>
+        </details>
+        <details>
+          <summary>Can I get a refund?</summary>
+          <p>If the scan has not yet been launched, contact us for a refund within 14 days. Once the report has been generated, the service is considered delivered.</p>
+        </details>
+        <details>
+          <summary>Aren't accessiBe-style overlay tools enough?</summary>
+          <p>No. Overlays are discredited by the accessibility community (Overlay Fact Sheet signed by over 1,000 experts). They often create new problems and don't replace a real audit. Our "no-magic report" approach is more legally and ethically defensible.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <p><strong>AccessiCheck</strong><br><a href="https://brozapi.com/">by Brozapi</a></p>
+          <p>AccessiCheck is a Brozapi product — SIRET 103 472 866 00013</p>
+        </div>
+        <div>
+          <p><a href="../mentions-legales.html">Legal notice</a></p>
+          <p><a href="../cgv.html">Terms of sale</a></p>
+          <p><a href="../mentions-legales.html#confidentialite">Privacy policy</a></p>
+          <p><a href="/blog/">Blog</a></p>
+        </div>
+        <div>
+          <p>Products:</p>
+          <p><a href="https://badgeia.brozapi.com/">BadgeIA</a></p>
+          <p><a href="https://citescan.brozapi.com/">CiteScan</a></p>
+        </div>
+      </div>
+      <p class="footer__disclaimer">
+        AccessiCheck is a technical diagnostic tool. It is neither legal advice nor a guarantee of WCAG/EAA compliance.
+      </p>
+    </div>
+  </footer>
+
+  <script src="../assets/app.js" defer></script>
+</body>
+</html>
