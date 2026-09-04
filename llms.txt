@@ -1,0 +1,17 @@
+# AccessiCheck
+
+> AccessiCheck est un scan automatique d'accessibilité RGAA/WCAG pour petits sites et agences : diagnostic express 29 €, rapport Pro multi-pages avec mapping RGAA 49 €, surveillance mensuelle 9 €/mois. Produit du studio Brozapi (Ploërmel, France). Outil d'aide au diagnostic — un audit humain reste nécessaire pour garantir la conformité.
+
+## Pages clés
+
+- [Accueil et scan gratuit](https://accessicheck.brozapi.com/)
+- [Offres et tarifs](https://accessicheck.brozapi.com/#offres)
+- [Exemple de rapport](https://accessicheck.brozapi.com/exemple-rapport.html)
+- [Blog accessibilité](https://accessicheck.brozapi.com/blog/)
+- [Audits par ville et métier](https://accessicheck.brozapi.com/audit-accessibilite-france.html)
+- [Déclaration d'accessibilité](https://accessicheck.brozapi.com/declaration-accessibilite.html)
+- [Mentions légales](https://accessicheck.brozapi.com/mentions-legales.html)
+
+## Contact
+
+- Studio Brozapi : https://brozapi.com/ — contact@brozapi.com
