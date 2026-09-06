@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist accessibilité site web : les 12 points à vérifier avant de livrer (WCAG & RGAA) — AccessiCheck</title>
+  <meta name="description" content="Freelance ou agence web ? Voici une checklist accessibilité en 12 points pour vérifier un site avant de le livrer à votre client : contrastes, alt, focus clavier, formulaires, titres, langue, zones cliquables… avec les critères RGAA et WCAG cités.">
+  <meta name="keywords" content="checklist accessibilité site web, vérifier WCAG avant livraison, checklist RGAA, livrer un site accessible, accessibilité freelance agence web">
+  <link rel="canonical" href="https://accessicheck.brozapi.com/blog/checklist-accessibilite-livraison-site-web.html">
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <meta property="og:title" content="Checklist accessibilité : les 12 points à vérifier avant de livrer un site web">
+  <meta property="og:description" content="Freelance ou agence web ? 12 points à vérifier avant de livrer un site à votre client, avec les critères RGAA et WCAG cités. Du contraste au focus clavier.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://accessicheck.brozapi.com/blog/checklist-accessibilite-livraison-site-web.html">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:image" content="https://accessicheck.brozapi.com/blog/og/checklist-accessibilite-livraison-site-web.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Checklist accessibilité site web : les 12 points à vérifier avant de livrer (WCAG & RGAA)",
+    "description": "Freelance ou agence web ? Voici une checklist accessibilité en 12 points pour vérifier un site avant de le livrer à votre client, avec les critères RGAA et WCAG cités.",
+    "author": {"@type": "Organization", "name": "Brozapi"},
+    "publisher": {"@type": "Organization", "name": "AccessiCheck", "logo": {"@type": "ImageObject", "url": "https://accessicheck.brozapi.com/favicon.svg"}},
+    "datePublished": "2026-09-06",
+    "dateModified": "2026-09-06",
+    "inLanguage": "fr",
+    "mainEntityOfPage": {"@type": "WebPage", "@id": "https://accessicheck.brozapi.com/blog/checklist-accessibilite-livraison-site-web.html"}
+  }
+  </script>
+  <style>
+    .table-wrapper { overflow-x: auto; margin: 1.5rem 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    th, td { border: 1px solid var(--gray-300); padding: 0.6rem 0.8rem; text-align: left; }
+    th { background: var(--gray-100); font-weight: 600; }
+    tr:nth-child(even) { background: var(--gray-100); }
+  </style>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.brozapi.com; font-src 'self' data:; base-uri 'self'; form-action 'self' https://api.brozapi.com">
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <header class="header">
+    <div class="container">
+      <a class="logo" href="/" aria-label="AccessiCheck — Accueil">
+        <span class="logo__name">AccessiCheck</span>
+        <span class="logo__by">par Brozapi</span>
+      </a>
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="/">Accueil</a>
+        <a href="/blog/">Blog</a>
+        <a href="https://accessicheck.brozapi.com/#offres">Offres</a>
+        <a href="https://accessicheck.brozapi.com/#faq">FAQ</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenu">
+    <article class="page">
+      <div class="container">
+        <nav aria-label="Fil d’Ariane">
+          <ol style="list-style:none;padding:0;margin:0 0 1rem;color:var(--gray-500);font-size:.9rem;">
+            <li style="display:inline;"><a href="/">Accueil</a></li>
+            <li style="display:inline;" aria-hidden="true"> › </li>
+            <li style="display:inline;"><a href="/blog/">Blog</a></li>
+            <li style="display:inline;" aria-hidden="true"> › </li>
+            <li style="display:inline;">Checklist accessibilité avant livraison</li>
+          </ol>
+        </nav>
+
+        <h1>Checklist accessibilité : les 12 points à vérifier avant de livrer un site web</h1>
+        <p><em>Publié le 6 septembre 2026 · Lecture : 6 minutes · Par l’équipe Brozapi</em></p>
+
+        <p>Vous êtes freelance ou agence web, et votre client vous demande un site « accessible ». Problème : vous n’êtes pas expert RGAA, et vous n’avez pas le budget pour un audit complet avant la mise en ligne. Bonne nouvelle : une poignée de vérifications simples suffit à écarter la grande majorité des défauts les plus fréquents.</p>
+
+        <p>Voici une checklist de 12 points, du plus fréquent au plus oublié. Pour chacun, nous citons le critère officiel — <a href="https://www.w3.org/WAI/WCAG21/quickref/" target="_blank" rel="noopener">WCAG du W3C</a> et <a href="https://rgaa.gouv.fr" target="_blank" rel="noopener">RGAA 4</a> — pour que vous puissiez vérifier par vous-même, plutôt que de vous fier à une reformulation approximative.</p>
+
+        <h2>Pourquoi vérifier avant la livraison, et pas après ?</h2>
+
+        <p>Le coût de correction explose avec le temps. Corriger un contraste insuffisant pendant le développement prend quelques minutes ; le faire après la mise en ligne, une fois les captures d’écran livrées et le site validé par le client, coûte une itération complète. Pire : un défaut d’accessibilité remonté <em>après</em> la livraison par le client ou par un utilisateur fragilise la relation commerciale.</p>
+
+        <p>Cette checklist est faite pour être passée <strong>avant</strong> d’envoyer le lien de recette. Quinze minutes suffisent.</p>
+
+        <h2>La checklist en 12 points</h2>
+
+        <h3>1. Contrastes de couleur</h3>
+        <p>Le texte doit rester lisible sur son fond. Le <a href="https://rgaa.gouv.fr" target="_blank" rel="noopener">critère 3.2 du RGAA</a> demande un rapport d’au moins 4,5:1 pour le texte courant, et 3:1 pour le texte de grande taille (<a href="https://www.w3.org/WAI/WCAG21/quickref/#contrast-minimum" target="_blank" rel="noopener">WCAG 1.4.3</a>). Test : l’outil de contraste des DevTools du navigateur, ou un outil dédié, sur chaque couleur de bouton et de texte.</p>
+
+        <h3>2. Alternatives textuelles des images</h3>
+        <p>Chaque image porteuse d’information doit avoir un attribut <code>alt</code> pertinent ; chaque image décorative, un <code>alt=""</code> vide (<a href="https://rgaa.gouv.fr" target="_blank" rel="noopener">critère 1.1 du RGAA</a>, <a href="https://www.w3.org/WAI/WCAG21/quickref/#non-text-content" target="_blank" rel="noopener">WCAG 1.1.1</a>). Test : inspectez le code, ou listez les images sans alternative avec un outil d’audit.</p>
+
+        <h3>3. Étiquettes des champs de formulaire</h3>
+        <p>Chaque champ doit être relié à un <code>&lt;label&gt;</code> explicite, et jamais remplacé par un simple placeholder (<a href="https://rgaa.gouv.fr" target="_blank" rel="noopener">critère 11.1 du RGAA</a>, <a href="https://www.w3.org/WAI/WCAG21/quickref/#labels-or-instructions" target="_blank" rel="noopener">WCAG 3.3.2</a>). Test : cliquez sur le texte du label — le curseur doit se placer dans le champ associé.</p>
+
+        <h3>4. Hiérarchie des titres</h3>
+        <p>Un seul <code>&lt;h1&gt;</code> par page, puis des <code>&lt;h2&gt;</code>, <code>&lt;h3&gt;</code> sans saut de niveau (<a href="https://rgaa.gouv.fr" target="_blank" rel="noopener">critère 9.1 du RGAA</a>, <a href="https://www.w3.org/WAI/WCAG21/quickref/#info-and-relationships" target="_blank" rel="noopener">WCAG 1.3.1</a>). Test : naviguez avec la touche « H » d’un lecteur d’écran et vérifiez que le plan de la page a du sens.</p>
+
+        <h3>5. Attribut lang de la page</h3>
+        <p>La langue principale doit être déclarée dans la balise <code>&lt;html lang="fr"&gt;</code> (<a href="https://rgaa.gouv.fr" target="_blank" rel="noopener">critère 8.3 du RGAA</a>, <a href="https://www.w3.org/WAI/WCAG21/quickref/#language-of-page" target="_blank" rel="noopener">WCAG 3.1.1</a>). C’est ce qui permet au lecteur d’écran de choisir la bonne prononciation. Test : ouvrez la première ligne du code source.</p>
+
+        <h3>6. Liens explicites</h3>
+        <p>Évitez « cliquez ici » et « en savoir plus » : l’intitulé doit être compréhensible hors contexte (<a href="https://rgaa.gouv.fr" target="_blank" rel="noopener">critère 6.1 du RGAA</a>, <a href="https://www.w3.org/WAI/WCAG21/quickref/#link-purpose-in-context" target="_blank" rel="noopener">WCAG 2.4.4</a>). Test : listez tous les liens de la page (fonction native du lecteur d’écran) et lisez-les sans leur entourage.</p>
+
+        <h3>7. Navigation au clavier et focus visible</h3>
+        <p>Tout ce qui se pilote à la souris doit se piloter au clavier, et le focus doit rester visible à chaque étape (<a href="https://rgaa.gouv.fr" target="_blank" rel="noopener">critères 7.3 et 10.7 du RGAA</a>, <a href="https://www.w3.org/WAI/WCAG21/quickref/#keyboard" target="_blank" rel="noopener">WCAG 2.1.1</a> et <a href="https://www.w3.org/WAI/WCAG21/quickref/#focus-visible" target="_blank" rel="noopener">2.4.7</a>). Test : parcourez la page avec la touche Tab uniquement, de haut en bas, sans jamais « perdre » le curseur.</p>
+
+        <h3>8. Messages d’erreur des formulaires</h3>
+        <p>Une erreur doit être expliquée clairement et rattachée à son champ, sans reposer sur la couleur seule (<a href="https://rgaa.gouv.fr" target="_blank" rel="noopener">critères 11.10 et 11.11 du RGAA</a>, <a href="https://www.w3.org/WAI/WCAG21/quickref/#error-identification" target="_blank" rel="noopener">WCAG 3.3.1</a>). Test : soumettez un formulaire vide et vérifiez que chaque erreur est compréhensible et liée au bon champ.</p>
+
+        <h3>9. Tailles des zones cliquables</h3>
+        <p>Les cibles tactiles (boutons, liens) doivent être suffisamment grandes — l’objectif recommandé est de 24×24 pixels minimum (<a href="https://www.w3.org/WAI/WCAG22/quickref/#target-size-minimum" target="_blank" rel="noopener">WCAG 2.5.8</a>). Test : vérifiez que deux liens de pied de page ou deux icônes ne se chevauchent pas au doigt sur mobile.</p>
+
+        <h3>10. Tableaux avec en-têtes déclarés</h3>
+        <p>Les tableaux de données doivent déclarer leurs en-têtes de colonnes et de lignes avec <code>&lt;th&gt;</code> et un attribut <code>scope</code> (<a href="https://rgaa.gouv.fr" target="_blank" rel="noopener">critère 5.6 du RGAA</a>, <a href="https://www.w3.org/WAI/WCAG21/quickref/#info-and-relationships" target="_blank" rel="noopener">WCAG 1.3.1</a>). Test : un lecteur d’écran doit pouvoir annoncer « Prix — Formule Pro » et pas seulement « 49 € ».</p>
+
+        <h3>11. Titre de page pertinent</h3>
+        <p>Chaque page a un <code>&lt;title&gt;</code> unique qui décrit son contenu (<a href="https://rgaa.gouv.fr" target="_blank" rel="noopener">critères 8.5 et 8.6 du RGAA</a>, <a href="https://www.w3.org/WAI/WCAG21/quickref/#page-titled" target="_blank" rel="noopener">WCAG 2.4.2</a>). C’est la première chose qu’un lecteur d’écran annonce, et celle qu’affichent les onglets du navigateur. Test : vérifiez que deux pages n’ont pas le même titre générique.</p>
+
+        <h3>12. Médias : sous-titres et transcriptions</h3>
+        <p>Les vidéos publiées sur le site doivent proposer des sous-titres, et idéalement une transcription textuelle (<a href="https://www.w3.org/WAI/WCAG21/quickref/#captions-prerecorded" target="_blank" rel="noopener">WCAG 1.2.2</a> et thématique Multimédia du RGAA). Test : regardez la vidéo en coupant le son — l’information doit rester compréhensible.</p>
+
+        <h2>Ce que cette checklist ne remplace pas</h2>
+
+        <p>Ces 12 points couvrent les erreurs les plus fréquentes, pas l’ensemble du référentiel. Le RGAA 4 compte plus d’une centaine de critères, et beaucoup ne peuvent être vérifiés que par un humain : la pertinence réelle d’un texte alternatif, la qualité du parcours avec un lecteur d’écran, la logique d’ensemble sur un site multi-pages. Une checklist passée sur la page d’accueil ne dit rien des pages intérieures.</p>
+
+        <p>Si votre client a une obligation légale (secteur public, grande entreprise), ou si le site comporte des parcours complexes (paiement, espace client), seul un audit complet apporte une garantie recevable.</p>
+
+        <h2>Validez le site livré en quelques secondes</h2>
+
+        <p>Vous avez passé la checklist ? Faites un dernier contrôle avec un scan automatique, pour être sûr de ne rien laisser passer sur la page livrée. <a href="https://accessicheck.brozapi.com/">AccessiCheck scanne votre page gratuitement</a> et signale les contrastes, les images sans alternative, les titres mal structurés et les formulaires incomplets.</p>
+
+        <div class="scanner__box" style="margin:2.5rem 0;">
+          <h2 style="margin-top:0;">Livrez un site vérifié, pas un site « à peu près »</h2>
+          <p>Scannez la page d’accueil gratuitement, ou passez à un audit complet 29 € (1 page) / 49 € (5 pages), avec un suivi possible à 9 €/mois.</p>
+          <a class="btn btn--primary" href="https://accessicheck.brozapi.com/#offres">Vérifier le site livré</a>
+        </div>
+
+        <p><em>Sources : RGAA 4 (rgaa.gouv.fr), WCAG 2.1 et 2.2 (w3.org/WAI). Les numéros de critères sont cités à titre indicatif : pour le texte officiel et les cas particuliers, reportez-vous au référentiel en vigueur.</em></p>
+
+        <p><em>Cet article est fourni à titre informatif et ne constitue pas un conseil juridique. Pour une analyse de votre situation, consultez un professionnel du droit.</em></p>
+
+        <hr>
+        <p><a href="/">← Retour à l’accueil</a> · <a href="/blog/">Tous les guides</a></p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <p><strong>Les autres outils Brozapi</strong></p>
+          <p><a href="https://badgeia.brozapi.com/" target="_blank" rel="noopener">BadgeIA</a> — le badge de transparence AI Act (39&nbsp;€)</p>
+          <p><a href="https://citescan.brozapi.com/fr/" target="_blank" rel="noopener">CiteScan</a> — votre visibilité dans ChatGPT, Gemini, Claude et Perplexity (dès 29&nbsp;€)</p>
+        </div>
+
+        <div>
+          <p><strong>AccessiCheck</strong><br><a href="https://brozapi.com/">par Brozapi</a></p>
+          <p>AccessiCheck est un produit Brozapi — SIRET 103 472 866 00013</p>
+        </div>
+        <div>
+          <p><a href="/mentions-legales.html">Mentions légales</a></p>
+          <p><a href="/declaration-accessibilite.html">Déclaration d'accessibilité</a></p>
+          <p><a href="/cgv.html">Conditions de vente</a></p>
+          <p><a href="/mentions-legales.html#confidentialite">Politique de confidentialité</a></p>
+          <p><a href="/">Accueil</a></p>
+          <p><a href="/blog/">Blog</a></p>
+        </div>
+        <div>
+          <p>Articles :</p>
+          <p><a href="/blog/audit-accessibilite-prix-methodes-loi.html">Audit accessibilité : prix et loi</a></p>
+          <p><a href="/blog/tester-accessibilite-site-web.html">Tester l’accessibilité de son site</a></p>
+          <p><a href="/erreurs-accessibilite-frequentes.html">Erreurs d’accessibilité fréquentes</a></p>
+          <p><a href="/audit-rgaa-pas-cher.html">Audit RGAA pas cher</a></p>
+        </div>
+      </div>
+      <p class="footer__disclaimer">
+        AccessiCheck est un outil technique d’aide au diagnostic. Il ne constitue ni un conseil juridique ni une garantie de conformité RGAA/WCAG.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
