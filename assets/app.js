@@ -198,7 +198,7 @@
     }
 
     function scoreLabel(score) {
-      if (score === 100) return t('score_excellent');
+      if (score >= 95) return t('score_excellent');
       if (score >= 90) return t('score_good');
       if (score >= 70) return t('score_improve');
       return t('score_fix');
