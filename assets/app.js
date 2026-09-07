@@ -33,6 +33,7 @@
       scan_retry: 'Réessayer le scan',
       need_https: 'Merci d’indiquer une adresse commençant par https://',
       need_email: 'Merci d’indiquer un email valide pour recevoir le rapport.',
+      scan_need_consent: 'Vous devez accepter la politique de confidentialité.',
       scan_starting: 'Lancement du scan gratuit…',
       scan_launch_error: 'Erreur de lancement du scan.',
       scan_progress: 'Scan en cours, cela peut prendre jusqu’à 60 secondes…',
@@ -74,6 +75,7 @@
       scan_retry: 'Retry the scan',
       need_https: 'Please enter an address starting with https://',
       need_email: 'Please enter a valid email to receive the report.',
+      scan_need_consent: 'You must accept the privacy policy.',
       scan_starting: 'Starting the free scan…',
       scan_launch_error: 'Failed to start the scan.',
       scan_progress: 'Scan in progress, may take up to 60 seconds…',
@@ -168,10 +170,17 @@
     function readScanInputs() {
       var urlInput = document.getElementById('scan-url');
       var emailInput = document.getElementById('scan-email');
+      var consentInput = document.getElementById('scan-consent');
       return {
         url: urlInput ? urlInput.value.trim() : '',
-        email: emailInput ? emailInput.value.trim() : ''
+        email: emailInput ? emailInput.value.trim() : '',
+        consent: consentInput ? consentInput.checked : false
       };
+    }
+
+    function focusScanConsent() {
+      var consentInput = document.getElementById('scan-consent');
+      if (consentInput) consentInput.focus();
     }
 
     function validUrl(url) {
@@ -372,6 +381,11 @@
           setScanStatus(t('need_email'), true);
           return;
         }
+        if (!input.consent) {
+          setScanStatus(t('scan_need_consent'), true);
+          focusScanConsent();
+          return;
+        }
         if (scanSubmit) scanSubmit.disabled = true;
         setScanStatus(t('scan_starting'), false);
         if (scanResults) scanResults.innerHTML = '';
@@ -423,6 +437,13 @@
           setScanStatus(t('need_email_first'), true);
           var scanner2 = document.getElementById('scanner');
           if (scanner2) scanner2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+        if (!input.consent) {
+          setScanStatus(t('scan_need_consent'), true);
+          var scannerConsent = document.getElementById('scanner');
+          if (scannerConsent) scannerConsent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          focusScanConsent();
           return;
         }
         if (!PAYMENT_LINKS[offer]) {

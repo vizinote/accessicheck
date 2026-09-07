@@ -150,6 +150,12 @@
               <label for="scan-email" class="visually-hidden">Votre email</label>
               <input id="scan-email" type="email" name="email" placeholder="vous@exemple.fr" required inputmode="email" autocomplete="email" spellcheck="false">
             </div>
+            <div class="form__checkbox">
+              <input id="scan-consent" type="checkbox" name="consent" value="1" required>
+              <label for="scan-consent">
+                J’accepte la <a href="mentions-legales.html#confidentialite">politique de confidentialité</a> et je souhaite recevoir le résultat du scan.
+              </label>
+            </div>
             <button class="btn btn--primary" type="submit" id="scan-submit">Lancer le scan gratuit</button>
             <p class="status-msg" id="scan-status" role="status" aria-live="polite"></p>
           </form>

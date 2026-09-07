@@ -126,6 +126,12 @@
               <label for="scan-email" class="visually-hidden">Your email</label>
               <input id="scan-email" type="email" name="email" placeholder="you@example.com" required inputmode="email" autocomplete="email" spellcheck="false">
             </div>
+            <div class="form__checkbox">
+              <input id="scan-consent" type="checkbox" name="consent" value="1" required>
+              <label for="scan-consent">
+                I accept the <a href="../mentions-legales.html#confidentialite">privacy policy</a> and I want to receive the scan result.
+              </label>
+            </div>
             <button class="btn btn--primary" type="submit" id="scan-submit">Run the free scan</button>
             <p class="status-msg" id="scan-status" role="status" aria-live="polite"></p>
           </form>
