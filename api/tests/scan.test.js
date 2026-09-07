@@ -1,6 +1,6 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert');
-const { normalizeUrl, validateUrl, isVagueLinkText, computeScore, pdfLinksWithoutAlternative } = require('../scanner');
+const { normalizeUrl, validateUrl, isVagueLinkText, computeScore, pdfLinksWithoutAlternative, classifyScanError, humanizeScanError } = require('../scanner');
 const { parseSemanticResult } = require('../semantic');
 
 describe('scanner helpers', () => {
@@ -115,5 +115,42 @@ describe('pdfLinksWithoutAlternative (RGAA 13.3)', () => {
     assert.strictEqual(pdfLinksWithoutAlternative([{ href: 'a.pdf', hasHtmlAlternative: true }]).length, 0);
     assert.strictEqual(pdfLinksWithoutAlternative([]).length, 0);
     assert.strictEqual(pdfLinksWithoutAlternative(null).length, 0);
+  });
+});
+
+describe('classifyScanError / humanizeScanError', () => {
+  it('classe un DNS introuvable en "unreachable" avec message humain', () => {
+    const raw = 'net::ERR_NAME_NOT_RESOLVED at https://domaine-inexistant-xyz123.fr/';
+    assert.strictEqual(classifyScanError(raw), 'unreachable');
+    const msg = humanizeScanError(raw);
+    assert.match(msg, /joindre ce site/);
+    assert.doesNotMatch(msg, /net::/);
+  });
+
+  it('classe un refus de connexion', () => {
+    assert.strictEqual(classifyScanError('net::ERR_CONNECTION_REFUSED at https://x.fr'), 'refused');
+    assert.match(humanizeScanError('net::ERR_CONNECTION_REFUSED'), /refuse la connexion/);
+  });
+
+  it('classe un certificat HTTPS invalide', () => {
+    assert.strictEqual(classifyScanError('net::ERR_CERT_DATE_INVALID at https://x.fr'), 'ssl');
+    assert.match(humanizeScanError('net::ERR_CERT_DATE_INVALID'), /certificat/);
+  });
+
+  it('classe un timeout (navigation et worker)', () => {
+    assert.strictEqual(classifyScanError('Navigation timeout of 30000 ms exceeded'), 'timeout');
+    assert.strictEqual(classifyScanError('Timeout du worker (scan abc > 90000ms)'), 'timeout');
+    assert.match(humanizeScanError('net::ERR_TIMED_OUT'), /trop de temps/);
+  });
+
+  it('conserve les messages déjà rédigés en français', () => {
+    const fr = 'La page a retourné un statut HTTP 404.';
+    assert.strictEqual(classifyScanError(fr), 'http_status');
+    assert.strictEqual(humanizeScanError(fr), fr);
+  });
+
+  it('fournit un repli lisible si le message est vide', () => {
+    assert.strictEqual(classifyScanError(''), 'unknown');
+    assert.match(humanizeScanError(''), /scan n'a pas abouti/);
   });
 });

@@ -423,6 +423,18 @@ a:focus {
   margin: 1rem 0 0;
 }
 
+/* Bloc d'erreur du scan gratuit (site injoignable, timeout, etc.) */
+.scan-result--error {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.scan-result__error-msg {
+  margin: 0 0 1rem;
+  color: var(--red);
+  font-weight: 600;
+}
+
 .impact-pill {
   display: inline-block;
   padding: 0.15rem 0.5rem;
@@ -527,6 +539,18 @@ a:focus {
   font-size: 0.9rem;
   color: var(--gray-500);
   margin: 1rem 0 0;
+}
+
+/* Bloc d'erreur du scan gratuit (site injoignable, timeout, etc.) */
+.scan-result--error {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.scan-result__error-msg {
+  margin: 0 0 1rem;
+  color: var(--red);
+  font-weight: 600;
 }
 
 .impact-pill {

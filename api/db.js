@@ -21,7 +21,8 @@ function initDb() {
           started_at TEXT,
           finished_at TEXT,
           result TEXT,
-          error TEXT
+          error TEXT,
+          error_code TEXT
         )
       `);
       db.run(`CREATE INDEX IF NOT EXISTS idx_scans_status ON scans(status)`);
@@ -52,6 +53,12 @@ function initDb() {
       `);
       db.run(`CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(email)`);
       db.run(`CREATE INDEX IF NOT EXISTS idx_leads_created ON leads(created_at)`);
+      // Migration : ajout de la colonne error_code si la table scans existait sans elle.
+      db.get("SELECT 1 FROM pragma_table_info('scans') WHERE name = 'error_code'", (err, row) => {
+        if (!err && !row) {
+          db.run("ALTER TABLE scans ADD COLUMN error_code TEXT");
+        }
+      });
       // Migration : ajout de la colonne source si la table existait sans elle.
       db.get("SELECT 1 FROM pragma_table_info('leads') WHERE name = 'source'", (err, row) => {
         if (!err && !row) {
@@ -100,6 +107,7 @@ function updateScanStatus(id, status, extra = {}) {
     if (extra.finished_at) { fields.push('finished_at = ?'); values.push(extra.finished_at); }
     if (extra.result !== undefined) { fields.push('result = ?'); values.push(extra.result); }
     if (extra.error !== undefined) { fields.push('error = ?'); values.push(extra.error); }
+    if (extra.error_code !== undefined) { fields.push('error_code = ?'); values.push(extra.error_code); }
 
     values.push(id);
     const sql = `UPDATE scans SET ${fields.join(', ')} WHERE id = ?`;

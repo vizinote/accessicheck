@@ -672,6 +672,37 @@ function deduplicateIssues(issues) {
   });
 }
 
+// Traduit les erreurs techniques de navigation (Puppeteer / réseau) en
+// catégories stables exploitables par le front puis en messages lisibles
+// pour un dirigeant non technique. Les messages déjà rédigés en français
+// (statut HTTP, validations d'URL) sont renvoyés tels quels.
+function classifyScanError(message) {
+  const msg = String(message || '');
+  if (/ERR_NAME_NOT_RESOLVED|ENOTFOUND|getaddrinfo|ERR_ADDRESS_UNREACHABLE/i.test(msg)) return 'unreachable';
+  if (/ERR_CONNECTION_REFUSED|ECONNREFUSED/i.test(msg)) return 'refused';
+  if (/ERR_SSL|ERR_CERT|ERR_BAD_SSL|certificate|SSL routines/i.test(msg)) return 'ssl';
+  if (/timed?[ _]?out|ETIMEDOUT/i.test(msg)) return 'timeout';
+  if (/net::|ERR_CONNECTION|ERR_NETWORK|ERR_TOO_MANY_REDIRECTS|ERR_ABORTED|ERR_EMPTY_RESPONSE/i.test(msg)) return 'unreachable';
+  if (/statut HTTP/i.test(msg)) return 'http_status';
+  return 'unknown';
+}
+
+function humanizeScanError(message) {
+  const msg = String(message || '');
+  switch (classifyScanError(msg)) {
+    case 'unreachable':
+      return "Nous n'arrivons pas à joindre ce site. Vérifiez l'adresse (faute de frappe ?) ou réessayez dans quelques minutes.";
+    case 'refused':
+      return "Le site refuse la connexion. Il est peut-être temporairement hors ligne : réessayez dans quelques minutes.";
+    case 'ssl':
+      return "Le certificat de sécurité (HTTPS) de ce site semble invalide. Vérifiez l'adresse ou contactez son administrateur.";
+    case 'timeout':
+      return "Le site met trop de temps à répondre. Réessayez dans quelques minutes ou vérifiez qu'il est bien en ligne.";
+    default:
+      return msg || "Le scan n'a pas abouti. Réessayez dans quelques minutes.";
+  }
+}
+
 async function scanUrl(url, opts = {}) {
   const { log = console.log, runSemantic = true } = typeof opts === 'function' ? { log: opts } : opts;
   const browser = await getBrowser();
@@ -780,6 +811,8 @@ module.exports = {
   scanWithRetry,
   closeBrowser,
   getBrowser,
+  classifyScanError,
+  humanizeScanError,
   isVagueLinkText,
   computeScore,
   runCustomChecks,

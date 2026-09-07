@@ -25,6 +25,11 @@
       scan_done: 'Scan terminé.',
       scan_slow: 'Le scan prend plus de temps que prévu. Rechargez la page ou choisissez une offre ci-dessous.',
       scan_conn_error: 'Erreur de connexion au serveur de scan.',
+      scan_unreachable: 'Nous n’arrivons pas à joindre ce site. Vérifiez l’adresse (faute de frappe ?) ou réessayez dans quelques minutes.',
+      scan_refused: 'Le site refuse la connexion. Il est peut-être temporairement hors ligne : réessayez dans quelques minutes.',
+      scan_ssl: 'Le certificat de sécurité (HTTPS) de ce site semble invalide. Vérifiez l’adresse ou contactez son administrateur.',
+      scan_timeout: 'Le site met trop de temps à répondre. Réessayez dans quelques minutes ou vérifiez qu’il est bien en ligne.',
+      scan_retry: 'Réessayer le scan',
       need_https: 'Merci d’indiquer une adresse commençant par https://',
       need_email: 'Merci d’indiquer un email valide pour recevoir le rapport.',
       scan_starting: 'Lancement du scan gratuit…',
@@ -60,6 +65,11 @@
       scan_done: 'Scan complete.',
       scan_slow: 'The scan is taking longer than expected. Reload the page or choose an offer below.',
       scan_conn_error: 'Could not reach the scan server.',
+      scan_unreachable: 'We could not reach this site. Check the address (typo?) or try again in a few minutes.',
+      scan_refused: 'The site refused the connection. It may be temporarily offline: try again in a few minutes.',
+      scan_ssl: 'This site’s security certificate (HTTPS) looks invalid. Check the address or contact its administrator.',
+      scan_timeout: 'The site is taking too long to respond. Try again in a few minutes or check that it is online.',
+      scan_retry: 'Retry the scan',
       need_https: 'Please enter an address starting with https://',
       need_email: 'Please enter a valid email to receive the report.',
       scan_starting: 'Starting the free scan…',
@@ -256,6 +266,53 @@
       }
     }
 
+    // Traduit une erreur brute (net::ERR_*, timeout, etc.) en message humain.
+    // Le serveur renvoie désormais error_code + error humanisé ; le filet
+    // regex couvre les scans échoués avant cette amélioration.
+    function friendlyScanError(rawError, errorCode) {
+      var raw = String(rawError || '');
+      var code = errorCode || '';
+      if (!code) {
+        if (/ERR_NAME_NOT_RESOLVED|ENOTFOUND|getaddrinfo|ERR_ADDRESS_UNREACHABLE/i.test(raw)) code = 'unreachable';
+        else if (/ERR_CONNECTION_REFUSED|ECONNREFUSED/i.test(raw)) code = 'refused';
+        else if (/ERR_SSL|ERR_CERT|certificate/i.test(raw)) code = 'ssl';
+        else if (/ERR_TIMED_OUT|ETIMEDOUT|Navigation timeout|TimeoutError/i.test(raw)) code = 'timeout';
+        else if (/net::|ERR_CONNECTION|ERR_NETWORK|Failed to fetch|NetworkError/i.test(raw)) code = 'unreachable';
+      }
+      if (code === 'unreachable' || code === 'refused' || code === 'ssl' || code === 'timeout') {
+        return { message: t('scan_' + code), retry: true };
+      }
+      return { message: raw || t('scan_failed'), retry: false };
+    }
+
+    // Bloc d'erreur visible avec bouton « Réessayer » (relance le formulaire).
+    function renderScanError(message) {
+      if (!scanResults) return;
+      var html = '<div class="scan-result scan-result--error">';
+      html += '<p class="scan-result__error-msg">' + String(message).replace(/</g, '&lt;') + '</p>';
+      html += '<button type="button" class="btn btn--primary" id="scan-retry">' + t('scan_retry') + '</button>';
+      html += '</div>';
+      scanResults.innerHTML = html;
+      var retryBtn = document.getElementById('scan-retry');
+      if (retryBtn && scanForm) {
+        retryBtn.addEventListener('click', function () {
+          if (typeof scanForm.requestSubmit === 'function') {
+            scanForm.requestSubmit();
+          } else {
+            scanForm.dispatchEvent(new Event('submit', { cancelable: true }));
+          }
+        });
+      }
+      scanResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function failScan(rawError, errorCode) {
+      var info = friendlyScanError(rawError, errorCode);
+      setScanStatus(info.message, true);
+      if (info.retry) renderScanError(info.message);
+      if (scanSubmit) scanSubmit.disabled = false;
+    }
+
     function pollScan(id) {
       var attempts = 0;
       var maxAttempts = 60;
@@ -269,8 +326,7 @@
           .then(function (data) {
             if (!data || !data.ok) {
               clearInterval(timer);
-              setScanStatus(data && data.error ? data.error : t('scan_failed'), true);
-              if (scanSubmit) scanSubmit.disabled = false;
+              failScan(data && data.error ? data.error : t('scan_failed'), data && data.error_code);
               return;
             }
             if (data.status === 'done') {
@@ -283,8 +339,7 @@
             }
             if (data.status === 'failed') {
               clearInterval(timer);
-              setScanStatus(data.error || t('scan_failed'), true);
-              if (scanSubmit) scanSubmit.disabled = false;
+              failScan(data.error || t('scan_failed'), data.error_code);
               return;
             }
             if (attempts >= maxAttempts) {
@@ -296,6 +351,7 @@
           .catch(function () {
             clearInterval(timer);
             setScanStatus(t('scan_conn_error'), true);
+            renderScanError(t('scan_conn_error'));
             if (scanSubmit) scanSubmit.disabled = false;
           });
       }, 2000);
@@ -333,7 +389,15 @@
             pollScan(data.id);
           })
           .catch(function (err) {
-            setScanStatus(err.message || t('scan_launch_failed'), true);
+            var msg = err && err.message ? err.message : '';
+            // TypeError « Failed to fetch » / « Load failed » (Safari) = API
+            // injoignable : message dédié, pas le texte brut du navigateur.
+            if (/Failed to fetch|NetworkError|Load failed/i.test(msg)) {
+              setScanStatus(t('scan_conn_error'), true);
+              renderScanError(t('scan_conn_error'));
+            } else {
+              failScan(msg || t('scan_launch_failed'));
+            }
             if (scanSubmit) scanSubmit.disabled = false;
           });
       });

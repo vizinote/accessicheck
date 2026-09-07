@@ -1,7 +1,7 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
 const { initDb, createScan, getScan, updateScanStatus, listPendingScans, createOrder, getOrder, getPendingOrderByEmail, updateOrderStatus, saveLead } = require('./db');
-const { generateId, normalizeUrl, validateUrl, scanWithRetry, closeBrowser } = require('./scanner');
+const { generateId, normalizeUrl, validateUrl, scanWithRetry, closeBrowser, classifyScanError, humanizeScanError } = require('./scanner');
 const { scanSiteWithRetry } = require('./multipage');
 const { generateReportHtml, generateReportPdf } = require('./reports/reportGenerator');
 
@@ -376,6 +376,9 @@ app.get(route('/scan/:id'), async (req, res) => {
     }
     if (scan.status === 'failed' && scan.error) {
       response.error = scan.error;
+      // Les scans échoués avant l'ajout du code n'en ont pas : on le dérive
+      // du message conservé pour garder un affichage lisible côté front.
+      response.error_code = scan.error_code || classifyScanError(scan.error);
     }
     return makeResponse(res, response);
   } catch (err) {
@@ -408,6 +411,9 @@ app.get(route('/result/:id'), async (req, res) => {
     }
     if (scan.status === 'failed' && scan.error) {
       response.error = scan.error;
+      // Les scans échoués avant l'ajout du code n'en ont pas : on le dérive
+      // du message conservé pour garder un affichage lisible côté front.
+      response.error_code = scan.error_code || classifyScanError(scan.error);
     }
     return makeResponse(res, response);
   } catch (err) {
@@ -505,11 +511,12 @@ async function processOneScan(scan) {
     });
     console.log(`[worker] scan ${id} terminé : score ${result.score}${result.pages_count ? ` (${result.pages_count} pages)` : ''}`);
   } catch (err) {
-    const message = err && err.message ? err.message : 'Erreur inconnue.';
-    console.error(`[worker] scan ${id} échoué :`, message);
+    const raw = err && err.message ? err.message : 'Erreur inconnue.';
+    console.error(`[worker] scan ${id} échoué :`, raw);
     await updateScanStatus(id, 'failed', {
       finished_at: new Date().toISOString(),
-      error: message,
+      error: humanizeScanError(raw),
+      error_code: classifyScanError(raw),
     });
   }
 }
