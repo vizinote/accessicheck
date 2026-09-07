@@ -11,6 +11,7 @@
 
   var I18N = {
     fr: {
+      score_excellent: 'Excellent',
       score_good: 'Bon',
       score_improve: 'À améliorer',
       score_fix: 'À corriger en priorité',
@@ -51,6 +52,7 @@
       guide_error: 'Réessayez dans quelques instants.'
     },
     en: {
+      score_excellent: 'Excellent',
       score_good: 'Good',
       score_improve: 'Needs improvement',
       score_fix: 'Fix first',
@@ -196,6 +198,7 @@
     }
 
     function scoreLabel(score) {
+      if (score === 100) return t('score_excellent');
       if (score >= 90) return t('score_good');
       if (score >= 70) return t('score_improve');
       return t('score_fix');
