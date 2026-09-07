@@ -147,8 +147,8 @@
     });
   });
 
-  // Formulaire scanner : scan gratuit (URL + email). Pas d'ordre ici :
-    // la commande se fait uniquement via les cartes #offres.
+  // Formulaire scanner : scan gratuit (URL + email). Le CTA affiché après le
+    // scan enregistre lui-même la commande one-shot et ouvre Stripe directement.
     var scanForm = document.getElementById('scan-form');
     var scanStatus = document.getElementById('scan-status');
     var scanSubmit = document.getElementById('scan-submit');
@@ -218,11 +218,42 @@
       } else {
         html += '<p class="scan-result__good">' + t('no_issues') + '</p>';
       }
-      html += '<a class="btn btn--primary" href="#offres" data-track="click_scan_cta_offres">' + t('cta_report') + '</a>';
+      // CTA post-scan : direct vers le checkout Stripe one-shot (plus d'ancre #offres).
+      // L'URL scannée est transmise via client_reference_id (visible dans Stripe / webhooks).
+      var ctaInput = readScanInputs();
+      var ctaPaymentUrl = PAYMENT_LINKS.oneshot + '?prefilled_email=' + encodeURIComponent(ctaInput.email);
+      if (ctaInput.url) {
+        ctaPaymentUrl += '&client_reference_id=' + encodeURIComponent(ctaInput.url);
+      }
+      html += '<a class="btn btn--primary" id="scan-cta-oneshot" href="' + ctaPaymentUrl + '">' + t('cta_report') + '</a>';
       html += '<p class="scan-result__note">' + t('scan_note') + '</p>';
       html += '</div>';
       scanResults.innerHTML = html;
       scanResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // Un clic enregistre la commande (URL + email + offre) puis ouvre Stripe.
+      // Si l'enregistrement échoue, on ouvre quand même Stripe : ne jamais perdre la vente.
+      var cta = document.getElementById('scan-cta-oneshot');
+      if (cta) {
+        cta.addEventListener('click', function (e) {
+          e.preventDefault();
+          var input = readScanInputs();
+          var paymentUrl = PAYMENT_LINKS.oneshot + '?prefilled_email=' + encodeURIComponent(input.email);
+          if (input.url) {
+            paymentUrl += '&client_reference_id=' + encodeURIComponent(input.url);
+          }
+          cta.setAttribute('aria-disabled', 'true');
+          trackEvent('click_scan_cta_stripe', '/');
+          trackEvent('scan_triggered_oneshot', '/');
+          fetch(API_BASE + '/accessicheck/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: input.url, email: input.email, offer: 'oneshot' })
+          })
+            .then(function () { window.location.href = paymentUrl; })
+            .catch(function () { window.location.href = paymentUrl; });
+        });
+      }
     }
 
     function pollScan(id) {
@@ -308,7 +339,7 @@
       });
     }
 
-    // Cartes #offres = SEULS points de paiement. Un clic enregistre la commande
+    // Cartes #offres : un clic enregistre la commande
     // (URL + email + offre) puis ouvre Stripe.
     document.querySelectorAll('[data-offer]').forEach(function (el) {
       el.addEventListener('click', function (e) {
