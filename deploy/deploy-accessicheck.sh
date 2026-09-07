@@ -60,7 +60,7 @@ else
 fi
 
 echo "=== test scan example.com ==="
-SCAN_RESPONSE=$(curl -fsS -X POST "${PUBLIC_URL}/scan" -H 'Content-Type: application/json' -d '{"url":"https://example.com","offre":"oneshot"}')
+SCAN_RESPONSE=$(curl -fsS -X POST "${PUBLIC_URL}/scan" -H 'Content-Type: application/json' -d '{"url":"https://example.com","offer":"oneshot"}')
 echo "scan response: $SCAN_RESPONSE"
 SCAN_ID=$(echo "$SCAN_RESPONSE" | python3 -c 'import sys,json; print(json.load(sys.stdin)["id"])')
 echo "scan id: $SCAN_ID"
