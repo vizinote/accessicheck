@@ -48,7 +48,10 @@ function initDb() {
           url TEXT,
           score TEXT,
           created_at TEXT NOT NULL,
-          source TEXT DEFAULT ''
+          source TEXT DEFAULT '',
+          consent_at TEXT DEFAULT '',
+          consent_text TEXT DEFAULT '',
+          consent_source TEXT DEFAULT ''
         )
       `);
       db.run(`CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(email)`);
@@ -60,6 +63,10 @@ function initDb() {
     const migrations = [
       ["scans", "error_code", "ALTER TABLE scans ADD COLUMN error_code TEXT"],
       ["leads", "source", "ALTER TABLE leads ADD COLUMN source TEXT DEFAULT ''"],
+      // Preuve de consentement RGPD (mini-CRM, t_e210c35e).
+      ["leads", "consent_at", "ALTER TABLE leads ADD COLUMN consent_at TEXT DEFAULT ''"],
+      ["leads", "consent_text", "ALTER TABLE leads ADD COLUMN consent_text TEXT DEFAULT ''"],
+      ["leads", "consent_source", "ALTER TABLE leads ADD COLUMN consent_source TEXT DEFAULT ''"],
     ];
     const applyMigration = ([table, column, alter]) =>
       new Promise((res, rej) => {
@@ -198,13 +205,13 @@ function updateOrderStatus(id, status, extra = {}) {
 
 // Leads (lead magnet guide PDF) ------------------------------------------------
 
-function saveLead(email, url, score, source) {
+function saveLead(email, url, score, source, consentText = '', consentSource = '') {
   return new Promise((resolve, reject) => {
     const db = getDb();
     const now = new Date().toISOString();
     db.run(
-      'INSERT INTO leads (email, url, score, source, created_at) VALUES (?, ?, ?, ?, ?)',
-      [email.toLowerCase().trim(), url, score, source, now],
+      'INSERT INTO leads (email, url, score, source, created_at, consent_at, consent_text, consent_source) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [email.toLowerCase().trim(), url, score, source, now, now, consentText, consentSource],
       function (err) {
         db.close();
         if (err) return reject(err);

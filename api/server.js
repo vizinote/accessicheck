@@ -78,8 +78,27 @@ function createEmailTransporter() {
   });
 }
 
+// RGPD (mini-CRM, t_e210c35e) : liste de désinscription globale + preuve de consentement.
+const DESINSCRITS_PATH = process.env.DESINSCRITS_PATH || '/data/desinscrits.txt';
+const CONSENT_GUIDE_TEXT = "J'accepte la politique de confidentialité et je souhaite recevoir le guide.";
+const DESINSCRIPTION_FOOTER = 'Pour ne plus recevoir nos emails, écrivez à contact@brozapi.com avec « désinscription » en objet.';
+
+function isDesinscrit(email) {
+  try {
+    const lines = require('fs').readFileSync(DESINSCRITS_PATH, 'utf-8').split('\n');
+    const target = String(email || '').trim().toLowerCase();
+    return lines.map((l) => l.trim().toLowerCase()).filter(Boolean).includes(target);
+  } catch (err) {
+    return false; // liste absente = pas de désinscrit connu
+  }
+}
+
 function sendGuideEmail(email) {
   // Ne fait jamais échouer la requête API.
+  if (isDesinscrit(email)) {
+    console.log('Email guide NON envoyé à %s : désinscrit (liste globale)', email);
+    return Promise.resolve();
+  }
   const transporter = createEmailTransporter();
   if (!transporter) {
     console.warn('SMTP non configuré : email de livraison non envoyé à %s', email);
@@ -98,7 +117,8 @@ function sendGuideEmail(email) {
     `ni une garantie de conformité.\n\n` +
     `Bonne lecture,\n` +
     `L'équipe Brozapi — AccessiCheck\n` +
-    `https://accessicheck.brozapi.com\n`;
+    `https://accessicheck.brozapi.com\n\n` +
+    `${DESINSCRIPTION_FOOTER}\n`;
 
   const htmlBody =
     `<html><body style="font-family: system-ui, sans-serif; color:#1a1a1a; background:#ffffff;">` +
@@ -121,7 +141,8 @@ function sendGuideEmail(email) {
     `<hr style="border:none; border-top:1px solid #d4d4d4; margin:1.5rem 0;">` +
     `<p style="font-size:0.8rem; color:#737373;">` +
     `Brozapi — Studio de produits numériques.<br>` +
-    `Ce message vous a été envoyé suite à votre demande sur accessicheck.brozapi.com.` +
+    `Ce message vous a été envoyé suite à votre demande sur accessicheck.brozapi.com.<br>` +
+    `${DESINSCRIPTION_FOOTER}` +
     `</p>` +
     `</div></body></html>`;
 
@@ -290,7 +311,7 @@ app.post(route('/lead'), async (req, res) => {
   }
 
   try {
-    await saveLead(email, '/guide-accessibilite-eaa.pdf', '', 'guide-pdf-accessicheck');
+    await saveLead(email, '/guide-accessibilite-eaa.pdf', '', 'guide-pdf-accessicheck', CONSENT_GUIDE_TEXT, 'accessicheck-guide-form');
   } catch (err) {
     console.error('saveLead error:', err);
     return makeResponse(res, { ok: false, error: 'Erreur de stockage. Réessayez plus tard.' }, 500);
