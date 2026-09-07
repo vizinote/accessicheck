@@ -53,20 +53,26 @@ function initDb() {
       `);
       db.run(`CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(email)`);
       db.run(`CREATE INDEX IF NOT EXISTS idx_leads_created ON leads(created_at)`);
-      // Migration : ajout de la colonne error_code si la table scans existait sans elle.
-      db.get("SELECT 1 FROM pragma_table_info('scans') WHERE name = 'error_code'", (err, row) => {
-        if (!err && !row) {
-          db.run("ALTER TABLE scans ADD COLUMN error_code TEXT");
-        }
-      });
-      // Migration : ajout de la colonne source si la table existait sans elle.
-      db.get("SELECT 1 FROM pragma_table_info('leads') WHERE name = 'source'", (err, row) => {
-        if (!err && !row) {
-          db.run("ALTER TABLE leads ADD COLUMN source TEXT DEFAULT ''");
-        }
-      });
     });
-    db.close((err) => (err ? reject(err) : resolve()));
+    // Migrations : ajout de colonnes sur les bases existantes. Elles DOIVENT être
+    // awaitées avant close() : un db.run lancé depuis le callback d'un db.get est
+    // schedulé APRÈS close() dans la file → SQLITE_MISUSE (crash au boot, prod 07/09/26).
+    const migrations = [
+      ["scans", "error_code", "ALTER TABLE scans ADD COLUMN error_code TEXT"],
+      ["leads", "source", "ALTER TABLE leads ADD COLUMN source TEXT DEFAULT ''"],
+    ];
+    const applyMigration = ([table, column, alter]) =>
+      new Promise((res, rej) => {
+        db.get(`SELECT 1 FROM pragma_table_info('${table}') WHERE name = ?`, [column], (err, row) => {
+          if (err) return rej(err);
+          if (row) return res();
+          db.run(alter, (e) => (e ? rej(e) : res()));
+        });
+      });
+    migrations
+      .reduce((chain, m) => chain.then(() => applyMigration(m)), Promise.resolve())
+      .then(() => db.close((err) => (err ? reject(err) : resolve())))
+      .catch((err) => { db.close(() => {}); reject(err); });
   });
 }
 
