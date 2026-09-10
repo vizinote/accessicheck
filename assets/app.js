@@ -125,19 +125,12 @@
         event: event,
         path: path || '/'
       });
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(
-          API_BASE + '/track',
-          new Blob([payload], { type: 'application/json' })
-        );
-      } else if (typeof fetch === 'function') {
-        fetch(API_BASE + '/track', {
-          method: 'POST',
-          keepalive: true,
-          headers: { 'Content-Type': 'application/json' },
-          body: payload
-        }).catch(function () {});
-      }
+      fetch(API_BASE + '/track', {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/json' },
+        body: payload
+      }).catch(function () {});
     } catch (e) {
       // silencieux : la mesure ne doit jamais bloquer le site
     }
