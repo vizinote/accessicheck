@@ -66,7 +66,15 @@ async function collectSemanticSignal(page) {
       if (out.links.length >= 20) break;
     }
 
+    // Même prédicat honeypot que scanner.js : ne pas envoyer les champs anti-spam à l'IA.
+    const estHoneypot = (el) => {
+      if (el.getAttribute('aria-hidden') === 'true' || el.tabIndex < 0) return true;
+      if (/(^|[\s_.:-])(hp|honeypot|anti-?spam)([\s_.:-]|$)/i.test(`${el.className || ''} ${el.name || ''} ${el.id || ''}`)) return true;
+      const st = getComputedStyle(el);
+      return st.display === 'none' || st.visibility === 'hidden';
+    };
     for (const f of document.querySelectorAll('input:not([type=hidden]):not([type=submit]):not([type=button]):not([type=image]), select, textarea')) {
+      if (estHoneypot(f)) continue;
       const id = f.id;
       let label = '';
       if (id) {

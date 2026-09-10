@@ -509,7 +509,16 @@ async function runCustomChecks(page) {
       return { target: parts.join(' > '), html: (el.outerHTML || '').replace(/\s+/g, ' ').slice(0, 200) };
     };
     const inputs = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="image"]), select, textarea'));
+    // Honeypot anti-spam = champ volontairement invisible : l'exclure du constat
+    // (lui ajouter un label serait une mauvaise correction). Même prédicat dans semantic.js.
+    const estHoneypot = (el) => {
+      if (el.getAttribute('aria-hidden') === 'true' || el.tabIndex < 0) return true;
+      if (/(^|[\s_.:-])(hp|honeypot|anti-?spam)([\s_.:-]|$)/i.test(`${el.className || ''} ${el.name || ''} ${el.id || ''}`)) return true;
+      const st = getComputedStyle(el);
+      return st.display === 'none' || st.visibility === 'hidden';
+    };
     const bad = inputs.filter((input) => {
+      if (estHoneypot(input)) return false;
       const id = input.id;
       const aria = input.getAttribute('aria-label') || input.getAttribute('aria-labelledby');
       const hasLabel = id && document.querySelector(`label[for="${id}"]`);
